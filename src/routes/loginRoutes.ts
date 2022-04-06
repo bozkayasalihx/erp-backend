@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { loginController } from "../controllers";
-import expressJwt from "express-jwt";
+
+//FIXME: validation and validation middlewares;
 
 const loginRouter = Router();
 

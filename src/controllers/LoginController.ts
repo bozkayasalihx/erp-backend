@@ -1,37 +1,29 @@
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import LoginAuth from "../auth/loginAuth";
-import { appDataSource } from "../bootstrap";
-import { IBody } from "../middleware/isLoggedIn";
-import { User } from "../models";
+import { IBody } from "../middlewares/isLoggedIn";
+import { user } from "../services";
+import bcrypt from "bcryptjs";
+import httpStatus from "http-status";
 
 async function loginController(req: Request<any, any, IBody>, res: Response) {
     const { email, username, password } = req.body;
+    // some validation logic goes here;
 
-    const loginAuth = new LoginAuth({ email, username, password });
-
-    const validEmail = loginAuth.validateEmail();
-    const validUsenrame = loginAuth.validateUsername();
-    const validPassword = loginAuth.validatePassword();
-
-    console.log("valid email", validEmail);
-    console.log("valid username", validUsenrame);
-    console.log("valid password", validPassword);
-
-    const userRepo = appDataSource.getRepository(User);
-
-    const token = jwt.sign(
-        { name: req.body.username },
-        process.env.SALT as string,
-        {
-            expiresIn: 60 * 2,
-            algorithm: "HS256",
-        }
+    const hashedPassword = await bcrypt.hash(
+        password,
+        process.env.SALT as string
     );
+    try {
+        const newUser = await user.insert({
+            email,
+            username,
+            password: hashedPassword,
+        });
 
-    return res.json({
-        token,
-    });
+        return res.status(httpStatus.CREATED).json({ user: newUser });
+    } catch (err) {
+        console.log("err", err);
+        return res.status(httpStatus.SERVICE_UNAVAILABLE);
+    }
 }
 
 export default loginController;
