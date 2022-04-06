@@ -13,7 +13,7 @@ const main = async () => {
     app.use(helmet());
 
     app.use("/api", loginRouter);
-    app.use("/api", isLoggedIn, meRoutes);
+    app.use("/api", meRoutes);
     app.listen(process.env.PORT, () => {
         console.log("server started at port: " + process.env.PORT);
     });
