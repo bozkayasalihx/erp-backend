@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { appDataSource } from "../configs";
+// import { appDataSource } from "../loaders";
 import { User } from "../models";
 
 export default async function me(req: Request, res: Response) {

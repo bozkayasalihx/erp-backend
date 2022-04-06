@@ -1,4 +1,4 @@
-import { appDataSource } from "../configs";
+import { appDataSource } from "../loaders";
 import { User } from "../models";
 
 class UserOperation {

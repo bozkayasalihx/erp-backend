@@ -2,12 +2,12 @@ import "dotenv/config";
 import express from "express";
 import helmet from "helmet";
 import "reflect-metadata";
-import * as configs from "./configs";
+import { connectDb } from "./loaders/database";
 import isLoggedIn from "./middlewares/isLoggedIn";
 import { loginRouter, meRoutes } from "./routes";
 
 const main = async () => {
-    await configs.appDataSource.initialize();
+    await connectDb();
     const app = express();
     app.use(express.json());
     app.use(helmet());
