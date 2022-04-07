@@ -1,6 +1,6 @@
 import { Router } from "express";
-import registerControler from "src/controllers/registerController";
-import { validateRegister } from "../middlewares/validate";
+import registerControler from "../controllers/registerController";
+import { validateRegister } from "../controllers/registerController";
 import validations from "../validations/validate";
 
 const route = Router();

@@ -2,15 +2,16 @@ import "dotenv/config";
 import express from "express";
 import helmet from "helmet";
 import "reflect-metadata";
-import { appDataSource, connectDb } from "./loaders/database";
+import { connectDb } from "./loaders/database";
+import { validate } from "./middlewares/validate.middle";
 import { loginRouter, meRoutes, registerRoute } from "./routes";
 
 const main = async () => {
     await connectDb();
-    const app = express()
+    const app = express();
     app.use(express.json());
     app.use(helmet());
-    // await appDataSource.dropDatabase().then(() => console.log("done"));
+    // await appDataSource.dropDatabase().then(() => console.log("done"))
 
     app.use("/api", loginRouter);
     app.use("/api", registerRoute);
