@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
 import path from "path";
-const entityDir = path.join(__dirname, "../dist/models/**.js");
+const entityDir = path.join(__dirname, "../../dist/models/**.js");
 export const appDataSource = new DataSource({
     type: "postgres",
     database: process.env.DB_NAME,

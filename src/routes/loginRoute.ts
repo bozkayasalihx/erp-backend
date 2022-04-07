@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { validate } from "../middlewares/validate";
+import { validateLogin } from "../middlewares/validate";
 import { loginController } from "../controllers";
 import validations from "../validations/validate";
 
@@ -9,5 +9,5 @@ const loginRouter = Router();
 
 loginRouter
     .route("/login")
-    .post(validate(validations.loginValidation()), loginController);
+    .post(validateLogin(validations.loginValidation()), loginController);
 export default loginRouter;
