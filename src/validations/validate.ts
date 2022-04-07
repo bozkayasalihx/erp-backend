@@ -11,7 +11,7 @@ export interface IRegister {
     password: string;
 }
 
-class Validation {
+class ValidationSchema {
     public loginValidation() {
         return Joi.object<ILogin>({
             email: Joi.string().required().email(),
@@ -27,4 +27,4 @@ class Validation {
     }
 }
 
-export default new Validation();
+export default new ValidationSchema();

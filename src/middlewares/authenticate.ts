@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import jwt from "jsonwebtoken";
 
-export function validate(req: Request, res: Response, next: NextFunction) {
+export function authenticate(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers["authorization"];
 
     const token = authHeader && authHeader.replace("Bearer ", "");

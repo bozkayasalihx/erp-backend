@@ -3,7 +3,7 @@ import express from "express";
 import helmet from "helmet";
 import "reflect-metadata";
 import { connectDb } from "./loaders/database";
-import { validate } from "./middlewares/validate.middle";
+import { authenticate } from "./middlewares/authenticate";
 import { loginRouter, meRoutes, registerRoute } from "./routes";
 
 const main = async () => {

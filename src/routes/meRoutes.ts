@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { validate } from "../middlewares/validate.middle";
+import { authenticate } from "../middlewares/authenticate";
 import { meController } from "../controllers";
 
 const meRouter = Router();
-meRouter.get("/me", validate, meController);
+meRouter.get("/me", authenticate, meController);
 
 export default meRouter;

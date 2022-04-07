@@ -6,21 +6,6 @@ import { ILogin } from "../validations/validate";
 import { IBody } from "../middlewares/isLoggedIn";
 import { user } from "../services";
 
-export const validateLogin =
-    (schema: ObjectSchema<ILogin>) =>
-    (req: Request<any, any, ILogin>, res: Response, next: NextFunction) => {
-        const { error, value } = schema.validate(req.body);
-
-        if (error) {
-            const errorMessage = errorSlugify(error.details);
-            return res
-                .status(httpStatus.BAD_REQUEST)
-                .json({ message: errorMessage });
-        }
-        Object.assign(req, value);
-        return next();
-    };
-
 async function loginController(req: Request<any, any, IBody>, res: Response) {
     const email = req.body.email;
     try {
