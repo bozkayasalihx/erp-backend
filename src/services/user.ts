@@ -1,3 +1,4 @@
+import { string } from "joi";
 import { appDataSource } from "../loaders";
 import { User } from "../models";
 
@@ -20,6 +21,9 @@ class UserOperation {
 
     public creatUser(params: Partial<User>) {
         return this.userRepo.create(params);
+    }
+    public findOne(params: { email: string }) {
+        return this.userRepo.findOne({ where: { email: params.email } });
     }
 }
 
