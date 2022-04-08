@@ -25,6 +25,12 @@ class ValidationSchema {
             password: Joi.string().required().min(5),
         });
     }
+
+    public resetPasswordValidation() {
+        return Joi.object<{ email: string }>({
+            email: Joi.string().required().email(),
+        });
+    }
 }
 
 export default new ValidationSchema();
