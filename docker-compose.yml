@@ -18,7 +18,5 @@ services:
     volumes:
       - redis:/var/lib/redis/data
 volumes:
-  db:
-    driver: all
+  db: # redis: redis
   redis:
-    driver: all
