@@ -16,10 +16,9 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
     return jwt.verify(
         token,
         process.env.ACCESS_TOKEN_SECRET_KEY as string,
-        (err, user) => {
+        (err, user: any) => {
             if (err)
                 return res.status(httpStatus.FORBIDDEN).send("invalid token");
-            console.log("user", user);
             req.user = user;
 
             return next();

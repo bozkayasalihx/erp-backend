@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { loginController, resetPasswordController } from "../controllers";
+import { isSetCookie } from "../middlewares/isSetCookie";
+import {
+    loginController,
+    refreshController,
+    resetPasswordController,
+} from "../controllers";
 import registerControler from "../controllers/registerController";
 import Validate from "../middlewares/validate";
 import validationSchema, { ILogin, IRegister } from "../validations/validate";
@@ -32,4 +37,6 @@ userRoute
         ),
         resetPasswordController
     );
+
+userRoute.route("/refreshToken").get(isSetCookie, refreshController);
 export default userRoute;

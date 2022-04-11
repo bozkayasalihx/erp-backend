@@ -1,4 +1,3 @@
-import { string } from "joi";
 import { appDataSource } from "../loaders";
 import { User } from "../models";
 

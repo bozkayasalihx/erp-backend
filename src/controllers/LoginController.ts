@@ -1,10 +1,9 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import httpStatus from "http-status";
-import jwt from "jsonwebtoken";
-import { ObjectSchema } from "joi";
-import { ILogin } from "../validations/validate";
+import { __prod__ } from "../scripts/dev";
 import { IBody } from "../middlewares/isLoggedIn";
 import { user } from "../services";
+import generateToken from "../scripts/utils/generateToken";
 
 async function loginController(req: Request<any, any, IBody>, res: Response) {
     const email = req.body.email;
@@ -16,25 +15,31 @@ async function loginController(req: Request<any, any, IBody>, res: Response) {
                 message: "user does not exist",
             });
         }
-
-        const access_token = jwt.sign(
-            { name: findedUser.username, ...findedUser },
+        const accesTokenExpire = `${process.env.ACCESS_TOKEN_EXPIRE}`;
+        const refreshTokenExpire = `${process.env.REFRESH_TOKEN_EXPIRE}`;
+        const access_token = generateToken(
+            { name: findedUser.username, email: findedUser.email },
             process.env.ACCESS_TOKEN_SECRET_KEY as string,
-            { expiresIn: "1d" }
-        );
-        const refresh_token = jwt.sign(
-            {
-                name: findedUser.username,
-                ...findedUser,
-            },
-            process.env.ACCESS_TOKEN_SECRET_KEY as string
+            accesTokenExpire
         );
 
-        const tokens = {
+        const refresh_token = generateToken(
+            { name: findedUser.username, email: findedUser.email },
+            process.env.REFRESH_TOKEN_SECRET_KEY as string,
+            refreshTokenExpire
+        );
+
+        res.cookie("qid", refresh_token, {
+            httpOnly: true,
+            sameSite: "lax",
+            secure: __prod__,
+            maxAge: 24 * 60 * 60 * 1000,
+        });
+        return res.status(httpStatus.OK).json({
+            username: findedUser.username,
+            email: findedUser.email,
             access_token,
-            refresh_token,
-        };
-        return res.status(httpStatus.OK).json({ user: findedUser, tokens });
+        });
     } catch (err) {
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
     }
