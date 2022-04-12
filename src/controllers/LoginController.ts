@@ -1,93 +1,82 @@
-import { Request, Response } from "express";
-import httpStatus from "http-status";
-import { IBody } from "../middlewares/isLoggedIn";
-import { Buyer, BuyerSite, Dealer, DealerSite, User, Vendor } from "../models";
-import { __prod__ } from "../scripts/dev";
-import generateToken from "../scripts/utils/generateToken";
 import bcrypt from "bcryptjs";
-import { UsingJoinTableOnlyOnOneSideAllowedError } from "typeorm";
+import { Request, Response } from "express";
 import { appDataSource } from "../loaders";
+import { UserTypes } from "../types/types";
+import { IBody } from "../middlewares/isLoggedIn";
+import {
+    Dealer,
+    DealerSite,
+    User,
+    Vendor,
+    VendorToDealerSiteToBuyerSite,
+} from "../models";
 
 async function loginController(req: Request<any, any, IBody>, res: Response) {
-    const email = req.body.email;
-
     // const user = new User();
     // user.username = "salih";
-    // user.email = "test@test.com";
+    // user.email = "salih@maker.com";
+    // user.mobile = "5385882737";
     // user.password = await bcrypt.hash("salih", 10);
-    // user.mobile = "123123123123123";
     // user.tckn = BigInt(11090259670);
+    // user.user_type = UserTypes.VENDOR_ADMIN;
 
-    // const maker = await appDataSource.getRepository(User).save();
-
-    // console.log("maker", maker);
-    const userRepo = appDataSource.getRepository(User);
-    const vendorRepo = appDataSource.getRepository(Vendor);
-    const buyerRepo = appDataSource.getRepository(Buyer);
-    const buyerSiteRepo = appDataSource.getRepository(BuyerSite);
-    const dealerRepo = appDataSource.getRepository(Dealer);
-    const dealerSiteRepo = appDataSource.getRepository(DealerSite);
-
-    const vendor = new Vendor();
-    const user = await userRepo.findOne({ where: { username: "salih" } });
-    vendor.name = "tuborg";
-    vendor.tax_no = "23413123";
-
-    vendor.created_by = user?.id as number;
-    vendor.updated_by = user?.id as number;
-    vendor.user_id = user?.id as number;
-    // await appDataSource.getRepository(Vendor).save(vendor);
     let maker;
-    // const dealer = new Dealer();
-    // dealer.name = "ALT tuborg";
-    // dealer.tax_no = "1231232";
-    // dealer.created_by = user?.id as number;
-    // dealer.updated_by = user?.id as number;
+    const user = (await appDataSource.manager.findOne(User, {
+        where: { username: "salih" },
+    })) as User;
 
-    // maker = await dealerRepo.save(dealer);
-    const dealer = await dealerRepo.findOne({ where: { name: "ALT tuborg" } });
-    const dealerSite = new DealerSite();
-    dealerSite.name = "ALT ALT tuborg";
-    dealerSite.created_by = user?.id as number;
-    dealerSite.updated_by = user?.id as number;
-    dealerSite.dealer = dealer as Dealer; dealerSite.dealer_id = dealer?.id as number;
-    maker = await dealerSiteRepo.save(dealerSite);
+    // const vendor = new Vendor();
+    // vendor.name = "coca cola";
+    // vendor.tax_no = "12412323";
+    // vendor.created_by = user.id;
+    // vendor.updated_by = user.id;
+
+    // const dealer = new Dealer();
+    // dealer.name = "alt coca cola";
+    // dealer.tax_no = "43534954375";
+    // dealer.updated_by = user.id;
+    // dealer.created_by = user.id;
+
+    const dealerRepo = appDataSource.getRepository(Dealer);
+    maker = await dealerRepo.findOne({
+        where: { name: "alt coca cola" },
+    });
+
+    // const dealerSite = new DealerSite();
+    // dealerSite.name = "alt alt coca cola";
+    // dealerSite.dealer_id = 1;
+    // dealerSite.created_by = user.id;
+    // dealerSite.updated_by = user.id;
+
+    // maker = await appDataSource.manager.save(dealerSite);
 
     console.log("maker", maker);
 
-    // const dealer = new Dealer();
-    // dealer.name = "ulker";
-    // dealer.tax_no = "34593745";
-
-    // const dealerSite1 = new DealerSite();
-    // dealerSite1.name = "alt ulker";
-    // dealer.dealer_site = [dealerSite1];
-
     // const buyer = new Buyer();
+    // buyer.name = "ust bakkal";
+    // buyer.tax_no = "2934729347";
 
-    // buyer.name = "bakkal";
-    // buyer.tax_no = "2938472347";
+    // const buyerSite = new BuyerSite();
+    // buyerSite.name = "alt bakkal";
 
-    // const buyerSite1 = new BuyerSite();
-    // buyerSite1.name = "alt bakkal";
+    // buyer.buyer_sites = [buyerSite];
+    // buyerSite.buyer = buyer;
 
-    // const vendorToDealerSite1 = new VendorToDealerSite();
-    // vendorToDealerSite1.dealerSite = dealerSite1;
-    // buyer.buyer_site = [buyerSite1];
+    // const vds = new VendorToDealerSite();
+    // vds.description = "salih is the best";
 
-    // const vendorToDealerSiteToBuyerSite1 = new VendorToDealerSiteToBuyerSite();
+    // vds.vendor = vendor;
+    // vds.dealerSite = dealerSite;
+    // dealerSite.vendorToDealerSites = [vds];
+    // vendor.vendorToDealerSite = [vds];
 
-    // vendorToDealerSiteToBuyerSite1.vendorToDealerSite = [vendorToDealerSite1];
+    // const vtdsbs = new VendorToDealerSiteToBuyerSite()
 
-    // vendor.vendorToDealerSite = [vendorToDealerSite1];
+    // vds.vToDsBs = vtdsbs;
+    // vtdsbs.buyerSites = [buyerSite];
+    // vtdsbs.vToDS = [vds];
 
-    // const maker = await appDataSource
-    //     .getRepository(VendorToDealerSiteToBuyerSite)
-    //     .save(vendorToDealerSiteToBuyerSite1);
-
-    // console.log("maker", maker);
-
-    return;
+    // const email = req.body.email;
 
     // try {
     //     const findedUser = await user.login(email);

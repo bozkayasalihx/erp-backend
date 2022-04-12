@@ -1,16 +1,13 @@
-import { number } from "joi";
 import {
     Column,
     Entity,
     Index,
     ManyToOne,
     OneToMany,
-    OneToOne,
     RelationId,
 } from "typeorm";
 import BaseEntity from "./BaseEntity";
 import DealerSite from "./DealerSite";
-import User from "./User";
 import Vendor from "./Vendor";
 import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
@@ -21,22 +18,20 @@ export default class VendorToDealerSite extends BaseEntity {
     description: string;
 
     /** Relations */
-
     @ManyToOne(() => Vendor, vendor => vendor.vendorToDealerSite)
     vendor: Vendor;
 
-    @ManyToOne(() => DealerSite, dealerSite => dealerSite.vendorToDealerSite)
+    @ManyToOne(() => DealerSite, dealerSite => dealerSite.vendorToDealerSites)
     dealerSite: DealerSite;
 
-    @OneToMany(() => VendorToDealerSiteToBuyerSite, vdsbs => vdsbs)
-    vdsbs: VendorToDealerSiteToBuyerSite;
+    @RelationId((vToDS: VendorToDealerSite) => vToDS.vendor)
+    @Column()
+    vendor_id: number;
 
-    /** referations */
-    // @RelationId((vendor: Vendor) => vendor.)
-    // @Column()
-    // vendor_id: number;
+    @RelationId((vToDS: VendorToDealerSite) => vToDS.dealerSite)
+    @Column()
+    dealer_site_id: number;
 
-    // @RelationId((dealerSite: DealerSite) => dealerSite)
-    // @Column()
-    // dealer_site_id: number;
+    @OneToMany(() => VendorToDealerSiteToBuyerSite, vToDsBs => vToDsBs.vToDS)
+    vToDsBs: VendorToDealerSiteToBuyerSite;
 }

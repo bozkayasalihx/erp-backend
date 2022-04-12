@@ -2,6 +2,7 @@ import {
     AfterInsert,
     Column,
     Entity,
+    JoinColumn,
     ManyToOne,
     OneToMany,
     OneToOne,

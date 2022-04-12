@@ -2,6 +2,7 @@ import {
     Column,
     CreateDateColumn,
     DeleteDateColumn,
+    JoinColumn,
     OneToOne,
     PrimaryGeneratedColumn,
     RelationId,
@@ -30,16 +31,10 @@ export default abstract class BaseEntity {
     end_date: Date;
 
     @OneToOne(() => User)
-    created_user: User;
-
-    @OneToOne(() => User)
-    updated_user: User;
-
-    @RelationId((CE: BaseEntity) => CE.created_user)
-    @Column()
+    @JoinColumn({ name: "created_by" })
     created_by: number;
 
-    @RelationId((CE: BaseEntity) => CE.updated_user)
-    @Column()
+    @OneToOne(() => User)
+    @JoinColumn({ name: "updated_by" })
     updated_by: number;
 }

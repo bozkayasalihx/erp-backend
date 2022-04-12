@@ -25,14 +25,6 @@ export default class Buyer extends BaseEntity {
     attribute4: string;
 
     /** Relations */
-    @OneToMany(() => BuyerSite, buyerSite => buyerSite.id)
-    buyer_site: Array<BuyerSite>;
-
-    // @OneToOne(() => User, user => user.id)
-    // @Column()
-    // created_by: number;
-
-    // @OneToOne(() => User, user => user.id)
-    // @Column()
-    // updated_by: number;
+    @OneToMany(() => BuyerSite, buyerSite => buyerSite.buyer)
+    buyer_sites: Array<BuyerSite>;
 }

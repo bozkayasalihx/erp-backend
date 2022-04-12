@@ -1,6 +1,8 @@
 import {
     Column,
     Entity,
+    Index,
+    JoinColumn,
     ManyToMany,
     ManyToOne,
     OneToMany,
@@ -12,6 +14,7 @@ import Vendor from "./Vendor";
 import VendorToDealerSite from "./VendorToDealerSite";
 
 @Entity("dealer_site")
+@Index(["dealer_id"], { unique: true })
 export default class DealerSite extends BaseEntity {
     /** Properites*/
     @Column()
@@ -36,17 +39,15 @@ export default class DealerSite extends BaseEntity {
     @ManyToOne(() => Dealer, dealer => dealer.dealer_sites)
     dealer: Dealer;
 
-    /** Referantions */
-    @RelationId((dealerSite: DealerSite) => dealerSite.dealer)
-    @Column()
+    @RelationId((dealerSite: DealerSite) => dealerSite.dealer, "dealer_id")
+    @Column({ name: "dealer_id" })
     dealer_id: number;
 
-    @RelationId((dealerSite: DealerSite) => dealerSite.created_user)
-    user_id: number;
+    /** Referantions */
 
     @OneToMany(
         () => VendorToDealerSite,
         vendorToDealerSite => vendorToDealerSite.dealerSite
     )
-    vendorToDealerSite: Array<VendorToDealerSite>;
+    vendorToDealerSites: Array<VendorToDealerSite>;
 }

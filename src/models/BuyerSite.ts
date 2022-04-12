@@ -1,14 +1,13 @@
 import {
     Column,
     Entity,
+    Index,
+    JoinColumn,
     ManyToOne,
     OneToMany,
-    OneToOne,
-    RelationId,
 } from "typeorm";
 import BaseEntity from "./BaseEntity";
 import Buyer from "./Buyer";
-import User from "./User";
 import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
 @Entity("buyer_site")
@@ -30,14 +29,11 @@ export default class BuyerSite extends BaseEntity {
     attribute4: string;
 
     /** Relations */
-    @ManyToOne(() => Buyer, buyer => buyer.id)
-    buyers: Array<Buyer>;
+    @ManyToOne(() => Buyer, buyer => buyer.buyer_sites)
+    @Index("buyer_id", { unique: true })
+    @JoinColumn({ name: "buyer_id" })
+    buyer: Buyer;
 
-    @OneToMany(() => VendorToDealerSiteToBuyerSite, vDsBs => vDsBs)
-    vdsbs: VendorToDealerSiteToBuyerSite;
-
-    /** referans */
-    @RelationId((buyerSite: BuyerSite) => buyerSite.buyers)
-    @Column()
-    buyer_id: number;
+    @OneToMany(() => VendorToDealerSiteToBuyerSite, vToDS => vToDS.buyerSites)
+    vToDS: VendorToDealerSiteToBuyerSite;
 }

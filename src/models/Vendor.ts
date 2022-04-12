@@ -1,7 +1,4 @@
-import {
-    Column,
-    Entity, OneToMany, RelationId
-} from "typeorm";
+import { Column, Entity, OneToMany, RelationId } from "typeorm";
 import BaseEntity from "./BaseEntity";
 import VendorToDealerSite from "./VendorToDealerSite";
 
@@ -36,10 +33,6 @@ export default class Vendor extends BaseEntity {
         vendorToDealerSite => vendorToDealerSite.vendor
     )
     vendorToDealerSite: Array<VendorToDealerSite>;
-
-    @RelationId((vendor: Vendor) => vendor.created_user)
-    @Column()
-    user_id: number;
 }
 
 const vendor = new Vendor();
