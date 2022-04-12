@@ -22,7 +22,6 @@ const main = async () => {
         })
     );
     app.use(cookieParser());
-    // await appDataSource.dropDatabase().then(() => console.log("done"));
 
     app.use(morgan("dev"));
     app.use("/api", userRoute);

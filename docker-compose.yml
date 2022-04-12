@@ -18,5 +18,5 @@ services:
     volumes:
       - redis:/var/lib/redis/data
 volumes:
-  db: # redis: redis
+  db:
   redis:

@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
+import { IBody } from "../middlewares/isLoggedIn";
 import { __prod__ } from "../scripts/dev";
 import generateToken from "../scripts/utils/generateToken";
-import { IBody } from "../middlewares/isLoggedIn";
 import { user } from "../services";
-import { StringRegexOptions } from "joi";
 
 async function registerControler(req: Request<any, any, IBody>, res: Response) {
     user.insert(req.body)
