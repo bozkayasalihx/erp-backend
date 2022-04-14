@@ -5,13 +5,16 @@ import {
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
 import { UserTypes } from "../types/types";
+import UserEntityRelation from "./UserEntityRelation";
 
-@Entity("user")
+@Entity("user_tbl")
 export default class User {
+    /** Properties */
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -48,6 +51,15 @@ export default class User {
     @Column({ type: "varchar", length: 20 })
     mobile: string;
 
+    /** relatiosn */
+
+    @OneToMany(
+        () => UserEntityRelation,
+        userEntityRelation => userEntityRelation.users
+    )
+    userEntityRelation: UserEntityRelation;
+
+    /** before insert operations */
     @BeforeInsert()
     private async beforeInsert() {
         this.password = await bcrypt.hash(this.password, +process.env.SALT!);

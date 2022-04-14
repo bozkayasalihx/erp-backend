@@ -12,15 +12,22 @@ export interface GenericError {
 }
 
 export enum UserTypes {
-    SITE_ADMIN = 1,
-    VENDOR = 6,
-    VENDOR_ADMIN = 7,
-    BUYER = 2,
-    BUYER_ADMIN = 3,
-    DEALER = 4,
-    DEALER_ADMIN = 5,
+    SITE_ADMIN = "SA",
+    VENDOR = "V",
+    VENDOR_ADMIN = "VA",
+    BUYER = "B",
+    BUYER_ADMIN = "BA",
+    DEALER = "D",
+    DEALER_ADMIN = "DA",
 }
 
 export const allModels = {
     ...models,
 };
+
+export enum Routes {
+    REGISTER = "/register",
+    LOGIN = "/login",
+    ME = "/me",
+}
+Routes.REGISTER;

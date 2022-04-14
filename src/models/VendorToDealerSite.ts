@@ -24,6 +24,11 @@ export default class VendorToDealerSite extends BaseEntity {
     @ManyToOne(() => DealerSite, dealerSite => dealerSite.vendorToDealerSites)
     dealerSite: DealerSite;
 
+    @OneToMany(() => VendorToDealerSiteToBuyerSite, vToDsBs => vToDsBs.vToDS)
+    vToDsBs: VendorToDealerSiteToBuyerSite;
+
+    /** Referans */
+
     @RelationId((vToDS: VendorToDealerSite) => vToDS.vendor)
     @Column()
     vendor_id: number;
@@ -31,7 +36,4 @@ export default class VendorToDealerSite extends BaseEntity {
     @RelationId((vToDS: VendorToDealerSite) => vToDS.dealerSite)
     @Column()
     dealer_site_id: number;
-
-    @OneToMany(() => VendorToDealerSiteToBuyerSite, vToDsBs => vToDsBs.vToDS)
-    vToDsBs: VendorToDealerSiteToBuyerSite;
 }

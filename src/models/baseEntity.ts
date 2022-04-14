@@ -16,7 +16,7 @@ export default abstract class BaseEntity {
     id: number;
 
     @UpdateDateColumn()
-    update_at: Date;
+    updated_at: Date;
 
     @CreateDateColumn()
     created_at: Date;
@@ -32,9 +32,11 @@ export default abstract class BaseEntity {
 
     @OneToOne(() => User)
     @JoinColumn({ name: "created_by" })
+    @Column()
     created_by: number;
 
     @OneToOne(() => User)
     @JoinColumn({ name: "updated_by" })
+    @Column()
     updated_by: number;
 }

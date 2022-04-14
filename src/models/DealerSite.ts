@@ -39,8 +39,8 @@ export default class DealerSite extends BaseEntity {
     @ManyToOne(() => Dealer, dealer => dealer.dealer_sites)
     dealer: Dealer;
 
-    @RelationId((dealerSite: DealerSite) => dealerSite.dealer, "dealer_id")
-    @Column({ name: "dealer_id" })
+    @RelationId((dealerSite: DealerSite) => dealerSite.dealer)
+    @Column()
     dealer_id: number;
 
     /** Referantions */

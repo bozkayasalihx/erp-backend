@@ -16,8 +16,6 @@ export function isSetCookie(req: Request, res: Response, next: NextFunction) {
             if (err) return res.sendStatus(httpStatus.FORBIDDEN);
             const findedUser = await user.findOne({ email: decode.email });
 
-            console.log("finded user", findedUser);
-
             if (!findedUser) return res.sendStatus(httpStatus.FORBIDDEN);
             req.refreshToken = refreshToken;
 
