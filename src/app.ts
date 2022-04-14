@@ -2,8 +2,8 @@ import "dotenv/config";
 import express from "express";
 import helmet from "helmet";
 import "reflect-metadata";
-import { appDataSource, connectDb } from "./loaders/database";
-import { meRoute, userRoute } from "./routes";
+import { connectDb } from "./loaders/database";
+import { meRoute, testRoute, userRoute } from "./routes";
 import { event } from "./configs";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -26,6 +26,7 @@ const main = async () => {
     app.use(morgan("dev"));
     app.use("/api", userRoute);
     app.use("/api", meRoute);
+    app.use("/api", testRoute);
     app.listen(process.env.PORT, () => {
         console.log("server started at port: " + process.env.PORT);
     });
