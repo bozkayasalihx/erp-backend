@@ -3,7 +3,7 @@ import { Column, Entity, Index } from "typeorm";
 import BaseEntity from "./BaseEntity";
 
 @Entity("role_auth")
-@Index(["role_name", "route_name", "route_method"])
+@Index(["role_name", "route_name"], { unique: true })
 export default class RoleAuth extends BaseEntity {
     @Column({ type: "enum", enum: UserTypes })
     role_name: UserTypes;
