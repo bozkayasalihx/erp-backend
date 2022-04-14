@@ -53,11 +53,11 @@ export default class User {
 
     /** relatiosn */
 
-    @OneToMany(
-        () => UserEntityRelation,
-        userEntityRelation => userEntityRelation.users
-    )
-    userEntityRelation: UserEntityRelation;
+    // @OneToMany(
+    //     () => UserEntityRelation,
+    //     userEntityRelation => userEntityRelation.users
+    // )
+    // userEntityRelation: UserEntityRelation;
 
     /** before insert operations */
     @BeforeInsert()

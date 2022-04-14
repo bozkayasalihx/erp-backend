@@ -2,6 +2,8 @@
     "name": "demo_backend",
     "version": "1.0.0",
     "main": "app.js",
+    "author": "Salih Bozkaya <bozkayasalih01x@gmail.com",
+    "description": "natica hand shaking service backend",
     "license": "MIT",
     "dependencies": {
         "bcryptjs": "^2.4.3",
