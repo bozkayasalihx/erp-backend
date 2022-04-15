@@ -13,19 +13,19 @@ import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 @Entity("buyer_site")
 export default class BuyerSite extends BaseEntity {
     /** Properties */
-    @Column()
+    @Column({ name: "name" })
     name: string;
 
-    @Column({ default: null })
+    @Column({ default: null, name: "attribute" })
     attribute: string;
 
-    @Column({ default: null })
+    @Column({ default: null, name: "attribute2" })
     attribute2: string;
 
-    @Column({ default: null })
+    @Column({ default: null, name: "attribute3" })
     attribute3: string;
 
-    @Column({ default: null })
+    @Column({ default: null, name: "attribute4" })
     attribute4: string;
 
     /** Relations */

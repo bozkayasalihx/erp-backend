@@ -7,7 +7,12 @@ import VendorToDealerSite from "./VendorToDealerSite";
 @Index(["vds_rltn_id", "buyer_site_id"], { unique: true })
 export default class VendorToDealerSiteToBuyerSite extends BaseEntity {
     /**Properties */
-    @Column({ type: "varchar", length: 240, default: null })
+    @Column({
+        type: "varchar",
+        length: 240,
+        default: null,
+        name: "description",
+    })
     description: string;
 
     @ManyToOne(() => BuyerSite, buyerSite => buyerSite.vToDS)
@@ -18,10 +23,10 @@ export default class VendorToDealerSiteToBuyerSite extends BaseEntity {
 
     /** referanss */
     @RelationId((vToDsBs: VendorToDealerSiteToBuyerSite) => vToDsBs.buyerSites)
-    @Column()
+    @Column({ name: "buyer_site_id" })
     buyer_site_id: number;
 
     @RelationId((vToDsBs: VendorToDealerSiteToBuyerSite) => vToDsBs.vToDS)
-    @Column()
+    @Column({ name: "vds_rltn_id" })
     vds_rltn_id: number;
 }

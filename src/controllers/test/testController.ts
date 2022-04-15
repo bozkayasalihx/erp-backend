@@ -26,23 +26,23 @@ export default async function testControler(req: Request, res: Response) {
 
     // const maker = await appDataSource.manager.save(user);
 
-    const user = (await appDataSource.manager.findOne(User, {
-        where: { username: "salih" },
-    })) as User;
+    // const user = (await appDataSource.manager.findOne(User, {
+    //     where: { username: "salih" },
+    // })) as User;
 
-    const vendor = (await appDataSource.manager.findOne(Vendor, {
-        where: { name: "tuborg" },
-    })) as Vendor;
+    // const vendor = (await appDataSource.manager.findOne(Vendor, {
+    //     where: { name: "tuborg" },
+    // })) as Vendor;
 
-    const usrRelation = new UserEntityRelation();
-    usrRelation.description = "james is the best of the me ";
-    usrRelation.created_by = user.id;
-    usrRelation.updated_by = user.id;
-    usrRelation.user_id = user.id;
-    usrRelation.ref_entity_id = user.id;
+    // const usrRelation = new UserEntityRelation();
+    // usrRelation.description = "james is the best of the me ";
+    // usrRelation.created_by = user.id;
+    // usrRelation.updated_by = user.id;
+    // usrRelation.user_id = user.id;
+    // usrRelation.ref_entity_id =
 
-    const maker = await appDataSource.manager.save(usrRelation);
-    console.log("maker", maker);
+    // const maker = await appDataSource.manager.save(usrRelation);
+    // console.log("maker", maker);
 
     return res.send("not found");
 }

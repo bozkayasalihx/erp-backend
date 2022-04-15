@@ -12,31 +12,29 @@ import User from "./User";
 
 export default abstract class BaseEntity {
     /** Base Entity */
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ name: "id" })
     id: number;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ name: "updated_at" })
     updated_at: Date;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ name: "created_at" })
     created_at: Date;
 
-    @DeleteDateColumn()
+    @DeleteDateColumn({ name: "deleted_at" })
     deleted_at: Date;
 
-    @Column({ default: null })
+    @Column({ default: null, name: "start_date" })
     start_date: Date;
 
-    @Column({ default: null })
+    @Column({ default: null, name: "end_date" })
     end_date: Date;
 
     @OneToOne(() => User)
     @JoinColumn({ name: "created_by" })
-    @Column()
     created_by: number;
 
     @OneToOne(() => User)
     @JoinColumn({ name: "updated_by" })
-    @Column()
     updated_by: number;
 }

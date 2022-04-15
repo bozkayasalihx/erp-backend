@@ -18,14 +18,14 @@ import Vendor from "./Vendor";
 
 @Entity("user_entity_relation")
 export default class UserEntityRelation extends BaseEntity {
-    @Column({ type: "varchar", length: 240 })
+    @Column({ type: "varchar", length: 240, name: "description" })
     description: string;
 
     @ManyToOne(() => User)
     users: Array<User>;
 
     @RelationId((uEnRelation: UserEntityRelation) => uEnRelation.users)
-    @Column()
+    @Column({name: "user_id"})
     user_id: number;
 
     @ManyToOne(() => Vendor, { nullable: true })
@@ -38,18 +38,18 @@ export default class UserEntityRelation extends BaseEntity {
     ds_ref_table: DealerSite;
 
     @RelationId((UERelation: UserEntityRelation) => UERelation.vendor_ref_table)
-    @Column({ nullable: true })
+    @Column({ nullable: true, name: "vendor_ref_table_id" })
     vendor_ref_table_id: number;
 
     @RelationId((UERelation: UserEntityRelation) => UERelation.bs_ref_table)
-    @Column({ nullable: true })
+    @Column({ nullable: true, name: "bs_ref_table_id" })
     bs_ref_table_id: number;
 
     @RelationId((UERelation: UserEntityRelation) => UERelation.ds_ref_table)
-    @Column({ nullable: true })
+    @Column({ nullable: true, name: "ds_ref_table_id" })
     ds_ref_table_id: number;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, name: "ref_entity_id" })
     ref_entity_id: number;
 
     @BeforeInsert()

@@ -15,49 +15,46 @@ import UserEntityRelation from "./UserEntityRelation";
 @Entity("user_tbl")
 export default class User {
     /** Properties */
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ name: "id" })
     id: number;
 
-    @UpdateDateColumn()
-    update_at: Date;
+    @UpdateDateColumn({ name: "udpated_at" })
+    updated_at: Date;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ name: "created_at" })
     created_at: Date;
 
-    @DeleteDateColumn()
+    @DeleteDateColumn({ name: "deleted_at" })
     deleted_at: Date;
 
-    @Column({ default: null })
+    @Column({ default: null, name: "start_date" })
     start_date: Date;
 
-    @Column({ default: null })
+    @Column({ default: null, name: "end_date" })
     end_date: Date;
 
-    @Column({ unique: true, nullable: true })
+    @Column({ unique: true, nullable: true, name: "username" })
     username: string;
 
-    @Column({ unique: true, nullable: false })
+    @Column({ unique: true, nullable: false, name: "email" })
     email: string;
 
-    @Column({ nullable: false })
+    @Column({ nullable: false, name: "password" })
     password: string;
 
-    @Column({ type: "enum", enum: UserTypes, default: UserTypes.VENDOR })
+    @Column({
+        type: "enum",
+        enum: UserTypes,
+        default: UserTypes.VENDOR_ADMIN,
+        name: "user_type",
+    })
     user_type: UserTypes;
 
-    @Column({ type: "bigint" })
+    @Column({ type: "bigint", name: "tckn" })
     tckn: BigInt;
 
-    @Column({ type: "varchar", length: 20 })
+    @Column({ type: "varchar", length: 20, name: "mobile" })
     mobile: string;
-
-    /** relatiosn */
-
-    // @OneToMany(
-    //     () => UserEntityRelation,
-    //     userEntityRelation => userEntityRelation.users
-    // )
-    // userEntityRelation: UserEntityRelation;
 
     /** before insert operations */
     @BeforeInsert()

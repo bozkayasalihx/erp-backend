@@ -14,7 +14,12 @@ import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 @Entity("vds_relations")
 @Index(["vendor_id", "dealer_site_id"], { unique: true })
 export default class VendorToDealerSite extends BaseEntity {
-    @Column({ type: "varchar", length: 240, default: null })
+    @Column({
+        type: "varchar",
+        length: 240,
+        default: null,
+        name: "description",
+    })
     description: string;
 
     /** Relations */
@@ -30,10 +35,10 @@ export default class VendorToDealerSite extends BaseEntity {
     /** Referans */
 
     @RelationId((vToDS: VendorToDealerSite) => vToDS.vendor)
-    @Column()
+    @Column({ name: "vendor_id" })
     vendor_id: number;
 
     @RelationId((vToDS: VendorToDealerSite) => vToDS.dealerSite)
-    @Column()
+    @Column({ name: "dealer_site_id" })
     dealer_site_id: number;
 }

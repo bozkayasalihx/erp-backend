@@ -5,12 +5,12 @@ import BaseEntity from "./BaseEntity";
 @Entity("role_auth")
 @Index(["role_name", "route_name"], { unique: true })
 export default class RoleAuth extends BaseEntity {
-    @Column({ type: "enum", enum: UserTypes })
+    @Column({ type: "enum", enum: UserTypes, name: "role_name" })
     role_name: UserTypes;
 
-    @Column({ type: "varchar", length: 100 })
+    @Column({ type: "varchar", length: 100, name: "route_name" })
     route_name: string;
 
-    @Column({ array: true, type: "varchar" })
+    @Column({ array: true, type: "varchar", name: "route_method" })
     route_method: Array<string>;
 }

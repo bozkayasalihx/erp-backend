@@ -17,22 +17,22 @@ import VendorToDealerSite from "./VendorToDealerSite";
 @Index(["dealer_id"], { unique: true })
 export default class DealerSite extends BaseEntity {
     /** Properites*/
-    @Column()
+    @Column({ name: "name" })
     name: string;
 
-    @Column({ default: null })
+    @Column({ default: null, name: "attribute" })
     attribute: string;
 
-    @Column({ default: null })
+    @Column({ default: null, name: "attribute2" })
     attribute2: string;
 
-    @Column({ default: null })
+    @Column({ default: null, name: "attribute3" })
     attribute3: string;
 
-    @Column({ default: null })
+    @Column({ default: null, name: "attribute4" })
     attribute4: string;
 
-    @Column({ default: null })
+    @Column({ default: null, name: "attribute5" })
     attribute5: string;
 
     /** Releations */
@@ -40,7 +40,7 @@ export default class DealerSite extends BaseEntity {
     dealer: Dealer;
 
     @RelationId((dealerSite: DealerSite) => dealerSite.dealer)
-    @Column()
+    @Column({ name: "dealer_id" })
     dealer_id: number;
 
     /** Referantions */
