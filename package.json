@@ -51,7 +51,7 @@
     "lint": "eslint . --ext .ts --fix"
   },
   "lint-staged": {
-    "./src/**/*.ts": [
+    "*.ts": [
       "organize-imports-cli",
       "prettier --write --ignore-unknown"
     ]
