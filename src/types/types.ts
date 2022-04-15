@@ -30,4 +30,22 @@ export enum Routes {
     LOGIN = "/login",
     ME = "/me",
 }
-Routes.REGISTER;
+
+export enum FileStatusType {
+    NEW = "N",
+    VALIDATED = "V",
+    REJECTED = "R",
+    INTERFACED = "I",
+    INVOICED = "S",
+}
+
+export enum FileRecordType {
+    HEADER = "H",
+    LINE = "L",
+}
+
+export enum LineStatusType {
+    NEW = "N",
+    ERROR = "E",
+    SUCCESS = "S",
+}

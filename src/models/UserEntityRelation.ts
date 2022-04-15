@@ -25,7 +25,7 @@ export default class UserEntityRelation extends BaseEntity {
     users: Array<User>;
 
     @RelationId((uEnRelation: UserEntityRelation) => uEnRelation.users)
-    @Column({name: "user_id"})
+    @Column({ name: "user_id" })
     user_id: number;
 
     @ManyToOne(() => Vendor, { nullable: true })
@@ -39,15 +39,15 @@ export default class UserEntityRelation extends BaseEntity {
 
     @RelationId((UERelation: UserEntityRelation) => UERelation.vendor_ref_table)
     @Column({ nullable: true, name: "vendor_ref_table_id" })
-    vendor_ref_table_id: number;
+    private vendor_ref_table_id: number;
 
     @RelationId((UERelation: UserEntityRelation) => UERelation.bs_ref_table)
     @Column({ nullable: true, name: "bs_ref_table_id" })
-    bs_ref_table_id: number;
+    private bs_ref_table_id: number;
 
     @RelationId((UERelation: UserEntityRelation) => UERelation.ds_ref_table)
     @Column({ nullable: true, name: "ds_ref_table_id" })
-    ds_ref_table_id: number;
+    private ds_ref_table_id: number;
 
     @Column({ nullable: true, name: "ref_entity_id" })
     ref_entity_id: number;
@@ -58,6 +58,8 @@ export default class UserEntityRelation extends BaseEntity {
             await appDataSource.manager.query(
                 `select user_type, id from user_tbl where id = ${this.user_id}`
             );
+
+        if (!results) throw new Error("not such as user");
 
         if (
             results[0].user_type === UserTypes.VENDOR ||

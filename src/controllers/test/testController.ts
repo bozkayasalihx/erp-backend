@@ -39,7 +39,6 @@ export default async function testControler(req: Request, res: Response) {
     // usrRelation.created_by = user.id;
     // usrRelation.updated_by = user.id;
     // usrRelation.user_id = user.id;
-    // usrRelation.ref_entity_id =
 
     // const maker = await appDataSource.manager.save(usrRelation);
     // console.log("maker", maker);
