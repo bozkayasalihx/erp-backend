@@ -10,3 +10,5 @@ export default class InvoiceFile extends BaseInvoice {
     @Column({ type: "enum", enum: LineStatusType })
     line_status: LineStatusType;
 }
+
+

@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
 import path from "path";
+import SnakeNamingStrategy from "../configs/typeormNaminStrategy";
 const entityDir = path.join(__dirname, "../../dist/models/**.js");
 const subsDir = path.join(__dirname, "../../dist/subscribers/**.js");
 export const appDataSource = new DataSource({
@@ -9,6 +10,7 @@ export const appDataSource = new DataSource({
     port: +process.env.DB_PORT!,
     username: process.env.DB_USER as string,
     password: process.env.DB_PASSWORD,
+    namingStrategy: new SnakeNamingStrategy(),
     synchronize: true,
     entities: [entityDir],
     subscribers: [subsDir],

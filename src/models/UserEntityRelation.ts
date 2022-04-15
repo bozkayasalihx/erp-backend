@@ -1,14 +1,6 @@
-import { UserTypes } from "../types/types";
-import {
-    AfterInsert,
-    BeforeInsert,
-    Column,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    RelationId,
-} from "typeorm";
+import { BeforeInsert, Column, Entity, ManyToOne, RelationId } from "typeorm";
 import { appDataSource } from "../loaders";
+import { UserTypes } from "../types/types";
 import BaseEntity from "./BaseEntity";
 import BuyerSite from "./BuyerSite";
 import DealerSite from "./DealerSite";
@@ -38,15 +30,15 @@ export default class UserEntityRelation extends BaseEntity {
     ds_ref_table: DealerSite;
 
     @RelationId((UERelation: UserEntityRelation) => UERelation.vendor_ref_table)
-    @Column({ nullable: true, name: "vendor_ref_table_id" })
+    // @Column({ nullable: true, name: "vendor_ref_table_id" })
     private vendor_ref_table_id: number;
 
     @RelationId((UERelation: UserEntityRelation) => UERelation.bs_ref_table)
-    @Column({ nullable: true, name: "bs_ref_table_id" })
+    // @Column({ nullable: true, name: "bs_ref_table_id" })
     private bs_ref_table_id: number;
 
     @RelationId((UERelation: UserEntityRelation) => UERelation.ds_ref_table)
-    @Column({ nullable: true, name: "ds_ref_table_id" })
+    // @Column({ nullable: true, name: "ds_ref_table_id" })
     private ds_ref_table_id: number;
 
     @Column({ nullable: true, name: "ref_entity_id" })
