@@ -6,14 +6,14 @@ import {
     OneToMany,
     RelationId,
 } from "typeorm";
-import BaseEntity from "./BaseEntity";
+import SuperEntity from "./BaseEntity";
 import DealerSite from "./DealerSite";
 import Vendor from "./Vendor";
 import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
 @Entity("vds_relations")
 @Index(["vendor_id", "dealer_site_id"], { unique: true })
-export default class VendorToDealerSite extends BaseEntity {
+export default class VendorToDealerSite extends SuperEntity {
     @Column({
         type: "varchar",
         length: 240,
