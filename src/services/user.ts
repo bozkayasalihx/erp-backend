@@ -2,7 +2,7 @@ import { appDataSource } from "../loaders";
 import { User } from "../models";
 
 class UserOperation {
-    private get userRepo() {
+    get userRepo() {
         return appDataSource.getRepository(User);
     }
     public async insert(user: Partial<User>) {
@@ -14,16 +14,14 @@ class UserOperation {
     public async update(user: Partial<User>) {
         return this.userRepo.save(user);
     }
-    public async login(email: string) {
-        return this.userRepo.findOne({ where: { email } });
+    public async login(email: string, username?: string) {
+        return this.userRepo.findOne({ where: [{ email }, { username }] });
     }
 
     public creatUser(params: Partial<User>) {
         return this.userRepo.create(params);
     }
-    public findOne(params: { email: string }) {
-        return this.userRepo.findOne({ where: { email: params.email } });
-    }
 }
 
-export default new UserOperation();
+const userOperation = new UserOperation();
+export default userOperation;
