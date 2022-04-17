@@ -1,13 +1,14 @@
-import User from "./models/User";
+import { User } from "./models";
 declare global {
     namespace Express {
-        interface User {
-            email: string;
-            username: string;
-        }
         interface Request {
             user: User;
             refreshToken: string;
+            payload: {
+                userId: number;
+                tokenVersion: number;
+                [x: string]: any;
+            };
         }
     }
 }
