@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 
 interface IGenerateToken {
-    name: string;
-    email: string;
+    userId: number;
+    tokenVersion: number;
 }
 
 export default function generateToken(
