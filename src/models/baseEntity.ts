@@ -1,16 +1,15 @@
 import {
+    BaseEntity,
     Column,
     CreateDateColumn,
-    DeleteDateColumn,
     JoinColumn,
     OneToOne,
     PrimaryGeneratedColumn,
-    RelationId,
     UpdateDateColumn,
 } from "typeorm";
 import User from "./User";
 
-export default abstract class BaseEntity {
+export default abstract class SuperEntity extends BaseEntity {
     /** Base Entity */
     @PrimaryGeneratedColumn({ name: "id" })
     id: number;
@@ -20,9 +19,6 @@ export default abstract class BaseEntity {
 
     @CreateDateColumn({ name: "created_at" })
     created_at: Date;
-
-    @DeleteDateColumn({ name: "deleted_at" })
-    deleted_at: Date;
 
     @Column({ default: null, name: "start_date" })
     start_date: Date;

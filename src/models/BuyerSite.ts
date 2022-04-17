@@ -6,12 +6,12 @@ import {
     ManyToOne,
     OneToMany,
 } from "typeorm";
-import BaseEntity from "./BaseEntity";
+import SuperEntity from "./BaseEntity";
 import Buyer from "./Buyer";
 import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
 @Entity("buyer_site")
-export default class BuyerSite extends BaseEntity {
+export default class BuyerSite extends SuperEntity {
     /** Properties */
     @Column({ name: "name" })
     name: string;
@@ -29,11 +29,11 @@ export default class BuyerSite extends BaseEntity {
     attribute4: string;
 
     /** Relations */
-    @ManyToOne(() => Buyer, buyer => buyer.buyer_sites)
+    @ManyToOne(() => Buyer, (buyer) => buyer.buyer_sites)
     @Index("buyer_id", { unique: true })
     @JoinColumn({ name: "buyer_id" })
     buyer: Buyer;
 
-    @OneToMany(() => VendorToDealerSiteToBuyerSite, vToDS => vToDS.buyerSites)
+    @OneToMany(() => VendorToDealerSiteToBuyerSite, (vToDS) => vToDS.buyerSites)
     vToDS: VendorToDealerSiteToBuyerSite;
 }

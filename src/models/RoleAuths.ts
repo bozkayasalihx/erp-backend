@@ -1,10 +1,10 @@
 import { UserTypes } from "../types/types";
 import { Column, Entity, Index } from "typeorm";
-import BaseEntity from "./BaseEntity";
+import SuperEntity from "./BaseEntity";
 
 @Entity("role_auth")
 @Index(["role_name", "route_name"], { unique: true })
-export default class RoleAuth extends BaseEntity {
+export default class RoleAuth extends SuperEntity {
     @Column({ type: "enum", enum: UserTypes, name: "role_name" })
     role_name: UserTypes;
 

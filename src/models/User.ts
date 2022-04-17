@@ -1,19 +1,18 @@
 import bcrypt from "bcryptjs";
 import {
+    BaseEntity,
     BeforeInsert,
     Column,
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
-    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
 import { UserTypes } from "../types/types";
-import UserEntityRelation from "./UserEntityRelation";
 
 @Entity("user_tbl")
-export default class User {
+export default class User extends BaseEntity {
     /** Properties */
     @PrimaryGeneratedColumn({ name: "id" })
     id: number;
@@ -55,6 +54,9 @@ export default class User {
 
     @Column({ type: "varchar", length: 20, name: "mobile" })
     mobile: string;
+
+    @Column("int", { default: 0 })
+    tokenVersion: number;
 
     /** before insert operations */
     @BeforeInsert()

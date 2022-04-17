@@ -13,15 +13,26 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
             .send("you must logged in for further operations");
     }
 
-    return jwt.verify(
-        token,
-        process.env.ACCESS_TOKEN_SECRET_KEY as string,
-        (err, user: any) => {
-            if (err)
-                return res.status(httpStatus.FORBIDDEN).send("invalid token");
-            req.user = user;
+    try {
+        const payload = jwt.verify(
+            token,
+            process.env.ACCESS_TOKEN_SECRET_KEY as string
+        );
 
-            return next();
+        if (typeof payload === "string") {
+            console.log("paylaod type is string", payload);
+            return;
         }
-    );
+
+        req.payload = {
+            userId: payload.userId,
+            tokenVersion: payload.tokenVersion,
+        };
+        return next();
+    } catch (err) {
+        console.log("err", err);
+        return res.status(httpStatus.BAD_REQUEST).json({
+            messsage: "bad request",
+        });
+    }
 }

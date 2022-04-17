@@ -46,31 +46,23 @@ export default async function testControler(req: Request, res: Response) {
     // const vendor = new Vendor()
     // vendor.name = "tuborg";
     // vendor.tax_no = "maker";
-    // vendor.
-
     const user = (await appDataSource.manager.findOne(User, {
         where: { username: "salih" },
     })) as User;
 
     const vendor = (await appDataSource.manager.findOne(Vendor, {
-        where: { name: "coca cola" },
+        where: { name: "vendor" },
     })) as Vendor;
+    const maker = new UserEntityRelation();
+    maker.description = "salih is the best";
+    maker.created_by = user.id;
+    maker.updated_by = user.id;
+    maker.users = user;
+    maker.ref_table = vendor;
 
-    // const userEntityRelation = new UserEntityRelation();
-    // userEntityRelation.description = "make me alive";
-    // userEntityRelation.user_id = user.id;
-    // userEntityRelation.ref_entity_id = vendor.id;
+    const test = await appDataSource.manager.save(maker);
 
-    // const maker = await appDataSource.manager.save(userEntityRelation);
-    // console.log("maker", maker);
-
-    const maker = await appDataSource.manager
-        .createQueryBuilder(UserEntityRelation, "eu")
-        .where("eu.user_id = :userid", { userid: user.id })
-        .getMany();
-
-    
-    console.log("user entity relations", maker);
+    console.log("test", test);
 
     return res.send("not found");
 }
