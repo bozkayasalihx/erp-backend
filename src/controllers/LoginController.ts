@@ -3,32 +3,33 @@ import httpStatus from "http-status";
 import { IBody } from "../middlewares/isLoggedIn";
 import { __prod__ } from "../scripts/dev";
 import generateToken from "../scripts/utils/generateToken";
-import { user } from "../services";
+import userOperation from "../services/user";
 
 async function loginController(req: Request<any, any, IBody>, res: Response) {
-    const email = req.body.email;
-
-    // const  roles = new RoleFunction()
-    // roles.role_name = UserTypes.BUYER
-
-    // const role = new FunctionType()
-
+    const { email, username } = req.body;
     try {
-        const findedUser = await user.login(email);
-        if (!findedUser) {
+        const user = await userOperation.login(email, username);
+        if (!user) {
             return res.status(httpStatus.NOT_FOUND).json({
                 message: "user does not exist",
             });
         }
+
+        if (req.payload.tokenVersion !== user.tokenVersion) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                message: "not authenticated",
+            });
+        }
+
         const accesTokenExpire = `${process.env.ACCESS_TOKEN_EXPIRE}`;
         const refreshTokenExpire = `${process.env.REFRESH_TOKEN_EXPIRE}`;
         const access_token = generateToken(
-            { name: findedUser.username, email: findedUser.email },
+            { userId: user.id, tokenVersion: user.tokenVersion },
             process.env.ACCESS_TOKEN_SECRET_KEY as string,
             accesTokenExpire
         );
         const refresh_token = generateToken(
-            { name: findedUser.username, email: findedUser.email },
+            { userId: user.id, tokenVersion: user.tokenVersion },
             process.env.REFRESH_TOKEN_SECRET_KEY as string,
             refreshTokenExpire
         );
@@ -39,8 +40,8 @@ async function loginController(req: Request<any, any, IBody>, res: Response) {
             maxAge: 24 * 60 * 60 * 1000,
         });
         return res.status(httpStatus.OK).json({
-            username: findedUser.username,
-            email: findedUser.email,
+            username: user.username,
+            email: user.email,
             access_token,
         });
     } catch (err) {
@@ -49,6 +50,3 @@ async function loginController(req: Request<any, any, IBody>, res: Response) {
 }
 
 export default loginController;
-function errorSlugify(details: import("joi").ValidationErrorItem[]) {
-    throw new Error("Function not implemented.");
-}
