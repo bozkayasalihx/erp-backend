@@ -1,9 +1,9 @@
-import { Column, Entity, OneToMany, RelationId } from "typeorm";
-import BaseEntity from "./BaseEntity";
+import { Column, Entity, OneToMany } from "typeorm";
+import SuperEntity from "./BaseEntity";
 import VendorToDealerSite from "./VendorToDealerSite";
 
 @Entity("vendor")
-export default class Vendor extends BaseEntity {
+export default class Vendor extends SuperEntity {
     //** Properties */
     @Column({ type: "varchar", length: 240, name: "name" })
     name: string;
@@ -29,7 +29,7 @@ export default class Vendor extends BaseEntity {
     /* Releations */
     @OneToMany(
         () => VendorToDealerSite,
-        vendorToDealerSite => vendorToDealerSite.vendor
+        (vendorToDealerSite) => vendorToDealerSite.vendor
     )
     vendorToDealerSite: Array<VendorToDealerSite>;
 }

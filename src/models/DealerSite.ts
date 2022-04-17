@@ -2,20 +2,17 @@ import {
     Column,
     Entity,
     Index,
-    JoinColumn,
-    ManyToMany,
     ManyToOne,
     OneToMany,
     RelationId,
 } from "typeorm";
-import BaseEntity from "./BaseEntity";
+import SuperEntity from "./BaseEntity";
 import Dealer from "./Dealer";
-import Vendor from "./Vendor";
 import VendorToDealerSite from "./VendorToDealerSite";
 
 @Entity("dealer_site")
 @Index(["dealer_id"], { unique: true })
-export default class DealerSite extends BaseEntity {
+export default class DealerSite extends SuperEntity {
     /** Properites*/
     @Column({ name: "name" })
     name: string;
@@ -36,7 +33,7 @@ export default class DealerSite extends BaseEntity {
     attribute5: string;
 
     /** Releations */
-    @ManyToOne(() => Dealer, dealer => dealer.dealer_sites)
+    @ManyToOne(() => Dealer, (dealer) => dealer.dealer_sites)
     dealer: Dealer;
 
     @RelationId((dealerSite: DealerSite) => dealerSite.dealer)
@@ -47,7 +44,7 @@ export default class DealerSite extends BaseEntity {
 
     @OneToMany(
         () => VendorToDealerSite,
-        vendorToDealerSite => vendorToDealerSite.dealerSite
+        (vendorToDealerSite) => vendorToDealerSite.dealerSite
     )
     vendorToDealerSites: Array<VendorToDealerSite>;
 }

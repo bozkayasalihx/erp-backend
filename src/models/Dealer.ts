@@ -1,19 +1,9 @@
-import {
-    AfterInsert,
-    Column,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    OneToMany,
-    OneToOne,
-    RelationId,
-} from "typeorm";
-import BaseEntity from "./BaseEntity";
+import { Column, Entity, OneToMany } from "typeorm";
+import SuperEntity from "./BaseEntity";
 import DealerSite from "./DealerSite";
-import User from "./User";
 
 @Entity("dealer")
-export default class Dealer extends BaseEntity {
+export default class Dealer extends SuperEntity {
     /** Properites*/
     @Column({ name: "name" })
     name: string;
@@ -34,6 +24,6 @@ export default class Dealer extends BaseEntity {
     attribute4: string;
 
     /** Releations */
-    @OneToMany(() => DealerSite, dealerSite => dealerSite.dealer)
+    @OneToMany(() => DealerSite, (dealerSite) => dealerSite.dealer)
     dealer_sites: Array<DealerSite>;
 }
