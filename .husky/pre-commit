@@ -4,5 +4,5 @@
 echo "running linting ��"
 yarn lint
 
-echo "running git-staged" 
+echo "running lint-staged" 
 npx lint-staged
