@@ -1,5 +1,5 @@
 import { Column, Entity } from "typeorm";
-import BaseInvoice from "./BaseInvocie";
+import BaseInvoice from "./BaseInvoice";
 
 @Entity("invoice_interface")
 export default class InvoiceInterface extends BaseInvoice {

@@ -1,6 +1,6 @@
 import { Column, Entity } from "typeorm";
 import { FileStatusType, LineStatusType } from "../types/types";
-import BaseInvoice from "./BaseInvocie";
+import BaseInvoice from "./BaseInvoice";
 
 @Entity("invoice_files")
 export default class InvoiceFile extends BaseInvoice {
@@ -10,5 +10,3 @@ export default class InvoiceFile extends BaseInvoice {
     @Column({ type: "enum", enum: LineStatusType })
     line_status: LineStatusType;
 }
-
-
