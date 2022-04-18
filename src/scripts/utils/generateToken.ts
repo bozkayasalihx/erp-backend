@@ -5,12 +5,17 @@ interface IGenerateToken {
     tokenVersion: number;
 }
 
-export default function generateToken(
+export function generateAccessToken(params: IGenerateToken, secretKey: string) {
+    return jwt.sign(params, secretKey, {
+        expiresIn: "10m",
+    });
+}
+
+export function generateRefreshToken(
     params: IGenerateToken,
-    secretKey: string,
-    expiresIn: string
+    secretKey: string
 ) {
     return jwt.sign(params, secretKey, {
-        expiresIn,
+        expiresIn: "1d",
     });
 }

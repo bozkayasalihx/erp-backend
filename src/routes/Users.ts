@@ -2,7 +2,7 @@ import { Router } from "express";
 import { isSetCookie } from "../middlewares/isSetCookie";
 import {
     loginController,
-    refreshController,
+    refreshTokenController,
     resetPasswordController,
 } from "../controllers";
 import registerControler from "../controllers/registerController";
@@ -38,5 +38,5 @@ userRoute
         resetPasswordController
     );
 
-userRoute.route("/refreshToken").get(isSetCookie, refreshController);
+userRoute.route("/refreshToken").get(isSetCookie, refreshTokenController);
 export default userRoute;

@@ -2,22 +2,23 @@ import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { IBody } from "../middlewares/isLoggedIn";
 import { __prod__ } from "../scripts/dev";
-import generateToken from "../scripts/utils/generateToken";
+import {
+    generateAccessToken,
+    generateRefreshToken,
+} from "../scripts/utils/generateToken";
 import userOperation from "../services/user";
 
 async function registerControler(req: Request<any, any, IBody>, res: Response) {
     try {
         const user = await userOperation.insert(req.body);
-        const access_token = generateToken(
+        const access_token = generateAccessToken(
             { userId: user.id, tokenVersion: user.tokenVersion },
-            process.env.ACCESS_TOKEN_SECRET_KEY as string,
-            `10m`
+            process.env.ACCESS_TOKEN_SECRET_KEY as string
         );
 
-        const refresh_token = generateToken(
+        const refresh_token = generateRefreshToken(
             { userId: user.id, tokenVersion: user.tokenVersion },
-            process.env.REFRESH_TOKEN_SECRET_KEY as string,
-            `1d`
+            process.env.REFRESH_TOKEN_SECRET_KEY as string
         );
 
         res.cookie("qid", refresh_token, {
