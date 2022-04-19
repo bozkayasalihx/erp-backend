@@ -3,7 +3,7 @@ import {
     Column,
     CreateDateColumn,
     JoinColumn,
-    OneToOne,
+    ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
@@ -26,11 +26,11 @@ export default abstract class SuperEntity extends BaseEntity {
     @Column({ default: null, name: "end_date" })
     end_date: Date;
 
-    @OneToOne(() => User)
+    @ManyToOne(() => User)
     @JoinColumn({ name: "created_by" })
     created_by: number;
 
-    @OneToOne(() => User)
+    @ManyToOne(() => User)
     @JoinColumn({ name: "updated_by" })
     updated_by: number;
 }

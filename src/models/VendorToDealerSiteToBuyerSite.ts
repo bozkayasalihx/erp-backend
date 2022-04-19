@@ -2,7 +2,6 @@ import { Column, Entity, Index, ManyToOne, RelationId } from "typeorm";
 import SuperEntity from "./BaseEntity";
 import BuyerSite from "./BuyerSite";
 import VendorToDealerSite from "./VendorToDealerSite";
-
 @Entity("vdsbs_relations")
 @Index(["vds_rltn_id", "buyer_site_id"], { unique: true })
 export default class VendorToDealerSiteToBuyerSite extends SuperEntity {
@@ -15,10 +14,10 @@ export default class VendorToDealerSiteToBuyerSite extends SuperEntity {
     })
     description: string;
 
-    @ManyToOne(() => BuyerSite, buyerSite => buyerSite.vToDS)
+    @ManyToOne(() => BuyerSite, (buyerSite) => buyerSite.vToDS)
     buyerSites: Array<BuyerSite>;
 
-    @ManyToOne(() => VendorToDealerSite, vToDS => vToDS.vToDsBs)
+    @ManyToOne(() => VendorToDealerSite, (vToDS) => vToDS.vToDsBs)
     vToDS: Array<VendorToDealerSite>;
 
     /** referanss */
