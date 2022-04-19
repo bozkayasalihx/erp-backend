@@ -49,3 +49,12 @@ export enum LineStatusType {
     ERROR = "E",
     SUCCESS = "S",
 }
+export enum InvoiceStatusType {
+    NEW = "A",
+    PENDING_APPROVAL = "B",
+    APPROVED = "C",
+    REJECTED = "D",
+    CANCELLED = "E",
+    PARTIALLY_PAID = "F",
+    TOTALLY_PAID = "G",
+}

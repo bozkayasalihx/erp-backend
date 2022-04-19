@@ -5,4 +5,4 @@ echo "running linting ��"
 yarn lint
 
 echo "running lint-staged" 
-# npx lint-staged 
+npx lint-staged 

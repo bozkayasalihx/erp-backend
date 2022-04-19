@@ -4,8 +4,6 @@ import SnakeNamingStrategy from "../configs/typeormNamingStrategy";
 
 const entityDir = path.join(__dirname, "../../dist/models/*.js");
 const subsDir = path.join(__dirname, "../../dist/subscribers/*.js");
-const entityDir2 = path.join(__dirname, "../models/*.ts");
-const subsDir2 = path.join(__dirname, "../subscribers/*.ts");
 
 export const appDataSource = new DataSource({
     type: "postgres",
@@ -16,8 +14,8 @@ export const appDataSource = new DataSource({
     password: process.env.DB_PASSWORD,
     namingStrategy: new SnakeNamingStrategy(),
     synchronize: true,
-    entities: [entityDir, entityDir2],
-    subscribers: [subsDir, subsDir2],
+    entities: [entityDir],
+    subscribers: [subsDir],
     logger: "advanced-console",
 });
 
