@@ -9,7 +9,7 @@ export const appDataSource = new DataSource({
     type: "postgres",
     database: process.env.DB_NAME,
     host: process.env.HOST,
-    port: +(process.env.DB_PORT as string),
+    port: process.env.DB_PORT,
     username: process.env.DB_USER as string,
     password: process.env.DB_PASSWORD,
     namingStrategy: new SnakeNamingStrategy(),

@@ -1,8 +1,8 @@
 import { readFile, writeFile } from "fs/promises";
 import { glob } from "glob";
+import { join, resolve } from "node:path";
 import { EventEmitter } from "node:stream";
 import { promisify } from "node:util";
-import { join, resolve } from "path";
 
 type OnNames = "data" | "drain";
 
