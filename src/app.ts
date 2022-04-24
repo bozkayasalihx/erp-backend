@@ -7,7 +7,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
 import "reflect-metadata";
-import { event } from "./configs";
+import { eventHandler } from "./configs";
 import { connectDb } from "./loaders/database";
 import {
     fileUpload as fileUploadRoute,
@@ -19,7 +19,7 @@ import { __prod__ } from "./scripts/dev";
 
 const main = async () => {
     await connectDb();
-    event();
+    eventHandler();
     const app = express();
 
     app.use(express.json());

@@ -1,8 +1,8 @@
 import nodemailer from "nodemailer";
-import eventEmitter from "../scripts/eventEmitter";
+import eventemitter from "../scripts/eventEmitter";
 
-export const event = () =>
-    eventEmitter.on("send_email", async ({ toEmail, subject, html }) => {
+export const eventHandler = () =>
+    eventemitter.on("send_email", async ({ toEmail, subject, html }) => {
         const transporter = nodemailer.createTransport({
             host: process.env.EMAIL_HOST,
             port: process.env.EMAIL_PORT,
