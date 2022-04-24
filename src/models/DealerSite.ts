@@ -6,8 +6,8 @@ import {
     OneToMany,
     RelationId,
 } from "typeorm";
-import SuperEntity from "./BaseEntity";
 import Dealer from "./Dealer";
+import SuperEntity from "./SuperEntity";
 import VendorToDealerSite from "./VendorToDealerSite";
 
 @Entity("dealer_site")
