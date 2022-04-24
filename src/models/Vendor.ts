@@ -1,35 +1,40 @@
-import { Column, Entity, OneToMany } from "typeorm";
-import SuperEntity from "./BaseEntity";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import SuperEntity from "./SuperEntity";
+import VendorRegion from "./VendorRegion";
 import VendorToDealerSite from "./VendorToDealerSite";
 
 @Entity("vendor")
 export default class Vendor extends SuperEntity {
     //** Properties */
     @Column({ type: "varchar", length: 240, name: "name" })
-    name: string;
+    public name: string;
 
     @Column({ type: "varchar", length: 20, name: "tax_no" })
-    tax_no: string;
+    public tax_no: string;
 
     @Column({ nullable: true, name: "attribute" })
-    attribute: string;
+    public attribute: string;
 
     @Column({ nullable: true, name: "attribute2" })
-    attribute2: string;
+    public attribute2: string;
 
     @Column({ nullable: true, name: "attribute3" })
-    attribute3: string;
+    public attribute3: string;
 
     @Column({ nullable: true, name: "attribute4" })
-    attribute4: string;
+    public attribute4: string;
 
     @Column({ nullable: true, name: "attribute5" })
-    attribute5: string;
+    public attribute5: string;
 
     /* Releations */
     @OneToMany(
         () => VendorToDealerSite,
         (vendorToDealerSite) => vendorToDealerSite.vendor
     )
-    vendorToDealerSite: Array<VendorToDealerSite>;
+    public vendorToDealerSite: Array<VendorToDealerSite>;
+
+    @ManyToOne(() => VendorRegion, (vendorRegion) => vendorRegion.vendors)
+    @JoinColumn({ name: "vendor_region_id" })
+    public vendor_region: VendorRegion;
 }

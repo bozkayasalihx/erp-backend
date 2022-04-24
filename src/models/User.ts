@@ -4,7 +4,6 @@ import {
     BeforeInsert,
     Column,
     CreateDateColumn,
-    DeleteDateColumn,
     Entity,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
@@ -15,31 +14,28 @@ import { UserTypes } from "../types/types";
 export default class User extends BaseEntity {
     /** Properties */
     @PrimaryGeneratedColumn({ name: "id" })
-    id: number;
+    public id: number;
 
-    @UpdateDateColumn({ name: "udpated_at" })
-    updated_at: Date;
+    @UpdateDateColumn({ name: "updated_at" })
+    public updated_at: Date;
 
     @CreateDateColumn({ name: "created_at" })
-    created_at: Date;
-
-    @DeleteDateColumn({ name: "deleted_at" })
-    deleted_at: Date;
+    public created_at: Date;
 
     @Column({ default: null, name: "start_date" })
-    start_date: Date;
+    public start_date: Date;
 
     @Column({ default: null, name: "end_date" })
-    end_date: Date;
+    public end_date: Date;
 
     @Column({ unique: true, nullable: true, name: "username" })
-    username: string;
+    public username: string;
 
     @Column({ unique: true, nullable: false, name: "email" })
-    email: string;
+    public email: string;
 
     @Column({ nullable: false, name: "password" })
-    password: string;
+    public password: string;
 
     @Column({
         type: "enum",
@@ -47,20 +43,20 @@ export default class User extends BaseEntity {
         default: UserTypes.VENDOR_ADMIN,
         name: "user_type",
     })
-    user_type: UserTypes;
+    public user_type: UserTypes;
 
     @Column({ type: "bigint", name: "tckn" })
-    tckn: BigInt;
+    public tckn: BigInt;
 
     @Column({ type: "varchar", length: 20, name: "mobile" })
-    mobile: string;
+    public mobile: string;
 
     @Column("int", { default: 0 })
-    tokenVersion: number;
+    public tokenVersion: number;
 
     /** before insert operations */
     @BeforeInsert()
     private async beforeInsert() {
-        this.password = await bcrypt.hash(this.password, +process.env.SALT!);
+        this.password = await bcrypt.hash(this.password, +process.env.SALT);
     }
 }

@@ -1,20 +1,30 @@
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import SuperEntity from "./BaseEntity";
+import BuyerSite from "./BuyerSite";
+import DealerSite from "./DealerSite";
+import SuperEntity from "./SuperEntity";
 import User from "./User";
 import Vendor from "./Vendor";
 
-@Entity("user_entity_relation")
+@Entity("user_entity_relations")
 export default class UserEntityRelation extends SuperEntity {
     @Column({ type: "varchar", length: 240, name: "description" })
-    description: string;
+    public description: string;
 
     @ManyToOne(() => User)
     @JoinColumn({ name: "user_id" })
-    users: User;
+    public user: User;
 
     @ManyToOne(() => Vendor)
-    @JoinColumn({ name: "ref_table_id" })
-    ref_table: Vendor;
+    @JoinColumn({ name: "vendor_table_id" })
+    public vendor_ref_table: Vendor;
+
+    @ManyToOne(() => BuyerSite)
+    @JoinColumn({ name: "buyer_site_ref_id" })
+    public buyer_site_ref_table: BuyerSite;
+
+    @ManyToOne(() => DealerSite)
+    @JoinColumn({ name: "dealer_site_ref_id" })
+    public dealer_site_ref_table: DealerSite;
 }
 
 // vendor => vendor.id
