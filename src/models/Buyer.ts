@@ -1,29 +1,29 @@
 import { Column, Entity, OneToMany } from "typeorm";
-import SuperEntity from "./BaseEntity";
 import BuyerSite from "./BuyerSite";
+import SuperEntity from "./SuperEntity";
 
 @Entity("buyer")
 export default class Buyer extends SuperEntity {
     /** Properties */
     @Column({ type: "varchar", length: 240, name: "name" })
-    name: string;
+    public name: string;
 
     @Column({ type: "varchar", length: 20, name: "tax_no" })
-    tax_no: string;
+    public tax_no: string;
 
     @Column({ default: null, name: "attribute" })
-    attribute: string;
+    public attribute: string;
 
     @Column({ default: null, name: "attribute2" })
-    attribute2: string;
+    public attribute2: string;
 
     @Column({ default: null, name: "attribute3" })
-    attribute3: string;
+    public attribute3: string;
 
     @Column({ default: null, name: "attribute4" })
-    attribute4: string;
+    public attribute4: string;
 
     /** Relations */
     @OneToMany(() => BuyerSite, (buyerSite) => buyerSite.buyer)
-    buyer_sites: Array<BuyerSite>;
+    public buyer_sites: Array<BuyerSite>;
 }

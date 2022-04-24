@@ -6,34 +6,34 @@ import {
     ManyToOne,
     OneToMany,
 } from "typeorm";
-import SuperEntity from "./BaseEntity";
 import Buyer from "./Buyer";
+import SuperEntity from "./SuperEntity";
 import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
 @Entity("buyer_site")
 export default class BuyerSite extends SuperEntity {
     /** Properties */
     @Column({ name: "name" })
-    name: string;
+    public name: string;
 
     @Column({ default: null, name: "attribute" })
-    attribute: string;
+    public attribute: string;
 
     @Column({ default: null, name: "attribute2" })
-    attribute2: string;
+    public attribute2: string;
 
     @Column({ default: null, name: "attribute3" })
-    attribute3: string;
+    public attribute3: string;
 
     @Column({ default: null, name: "attribute4" })
-    attribute4: string;
+    public attribute4: string;
 
     /** Relations */
     @ManyToOne(() => Buyer, (buyer) => buyer.buyer_sites)
     @Index("buyer_id", { unique: true })
     @JoinColumn({ name: "buyer_id" })
-    buyer: Buyer;
+    public buyer: Buyer;
 
     @OneToMany(() => VendorToDealerSiteToBuyerSite, (vToDS) => vToDS.buyerSites)
-    vToDS: VendorToDealerSiteToBuyerSite;
+    public vToDS: VendorToDealerSiteToBuyerSite;
 }
