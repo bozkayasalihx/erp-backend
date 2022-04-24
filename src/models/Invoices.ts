@@ -1,45 +1,55 @@
-import { Column, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { InvoiceStatusType } from "../types/types";
-import SuperEntity from "./BaseEntity";
+import InvoiceLine from "./InvoiceLine";
+import PaymentSchedule from "./PaymentSchedule";
+import SuperEntity from "./SuperEntity";
 import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
+@Entity("invoices")
 export default class Invoices extends SuperEntity {
     /**Properties */
     @Column({ type: "varchar", length: 30 })
-    invoice_no: string;
+    public invoice_no: string;
 
     @Column({ type: "timestamp" })
-    invoice_date: Date;
+    public invoice_date: Date;
 
     @Column({ type: "real" })
-    invoice_amount: number;
+    public invoice_amount: number;
 
     @Column({ type: "varchar", length: 3 })
-    currency: string;
+    public currency: string;
 
     @Column({ type: "enum", enum: InvoiceStatusType })
-    status: InvoiceStatusType;
+    public status: InvoiceStatusType;
 
     @Column({ type: "int" })
-    ref_file_id: number;
+    public ref_file_id: number;
 
     @Column({ type: "varchar", length: 150 })
-    attribute: string;
+    public attribute: string;
 
     @Column({ type: "varchar", length: 150 })
-    attribute2: string;
+    public attribute2: string;
 
     @Column({ type: "varchar", length: 150 })
-    attribute3: string;
+    public attribute3: string;
 
     @Column({ type: "varchar", length: 150 })
-    attribute4: string;
+    public attribute4: string;
 
     @Column({ type: "varchar", length: 150 })
-    attribute5: string;
+    public attribute5: string;
 
     /** RElations */
 
-    @ManyToOne(() => VendorToDealerSiteToBuyerSite)
-    vdsbs: VendorToDealerSiteToBuyerSite;
+    @ManyToOne(() => VendorToDealerSiteToBuyerSite, (vdsbs) => vdsbs.invoices)
+    @JoinColumn({ name: "vdsbs_id" })
+    public vdsbs: VendorToDealerSiteToBuyerSite;
+
+    @OneToMany(() => PaymentSchedule, (ps) => ps.invoices)
+    public payment_schedules: Array<PaymentSchedule>;
+
+    @OneToMany(() => InvoiceLine, (invoicesLine) => invoicesLine.invoice)
+    public invoices_lines: Array<InvoiceLine>;
 }
