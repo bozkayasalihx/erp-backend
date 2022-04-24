@@ -1,6 +1,6 @@
-import { UserTypes } from "../types/types";
 import { Column, Entity, Index } from "typeorm";
-import SuperEntity from "./BaseEntity";
+import { UserTypes } from "../types/types";
+import SuperEntity from "./SuperEntity";
 
 @Entity("role_auth")
 @Index(["role_name", "route_name"], { unique: true })
