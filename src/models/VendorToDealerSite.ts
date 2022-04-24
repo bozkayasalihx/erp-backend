@@ -6,8 +6,8 @@ import {
     OneToMany,
     RelationId,
 } from "typeorm";
-import SuperEntity from "./BaseEntity";
 import DealerSite from "./DealerSite";
+import SuperEntity from "./SuperEntity";
 import Vendor from "./Vendor";
 import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
@@ -20,25 +20,25 @@ export default class VendorToDealerSite extends SuperEntity {
         default: null,
         name: "description",
     })
-    description: string;
+    public description: string;
 
     /** Relations */
-    @ManyToOne(() => Vendor, vendor => vendor.vendorToDealerSite)
-    vendor: Vendor;
+    @ManyToOne(() => Vendor, (vendor) => vendor.vendorToDealerSite)
+    public vendor: Vendor;
 
-    @ManyToOne(() => DealerSite, dealerSite => dealerSite.vendorToDealerSites)
-    dealerSite: DealerSite;
+    @ManyToOne(() => DealerSite, (dealerSite) => dealerSite.vendorToDealerSites)
+    public dealerSite: DealerSite;
 
-    @OneToMany(() => VendorToDealerSiteToBuyerSite, vToDsBs => vToDsBs.vToDS)
-    vToDsBs: VendorToDealerSiteToBuyerSite;
+    @OneToMany(() => VendorToDealerSiteToBuyerSite, (vToDsBs) => vToDsBs.vToDS)
+    public vToDsBs: VendorToDealerSiteToBuyerSite;
 
     /** Referans */
 
     @RelationId((vToDS: VendorToDealerSite) => vToDS.vendor)
     @Column({ name: "vendor_id" })
-    vendor_id: number;
+    public vendor_id: number;
 
     @RelationId((vToDS: VendorToDealerSite) => vToDS.dealerSite)
     @Column({ name: "dealer_site_id" })
-    dealer_site_id: number;
+    public dealer_site_id: number;
 }

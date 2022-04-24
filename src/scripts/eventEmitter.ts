@@ -18,4 +18,5 @@ class EmitterClass extends EventEmitter {
     }
 }
 
-export default new EmitterClass();
+const eventclass = new EmitterClass();
+export default eventclass;
