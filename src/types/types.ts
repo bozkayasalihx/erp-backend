@@ -58,3 +58,41 @@ export enum InvoiceStatusType {
     PARTIALLY_PAID = "F",
     TOTALLY_PAID = "G",
 }
+
+export enum PaymentStatusType {
+    NO_PAYMENT = "N",
+    PARTIALLY_PAID = "P",
+    FULLY_PAID = "C",
+}
+export enum PaymentType {
+    DEPOSIT = "D",
+    ADVANCE = "A",
+    VINOV = "V",
+    CREDIT_CARD = "CC",
+    CASH = "C",
+    KMH = "K",
+}
+export enum Currency {
+    USD = "usd",
+    EUR = "eur",
+    TRY = "try",
+}
+export enum DepositStatusType {
+    ENTERED = "E",
+    PENDING_APPROVAL = "P",
+    APPROVED = "A",
+    REJECTED = "R",
+}
+
+export enum AdvanceType {
+    CASH = "C",
+    CREDIT_CARD = "CC",
+    VINOV = "V",
+}
+
+export enum AdvanceStatusType {
+    ENTERED = "E",
+    PENDING_APPROVAL = "P",
+    APPROVED = "A",
+    REJECTED = "R",
+}
