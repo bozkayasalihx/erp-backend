@@ -45,6 +45,20 @@ class ValidationSchema {
             email: Joi.string().required().email(),
         });
     }
+
+    public vendorValidation() {
+        return Joi.object({
+            name: Joi.string().required().min(3),
+            tax_no: Joi.number().required().min(3),
+            vendor_region_id: Joi.number().required(),
+        });
+    }
+
+    public vendorRegionValidation() {
+        return Joi.object({
+            name: Joi.string().required().min(2),
+        });
+    }
 }
 
 export default new ValidationSchema();

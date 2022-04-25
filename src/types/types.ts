@@ -25,12 +25,6 @@ export const allModels = {
     ...models,
 };
 
-export enum Routes {
-    REGISTER = "/register",
-    LOGIN = "/login",
-    ME = "/me",
-}
-
 export enum FileStatusType {
     NEW = "N",
     VALIDATED = "V",
