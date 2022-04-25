@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import jwt from "jsonwebtoken";
+import { __prod__ } from "../scripts/dev";
 
 export function authenticate(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers["authorization"];
+    if (!__prod__) return next();
 
     const token = authHeader && authHeader.replace("Bearer ", "");
 
