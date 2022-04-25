@@ -12,8 +12,8 @@ export default class Vendor extends SuperEntity {
     @Column({ type: "varchar", length: 20, name: "tax_no" })
     public tax_no: string;
 
-    @Column({ nullable: true, name: "attribute" })
-    public attribute: string;
+    @Column({ nullable: true, name: "attribute1" })
+    public attribute1: string;
 
     @Column({ nullable: true, name: "attribute2" })
     public attribute2: string;

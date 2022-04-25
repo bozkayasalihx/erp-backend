@@ -16,8 +16,8 @@ export default class BuyerSite extends SuperEntity {
     @Column({ name: "name" })
     public name: string;
 
-    @Column({ default: null, name: "attribute" })
-    public attribute: string;
+    @Column({ default: null, name: "attribute1" })
+    public attribute1: string;
 
     @Column({ default: null, name: "attribute2" })
     public attribute2: string;
@@ -27,6 +27,9 @@ export default class BuyerSite extends SuperEntity {
 
     @Column({ default: null, name: "attribute4" })
     public attribute4: string;
+
+    @Column({ default: null, name: "attribute5" })
+    public attribute5: string;
 
     /** Relations */
     @ManyToOne(() => Buyer, (buyer) => buyer.buyer_sites)

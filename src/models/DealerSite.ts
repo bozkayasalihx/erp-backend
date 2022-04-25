@@ -17,8 +17,8 @@ export default class DealerSite extends SuperEntity {
     @Column({ name: "name" })
     name: string;
 
-    @Column({ default: null, name: "attribute" })
-    attribute: string;
+    @Column({ default: null, name: "attribute1" })
+    attribute1: string;
 
     @Column({ default: null, name: "attribute2" })
     attribute2: string;

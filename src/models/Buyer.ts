@@ -11,8 +11,8 @@ export default class Buyer extends SuperEntity {
     @Column({ type: "varchar", length: 20, name: "tax_no" })
     public tax_no: string;
 
-    @Column({ default: null, name: "attribute" })
-    public attribute: string;
+    @Column({ default: null, name: "attribute1" })
+    public attribute1: string;
 
     @Column({ default: null, name: "attribute2" })
     public attribute2: string;
@@ -22,6 +22,9 @@ export default class Buyer extends SuperEntity {
 
     @Column({ default: null, name: "attribute4" })
     public attribute4: string;
+
+    @Column({ default: null, name: "attribute5" })
+    public attribute5: string;
 
     /** Relations */
     @OneToMany(() => BuyerSite, (buyerSite) => buyerSite.buyer)

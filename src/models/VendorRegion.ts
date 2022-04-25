@@ -9,8 +9,8 @@ export default class VendorRegion extends SuperEntity {
     @Column({ type: "varchar", length: 240, name: "name" })
     public name: string;
 
-    @Column({ nullable: true, name: "attribute" })
-    public attribute: string;
+    @Column({ nullable: true, name: "attribute1" })
+    public attribute1: string;
 
     @Column({ nullable: true, name: "attribute2" })
     public attribute2: string;

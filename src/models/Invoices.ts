@@ -27,7 +27,7 @@ export default class Invoices extends SuperEntity {
     public ref_file_id: number;
 
     @Column({ type: "varchar", length: 150 })
-    public attribute: string;
+    public attribute1: string;
 
     @Column({ type: "varchar", length: 150 })
     public attribute2: string;
