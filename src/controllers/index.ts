@@ -1,7 +1,9 @@
-export { default as loginController } from "./loginController";
-export { default as logoutController } from "./logoutController";
-export { default as meController } from "./meController";
-export { default as refreshTokenController } from "./refreshTokenController";
-export { default as resetPasswordController } from "./resetPasswordController";
 export { default as testControler } from "./test/testController";
 export { default as fileUploadController } from "./upload/fileUploadController";
+export { default as loginController } from "./user/LoginController";
+export { default as logoutController } from "./user/logoutController";
+export { default as meController } from "./user/meController";
+export { default as refreshTokenController } from "./user/refreshTokenController";
+export { default as resetPasswordController } from "./user/resetPasswordController";
+export { default as createVendor } from "./vendor/createVendor";
+export { default as createVendorRegion } from "./vendor/createVendorRegion";

@@ -9,11 +9,13 @@ import path from "path";
 import "reflect-metadata";
 import { eventHandler } from "./configs";
 import { connectDb } from "./loaders/database";
+import { authenticate } from "./middlewares/authenticate";
 import {
     fileUpload as fileUploadRoute,
     meRoute,
     testRoute,
     userRoute,
+    vendorRoute,
 } from "./routes";
 import { __prod__ } from "./scripts/dev";
 
@@ -36,21 +38,26 @@ const main = async () => {
     app.use(morgan("dev"));
 
     app.use("/static", express.static(path.join(__dirname, "../src/public")));
+
+    app.use("/api", userRoute);
+    //after thsi middeleware all route protected;
+    app.use(authenticate);
+    /** routes */
     app.use(
+        "/file-upload",
         fileUpload({
             limits: {
-                fileSize: 10 * 1024 * 1024, // 1omb
+                fileSize: 10 * 1024 * 1024, // 10mb
             },
             useTempFiles: true,
             tempFileDir: "/temp/",
             debug: !__prod__,
         })
     );
-
-    app.use("/api", userRoute);
     app.use("/api", meRoute);
     app.use("/api", testRoute);
     app.use("/api", fileUploadRoute);
+    app.use("/api/vendor", vendorRoute);
 
     app.listen(process.env.PORT, () => {
         console.log("server started at port: " + process.env.PORT);
