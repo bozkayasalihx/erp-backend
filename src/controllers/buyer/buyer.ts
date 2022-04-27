@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
+import { __prod__ } from "../../scripts/dev";
 import { buyerOperation } from "../../services";
 
 export interface IBuyerParams {
@@ -35,7 +36,7 @@ export default async function buyer(
             message: "already exists",
         });
     } catch (err) {
-        console.log("err", err);
+        !__prod__ && console.log("err", err);
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             message: "an error accured try again later",
         });
