@@ -8,4 +8,8 @@ export enum Routes {
     FILE_UPLOAD = "/file-upload",
     CREATE_VENDOR = "/create-vendor",
     CREATE_VENDOR_REGION = "/create-vendor-region",
+    CREATE_BUYER = "/create-buyer",
+    CREATE_BUYER_SITE = "/create-buyersite",
+    CREATE_DEALER = "/create-dealer",
+    CREATE_DEALER_SITE = "/create-dealersite",
 }

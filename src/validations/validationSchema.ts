@@ -49,14 +49,42 @@ class ValidationSchema {
     public vendorValidation() {
         return Joi.object({
             name: Joi.string().required().min(3),
-            tax_no: Joi.number().required().min(3),
-            vendor_region_id: Joi.number().required(),
+            tax_no: Joi.string().required().min(3),
+            vendor_region_id: Joi.string().required(),
         });
     }
 
     public vendorRegionValidation() {
         return Joi.object({
             name: Joi.string().required().min(2),
+        });
+    }
+
+    public buyerValidation() {
+        return Joi.object({
+            name: Joi.string().required().min(3),
+            tax_no: Joi.number().required().min(3),
+        });
+    }
+
+    public buyerSiteValidation() {
+        return Joi.object({
+            name: Joi.string().required().min(3),
+            buyer_id: Joi.number().required(),
+        });
+    }
+
+    public dealerValidation() {
+        return Joi.object({
+            name: Joi.string().required().min(3),
+            tax_no: Joi.number().required().min(3),
+        });
+    }
+
+    public dealerSiteValidation() {
+        return Joi.object({
+            name: Joi.string().required().min(3),
+            dealer_id: Joi.number().required(),
         });
     }
 }
