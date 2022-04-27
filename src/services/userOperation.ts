@@ -1,9 +1,15 @@
+import { DataSource } from "typeorm";
 import { appDataSource } from "../loaders";
 import { User } from "../models";
 
 class UserOperation {
+    private source: DataSource;
+
+    constructor() {
+        this.source = appDataSource;
+    }
     get userRepo() {
-        return appDataSource.getRepository(User);
+        return this.source.getRepository(User);
     }
     public async insert(user: Partial<User>) {
         const newUser = this.userRepo.create(user);
@@ -23,5 +29,4 @@ class UserOperation {
     }
 }
 
-const userOperation = new UserOperation();
-export default userOperation;
+export default new UserOperation();

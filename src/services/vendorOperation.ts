@@ -2,12 +2,13 @@ import { appDataSource } from "../loaders";
 import { Vendor, VendorRegion } from "../models";
 
 class VendorOperation {
+    private source = appDataSource;
     public get vendorRepo() {
-        return appDataSource.getRepository(Vendor);
+        return this.source.getRepository(Vendor);
     }
 
     public get vendorRegionRepo() {
-        return appDataSource.getRepository(VendorRegion);
+        return this.source.getRepository(VendorRegion);
     }
 
     public createVendorRegion(params: Partial<VendorRegion>) {
