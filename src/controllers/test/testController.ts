@@ -59,8 +59,8 @@ export default async function testControler(req: Request, res: Response) {
     })) as BuyerSite;
 
     const ue = new UserEntityRelation();
-    ue.created_by = user.id;
-    ue.updated_by = user.id;
+    ue.created_by = user;
+    ue.updated_by = user;
     ue.buyer_site_ref_table = buyerSite;
     ue.description = "vendor";
     ue.user = user;

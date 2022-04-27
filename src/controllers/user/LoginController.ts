@@ -18,12 +18,6 @@ async function loginController(req: Request<any, any, IBody>, res: Response) {
             });
         }
 
-        if (req.payload.tokenVersion !== user.tokenVersion) {
-            return res.status(httpStatus.BAD_REQUEST).json({
-                message: "not authenticated",
-            });
-        }
-
         const access_token = generateAccessToken(
             { userId: user.id, tokenVersion: user.tokenVersion },
             process.env.ACCESS_TOKEN_SECRET_KEY as string
@@ -44,6 +38,7 @@ async function loginController(req: Request<any, any, IBody>, res: Response) {
             access_token,
         });
     } catch (err) {
+        console.log("err", err);
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
     }
 }
