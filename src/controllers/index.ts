@@ -1,3 +1,7 @@
+export { default as buyerControler } from "./buyer/buyer";
+export { default as buyerSiteController } from "./buyer/buyerSite";
+export { default as dealerController } from "./dealer/dealer";
+export { default as dealerSiteController } from "./dealer/dealerSite";
 export { default as testControler } from "./test/testController";
 export { default as fileUploadController } from "./upload/fileUploadController";
 export { default as loginController } from "./user/LoginController";
@@ -5,5 +9,5 @@ export { default as logoutController } from "./user/logoutController";
 export { default as meController } from "./user/meController";
 export { default as refreshTokenController } from "./user/refreshTokenController";
 export { default as resetPasswordController } from "./user/resetPasswordController";
-export { default as createVendor } from "./vendor/createVendor";
-export { default as createVendorRegion } from "./vendor/createVendorRegion";
+export { default as createVendorController } from "./vendor/createVendor";
+export { default as createVendorRegionController } from "./vendor/createVendorRegion";

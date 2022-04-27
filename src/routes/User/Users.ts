@@ -11,9 +11,7 @@ import { Routes } from "../../types/routePath";
 import validationSchema, {
     ILogin,
     IRegister,
-} from "../../validations/validate";
-
-// FIXME: validation and validation middlewares;
+} from "../../validations/validationSchema";
 
 const userRoute = Router();
 
