@@ -1,13 +1,12 @@
-import { DataSource } from "typeorm";
 import { appDataSource } from "../loaders";
 import { Buyer, BuyerSite } from "../models";
 
 class UserOperation {
-    private source: DataSource;
-    constructor() {
-        this.source = appDataSource;
+    private get source() {
+        return appDataSource;
     }
-    get buyerRepo() {
+
+    public get buyerRepo() {
         return this.source.getRepository(Buyer);
     }
 

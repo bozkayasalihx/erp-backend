@@ -10,12 +10,16 @@ const router = Router();
 
 router.post(
     Routes.CREATE_BUYER,
-    new Validate<IBuyerParams>().validate(validationSchema.buyerValidation()),
+    new Validate<IBuyerParams>().validate(
+        validationSchema.createBuyerValidation()
+    ),
     buyerControler
 );
 router.post(
     Routes.CREATE_VENDOR_REGION,
-    new Validate<IBuyerSite>().validate(validationSchema.buyerSiteValidation()),
+    new Validate<IBuyerSite>().validate(
+        validationSchema.createBuyerSiteValidation()
+    ),
     buyerSiteController
 );
 

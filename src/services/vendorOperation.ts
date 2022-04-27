@@ -2,7 +2,9 @@ import { appDataSource } from "../loaders";
 import { Vendor, VendorRegion } from "../models";
 
 class VendorOperation {
-    private source = appDataSource;
+    private get source() {
+        return appDataSource;
+    }
     public get vendorRepo() {
         return this.source.getRepository(Vendor);
     }

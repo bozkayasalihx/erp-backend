@@ -1,13 +1,11 @@
-import { DataSource } from "typeorm";
 import { appDataSource } from "../loaders";
 import { User } from "../models";
 
 class UserOperation {
-    private source: DataSource;
-
-    constructor() {
-        this.source = appDataSource;
+    private get source() {
+        return appDataSource;
     }
+
     get userRepo() {
         return this.source.getRepository(User);
     }

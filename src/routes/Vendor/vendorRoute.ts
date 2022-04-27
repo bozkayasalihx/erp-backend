@@ -12,13 +12,15 @@ const router = Router();
 
 router.post(
     Routes.CREATE_VENDOR,
-    new Validate<VendorBody>().validate(validationSchema.vendorValidation()),
+    new Validate<VendorBody>().validate(
+        validationSchema.createVendorValidation()
+    ),
     createVendorController
 );
 router.post(
     Routes.CREATE_VENDOR_REGION,
     new Validate<{ name: string }>().validate(
-        validationSchema.vendorRegionValidation()
+        validationSchema.createVendorRegionValidation()
     ),
     createVendorRegionController
 );
