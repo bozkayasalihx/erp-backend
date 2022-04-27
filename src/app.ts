@@ -11,6 +11,8 @@ import { eventHandler } from "./configs";
 import { connectDb } from "./loaders/database";
 import { authenticate } from "./middlewares/authenticate";
 import {
+    buyerRoute,
+    dealerRoute,
     fileUpload as fileUploadRoute,
     meRoute,
     testRoute,
@@ -58,6 +60,13 @@ const main = async () => {
     app.use("/api", testRoute);
     app.use("/api", fileUploadRoute);
     app.use("/api/vendor", vendorRoute);
+    app.use("/api/buyer", buyerRoute);
+    app.use("/api/dealer", dealerRoute);
+
+    // not found route;
+    app.use("*", (_, res) => {
+        return res.send("<h1>NOT FOUND</h1>");
+    });
 
     app.listen(process.env.PORT, () => {
         console.log("server started at port: " + process.env.PORT);
