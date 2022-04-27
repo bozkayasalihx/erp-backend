@@ -13,7 +13,7 @@ import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 @Entity("buyer_site")
 export default class BuyerSite extends SuperEntity {
     /** Properties */
-    @Column({ name: "name" })
+    @Column({ name: "name", unique: true })
     public name: string;
 
     @Column({ default: null, name: "attribute1" })
