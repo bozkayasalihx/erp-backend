@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { __prod__ } from "../scripts/dev";
 import { UserTypes } from "../types/types";
 
 const allowedTypes = ["VA", "V", "B", "BA", "D", "DA"];
@@ -46,45 +47,115 @@ class ValidationSchema {
         });
     }
 
-    public vendorValidation() {
+    public createVendorValidation() {
         return Joi.object({
             name: Joi.string().required().min(3),
             tax_no: Joi.string().required().min(3),
             vendor_region_id: Joi.string().required(),
+            created_by: __prod__ && Joi.number().required(),
+            updated_by: __prod__ && Joi.number().required(),
         });
     }
 
-    public vendorRegionValidation() {
+    public updateVendorValidation() {
+        return Joi.object({
+            id: Joi.number().required(),
+            name: Joi.string().optional().min(3),
+            tax_no: Joi.string().optional().min(3),
+            vendor_region_id: Joi.string().optional(),
+            created_by: __prod__ && Joi.number().required(),
+            updated_by: __prod__ && Joi.number().required(),
+        });
+    }
+
+    public createVendorRegionValidation() {
         return Joi.object({
             name: Joi.string().required().min(2),
+            created_by: __prod__ && Joi.number().required(),
+            updated_by: __prod__ && Joi.number().required(),
         });
     }
 
-    public buyerValidation() {
+    public updateVendorRegionValidation() {
+        return Joi.object({
+            id: Joi.number().required(),
+            name: Joi.string().optional().min(2),
+            created_by: __prod__ && Joi.number().required(),
+            updated_by: __prod__ && Joi.number().required(),
+        });
+    }
+
+    public createBuyerValidation() {
         return Joi.object({
             name: Joi.string().required().min(3),
             tax_no: Joi.number().required().min(3),
+            created_by: __prod__ && Joi.number().required(),
+            updated_by: __prod__ && Joi.number().required(),
         });
     }
 
-    public buyerSiteValidation() {
+    public updateBuyerValidation() {
+        return Joi.object({
+            id: Joi.number().required(),
+            name: Joi.string().optional().min(3),
+            tax_no: Joi.number().optional().min(3),
+            created_by: __prod__ && Joi.number().required(),
+            updated_by: __prod__ && Joi.number().required(),
+        });
+    }
+
+    public createBuyerSiteValidation() {
         return Joi.object({
             name: Joi.string().required().min(3),
             buyer_id: Joi.number().required(),
+            created_by: __prod__ && Joi.number().required(),
+            updated_by: __prod__ && Joi.number().required(),
         });
     }
 
-    public dealerValidation() {
+    public updateBuyerSiteValidation() {
+        return Joi.object({
+            name: Joi.string().optional().min(3),
+            id: Joi.number().required(),
+            buyer_id: Joi.number().optional(),
+            created_by: __prod__ && Joi.number().required(),
+            updated_by: __prod__ && Joi.number().required(),
+        });
+    }
+
+    public createDealerValidation() {
         return Joi.object({
             name: Joi.string().required().min(3),
             tax_no: Joi.number().required().min(3),
+            created_by: __prod__ && Joi.number().required(),
+            updated_by: __prod__ && Joi.number().required(),
         });
     }
 
-    public dealerSiteValidation() {
+    public updateDealerValidation() {
+        return Joi.object({
+            name: Joi.string().optional().min(3),
+            tax_no: Joi.number().optional().min(3),
+            created_by: __prod__ && Joi.number().required(),
+            updated_by: __prod__ && Joi.number().required(),
+        });
+    }
+
+    public createDealerSiteValidation() {
         return Joi.object({
             name: Joi.string().required().min(3),
             dealer_id: Joi.number().required(),
+            created_by: __prod__ && Joi.number().required(),
+            updated_by: __prod__ && Joi.number().required(),
+        });
+    }
+
+    public updateDealerSiteValidation() {
+        return Joi.object({
+            name: Joi.string().optional().min(3),
+            dealer_id: Joi.number().optional(),
+            created_by: __prod__ && Joi.number().required(),
+            updated_by: __prod__ && Joi.number().required(),
         });
     }
 }
