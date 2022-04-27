@@ -5,10 +5,10 @@ import SuperEntity from "./SuperEntity";
 @Entity("dealer")
 export default class Dealer extends SuperEntity {
     /** Properites*/
-    @Column({ name: "name" })
+    @Column({ name: "name", unique: true })
     public name: string;
 
-    @Column({ type: "varchar", length: 20, name: "tax_no" })
+    @Column({ type: "varchar", length: 20, name: "tax_no", unique: true })
     public tax_no: string;
 
     @Column({ default: null, name: "attribute1" })
