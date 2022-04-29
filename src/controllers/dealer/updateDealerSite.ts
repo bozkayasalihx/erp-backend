@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import { __prod__ } from "src/scripts/dev";
-import dealerOperation from "src/services/dealerOperation";
+import { dealerSiteOperation } from "src/services";
+import { __prod__ } from "../../scripts/dev";
 import { IDealerSite } from "./createDealerSite";
 
 export default async function updateDealerSite(
@@ -11,7 +11,7 @@ export default async function updateDealerSite(
     const { id } = req.body;
     const user = req.user;
     try {
-        const dealerSite = await dealerOperation.dealerSiteRepo.findOne({
+        const dealerSite = await dealerSiteOperation.dealerSiteRepo.findOne({
             where: { id },
         });
 
@@ -25,7 +25,7 @@ export default async function updateDealerSite(
 
         dealerSite.updated_by = user;
 
-        await dealerOperation.updateDealerSite(dealerSite);
+        await dealerSiteOperation.updateDealerSite(dealerSite);
 
         return res.status(httpStatus.OK).json({
             message: "successfuly updated",

@@ -1,7 +1,7 @@
 import { appDataSource } from "../loaders";
 import { User } from "../models";
 
-class UserOperation {
+export class UserOperation {
     private get source() {
         return appDataSource;
     }

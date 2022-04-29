@@ -1,7 +1,7 @@
 import { appDataSource } from "../loaders";
 import { Vendor, VendorRegion } from "../models";
 
-class VendorOperation {
+export class VendorOperation {
     private get source() {
         return appDataSource;
     }

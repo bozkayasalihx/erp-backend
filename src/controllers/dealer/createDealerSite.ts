@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
+import { dealerSiteOperation } from "src/services";
 import dealerOperation from "../../services/dealerOperation";
 
 export interface IDealerSite {
@@ -19,7 +20,7 @@ export default async function dealerSite(
         });
 
         if (dealer) {
-            await dealerOperation.insertDealerSite({
+            await dealerSiteOperation.insertDealerSite({
                 name,
                 dealer_id,
             });

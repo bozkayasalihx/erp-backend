@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { dealerController, dealerSiteController } from "../../controllers";
+import {
+    dealerController,
+    dealerSiteController,
+    updateDealerController,
+    updateDealerSiteController,
+} from "../../controllers";
 import { IDealer } from "../../controllers/dealer/createDealer";
 import { IDealerSite } from "../../controllers/dealer/createDealerSite";
 import Validate from "../../middlewares/validate";
@@ -25,14 +30,16 @@ router.patch(
     Routes.CREATE_DEALER,
     new Validate<Partial<IDealer>>().validate(
         validationSchema.updateDealerValidation()
-    )
+    ),
+    updateDealerController
 );
 
 router.patch(
     Routes.CREATE_DEALER_SITE,
     new Validate<Partial<IDealerSite>>().validate(
         validationSchema.updateDealerSiteValidation()
-    )
+    ),
+    updateDealerSiteController
 );
 
 export default router;
