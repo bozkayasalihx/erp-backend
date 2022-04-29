@@ -1,7 +1,9 @@
-export { default as buyerControler } from "./buyer/buyer";
-export { default as buyerSiteController } from "./buyer/buyerSite";
+export { default as buyerControler } from "./buyer/createBuyer";
+export { default as buyerSiteController } from "./buyer/createBuyerSite";
 export { default as dealerController } from "./dealer/createDealer";
 export { default as dealerSiteController } from "./dealer/createDealerSite";
+export { default as updateDealerController } from "./dealer/updateDealer";
+export { default as updateDealerSiteController } from "./dealer/updateDealerSite";
 export { default as testControler } from "./test/testController";
 export { default as fileUploadController } from "./upload/fileUploadController";
 export { default as loginController } from "./user/LoginController";
