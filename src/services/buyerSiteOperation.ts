@@ -1,29 +1,28 @@
 import { appDataSource } from "../loaders";
 import { BuyerSite } from "../models";
 
-export class BuyerOperation {
+export class BuyerSiteOperation {
     private get source() {
         return appDataSource;
     }
 
-    get buyerSiteRepo() {
+    get repo() {
         return this.source.getRepository(BuyerSite);
     }
 
     public async insertBuyerSite(params: Partial<BuyerSite>) {
-        const newBuyer = this.buyerSiteRepo.create(params);
+        const newBuyer = this.repo.create(params);
 
-        return this.buyerSiteRepo.save(newBuyer);
+        return this.repo.save(newBuyer);
     }
 
     public async updateBuyerSite(params: Partial<BuyerSite>) {
-        return this.buyerSiteRepo.save(params);
+        return this.repo.save(params);
     }
 
     public createBuyerSite(params: Partial<BuyerSite>) {
-        return this.buyerSiteRepo.create(params);
+        return this.repo.create(params);
     }
 }
 
-const buyerOperation = new BuyerOperation();
-export default buyerOperation;
+export default new BuyerSiteOperation();

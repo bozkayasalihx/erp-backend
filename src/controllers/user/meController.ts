@@ -13,7 +13,7 @@ export default async function me(req: Request, res: Response) {
             process.env.REFRESH_TOKEN_SECRET_KEY as string
         ) as jwt.JwtPayload;
 
-        const user = await userOperation.userRepo.findOne({
+        const user = await userOperation.repo.findOne({
             where: { id: payload.userId },
         });
 

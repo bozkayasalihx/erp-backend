@@ -13,11 +13,11 @@ export default async function buyerSite(
 ) {
     const { buyer_id, name } = req.body;
     try {
-        const buyerSite = await buyerSiteOperation.buyerSiteRepo.findOne({
+        const buyerSite = await buyerSiteOperation.repo.findOne({
             where: { name },
         });
 
-        const buyer = await buyerOperation.buyerRepo.findOne({
+        const buyer = await buyerOperation.repo.findOne({
             where: { id: buyer_id },
         });
 

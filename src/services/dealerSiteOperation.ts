@@ -1,28 +1,28 @@
 import { appDataSource } from "../loaders";
 import { DealerSite } from "../models";
 
-export class DealerOperation {
+export class DealerSiteOperation {
     private get source() {
         return appDataSource;
     }
 
-    public get dealerSiteRepo() {
+    public get repo() {
         return this.source.getRepository(DealerSite);
     }
 
     public async insertDealerSite(params: Partial<DealerSite>) {
-        const dealerSite = await this.dealerSiteRepo.insert(params);
+        const dealerSite = await this.repo.insert(params);
         return dealerSite;
     }
 
     public createDealerSite(params: Partial<DealerSite>) {
-        return this.dealerSiteRepo.create(params);
+        return this.repo.create(params);
     }
 
     public async updateDealerSite(params: Partial<DealerSite>) {
-        const dealerSite = await this.dealerSiteRepo.save(params);
+        const dealerSite = await this.repo.save(params);
         return dealerSite;
     }
 }
 
-export default new DealerOperation();
+export default new DealerSiteOperation();

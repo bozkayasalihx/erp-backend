@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import { dealerSiteOperation } from "src/services";
+import { dealerSiteOperation } from "../../services";
 import dealerOperation from "../../services/dealerOperation";
 
 export interface IDealerSite {
@@ -15,7 +15,7 @@ export default async function dealerSite(
     const { dealer_id, name } = req.body;
 
     try {
-        const dealer = await dealerOperation.dealerRepo.findOne({
+        const dealer = await dealerOperation.repo.findOne({
             where: { id: dealer_id },
         });
 

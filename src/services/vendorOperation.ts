@@ -5,7 +5,7 @@ export class VendorOperation {
     private get source() {
         return appDataSource;
     }
-    public get vendorRepo() {
+    public get repo() {
         return this.source.getRepository(Vendor);
     }
 

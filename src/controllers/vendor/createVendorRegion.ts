@@ -2,12 +2,12 @@ import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { vendorOperation } from "../../services";
 
-interface CreateVendorRegion {
+export interface IVendorRegion {
     name: string;
 }
 
 export default async function createVendorRegion(
-    req: Request<any, any, CreateVendorRegion>,
+    req: Request<any, any, IVendorRegion>,
     res: Response
 ) {
     const { name } = req.body;

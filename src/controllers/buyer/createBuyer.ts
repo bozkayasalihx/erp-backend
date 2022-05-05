@@ -15,7 +15,7 @@ export default async function buyer(
     const { name, tax_no } = req.body;
 
     try {
-        const buyer = await buyerOperation.buyerRepo.findOne({
+        const buyer = await buyerOperation.repo.findOne({
             where: [{ name }, { tax_no: String(tax_no) }],
         });
 

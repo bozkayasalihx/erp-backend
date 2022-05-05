@@ -6,21 +6,21 @@ export class DealerOperation {
         return appDataSource;
     }
 
-    public get dealerRepo() {
+    public get repo() {
         return this.source.getRepository(Dealer);
     }
 
     public async insertDealer(params: Partial<Dealer>) {
-        const dealer = await this.dealerRepo.insert(params);
+        const dealer = await this.repo.insert(params);
         return dealer;
     }
 
     public createDealer(params: Partial<Dealer>) {
-        return this.dealerRepo.create(params);
+        return this.repo.create(params);
     }
 
     public async updateDealer(params: Partial<Dealer>) {
-        const dealer = await this.dealerRepo.save(params);
+        const dealer = await this.repo.save(params);
         return dealer;
     }
 }

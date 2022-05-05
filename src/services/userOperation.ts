@@ -6,24 +6,24 @@ export class UserOperation {
         return appDataSource;
     }
 
-    get userRepo() {
+    get repo() {
         return this.source.getRepository(User);
     }
     public async insert(user: Partial<User>) {
-        const newUser = this.userRepo.create(user);
+        const newUser = this.repo.create(user);
 
-        return this.userRepo.save(newUser);
+        return this.repo.save(newUser);
     }
 
     public async update(user: Partial<User>) {
-        return this.userRepo.save(user);
+        return this.repo.save(user);
     }
     public async login(email: string, username?: string) {
-        return this.userRepo.findOne({ where: [{ email }, { username }] });
+        return this.repo.findOne({ where: [{ email }, { username }] });
     }
 
     public creatUser(params: Partial<User>) {
-        return this.userRepo.create(params);
+        return this.repo.create(params);
     }
 }
 

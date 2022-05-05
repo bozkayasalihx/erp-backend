@@ -6,22 +6,22 @@ export class BuyerOperation {
         return appDataSource;
     }
 
-    public get buyerRepo() {
+    public get repo() {
         return this.source.getRepository(Buyer);
     }
 
     public async insertBuyer(params: Partial<Buyer>) {
-        const newBuyer = this.buyerRepo.create(params);
+        const newBuyer = this.repo.create(params);
 
-        return this.buyerRepo.save(newBuyer);
+        return this.repo.save(newBuyer);
     }
 
     public async updateBuyer(params: Partial<Buyer>) {
-        return this.buyerRepo.save(params);
+        return this.repo.save(params);
     }
 
     public createBuyer(params: Partial<Buyer>) {
-        return this.buyerRepo.create(params);
+        return this.repo.create(params);
     }
 }
 

@@ -11,7 +11,7 @@ export const resetPasswordController = async (
     const { email } = req.body;
     const newPasword = randomBytes(10).toString("hex");
     try {
-        const user = await userOperation.userRepo.findOne({ where: { email } });
+        const user = await userOperation.repo.findOne({ where: { email } });
 
         if (!user) {
             return res.sendStatus(httpStatus.BAD_REQUEST);
