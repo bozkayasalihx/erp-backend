@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
     loginController,
+    logoutController,
     refreshTokenController,
     resetPasswordController,
 } from "../../controllers";
@@ -39,6 +40,8 @@ userRoute
         ),
         resetPasswordController
     );
+
+userRoute.post("/logout", logoutController);
 
 userRoute.route(Routes.REFRESH_TOKEN).get(isSetCookie, refreshTokenController);
 export default userRoute;
