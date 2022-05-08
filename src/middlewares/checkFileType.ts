@@ -12,6 +12,7 @@ export default async function checkFileType(
     res: Response,
     next: NextFunction
 ) {
+    console.log("req.files", req.files);
     if (!req.files?.file)
         return res.status(httpStatus.NOT_FOUND).json({
             message: "no file uploaded",

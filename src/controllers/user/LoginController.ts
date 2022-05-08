@@ -34,7 +34,7 @@ async function loginController(req: Request<any, any, IBody>, res: Response) {
         });
         return res.status(httpStatus.OK).json({
             username: user.username,
-            email: user.email,
+            user_type: user.user_type,
             access_token,
         });
     } catch (err) {

@@ -7,9 +7,9 @@ import userOperation from "../../services/userOperation";
 
 export default async function me(req: Request, res: Response) {
     try {
-        const token = req.cookies.qid;
+        const refreshToken = req.refreshToken;
         const payload = jwt.verify(
-            token,
+            refreshToken,
             process.env.REFRESH_TOKEN_SECRET_KEY as string
         ) as jwt.JwtPayload;
 

@@ -1,12 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import jwt from "jsonwebtoken";
-import { __prod__ } from "../scripts/dev";
 
 export function authenticate(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers["authorization"];
-    if (!__prod__) return next();
-
     const token = authHeader && authHeader.replace("Bearer ", "");
 
     if (!token) {
@@ -33,8 +30,8 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
         return next();
     } catch (err) {
         console.log("err", err);
-        return res.status(httpStatus.BAD_REQUEST).json({
-            messsage: "bad request",
+        return res.status(httpStatus.FORBIDDEN).json({
+            messsage: "forbidden request",
         });
     }
 }

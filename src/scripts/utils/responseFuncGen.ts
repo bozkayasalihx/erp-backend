@@ -16,7 +16,6 @@ type Maker =
     | BuyerSiteOperation
     | DealerSiteOperation;
 
-type Maybe<T> = Promise<T> | T;
 type Callback<T> = (body: T) => any;
 
 export const responseFuncGen =

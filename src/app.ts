@@ -2,7 +2,6 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import "dotenv/config";
 import express from "express";
-import fileUpload from "express-fileupload";
 import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
@@ -19,7 +18,6 @@ import {
     userRoute,
     vendorRoute,
 } from "./routes";
-import { __prod__ } from "./scripts/dev";
 
 const main = async () => {
     await connectDb();
@@ -45,17 +43,6 @@ const main = async () => {
     //after thsi middeleware all route protected;
     app.use(authenticate);
     /** routes */
-    app.use(
-        "/file-upload",
-        fileUpload({
-            limits: {
-                fileSize: 10 * 1024 * 1024, // 10mb
-            },
-            useTempFiles: true,
-            tempFileDir: "/temp/",
-            debug: !__prod__,
-        })
-    );
     app.use("/api", meRoute);
     app.use("/api", testRoute);
     app.use("/api", fileUploadRoute);
