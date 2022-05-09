@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
-import jwt from "jsonwebtoken";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
 
 export function authenticate(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers["authorization"];
@@ -29,7 +29,12 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
         };
         return next();
     } catch (err) {
-        console.log("err", err);
+        if (err instanceof TokenExpiredError) {
+            // do nothings;
+        } else {
+            console.log("err", err);
+        }
+
         return res.status(httpStatus.FORBIDDEN).json({
             messsage: "forbidden request",
         });

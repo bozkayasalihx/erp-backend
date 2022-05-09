@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
     createVendorController,
     createVendorRegionController,
+    getVendorController,
     updateVendorController,
     updateVendorRegionController,
 } from "../../controllers";
@@ -17,6 +18,8 @@ router.post(
     new Validate<IVendor>().validate(validationSchema.createVendorValidation()),
     createVendorController
 );
+
+router.get(`/:vendorId?`, getVendorController);
 router.post(
     Routes.CREATE_VENDOR_REGION,
     new Validate<{ name: string }>().validate(

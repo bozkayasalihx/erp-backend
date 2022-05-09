@@ -14,4 +14,5 @@ export enum Routes {
     CREATE_DEALER_SITE = "/dealer/create-dealersite",
     CREATE_VENDOR_DEALER = "/vendor-dealer/create-vendor-dealer",
     CREATE_DEALER_BUYER = "/vendor-dealer/create-vendor-dealer",
+    VENDOR = "/vendor",
 }

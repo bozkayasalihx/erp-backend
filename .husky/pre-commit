@@ -1,8 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-echo "running linting ��"
-yarn lint
 
 echo "running lint-staged" 
 npx lint-staged 
