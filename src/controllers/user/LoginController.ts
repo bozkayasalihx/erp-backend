@@ -1,3 +1,4 @@
+import { compare } from "bcryptjs";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { IBody } from "../../middlewares/isLoggedIn";
@@ -9,12 +10,20 @@ import {
 import userOperation from "../../services/userOperation";
 
 async function loginController(req: Request<any, any, IBody>, res: Response) {
-    const { email, username } = req.body;
+    const { email, username, password } = req.body;
     try {
         const user = await userOperation.login(email, username);
         if (!user) {
             return res.status(httpStatus.NOT_FOUND).json({
                 message: "user does not exist",
+            });
+        }
+
+        const valid = await compare(password, user.password);
+
+        if (!valid) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                message: "email or password wrong",
             });
         }
 

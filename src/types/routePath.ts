@@ -6,7 +6,7 @@ export enum Routes {
     RESET_PASSWORD = "/reset-password",
     REFRESH_TOKEN = "/refresh-token",
     FILE_UPLOAD = "/file-upload",
-    CREATE_VENDOR = "/vendor/create-vendor",
+    CREATE_VENDOR = "/vendor2/create-vendor",
     CREATE_VENDOR_REGION = "/vendor/create-vendor-region",
     CREATE_BUYER = "/buyer/create-buyer",
     CREATE_BUYER_SITE = "/buyer/create-buyersite",

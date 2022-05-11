@@ -7,6 +7,7 @@ import { UserCreateSubs } from "../subscribers/userSubs";
 
 const entityDir = path.join(__dirname, "../../dist/models/*.js");
 const subsDir = path.join(__dirname, "../../dist/subscribers/*.js");
+const migrationDir = path.join(__dirname, "../../dist/migrations/*.js");
 
 export const appDataSource = new DataSource({
     type: "postgres",
@@ -19,6 +20,7 @@ export const appDataSource = new DataSource({
     synchronize: true,
     entities: [entityDir],
     subscribers: !__prod__ ? [UserCreateSubs] : undefined,
+    migrations: !__prod__ ? [migrationDir] : undefined,
     logger: "advanced-console",
 });
 

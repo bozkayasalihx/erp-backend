@@ -24,6 +24,8 @@ const main = async () => {
     eventHandler();
     const app = express();
 
+    // !__prod__ && (await appDataSource.runMigrations());
+
     app.use(express.json());
     app.use(
         cors({
@@ -36,7 +38,6 @@ const main = async () => {
     app.use(helmet());
     // app.use(csurf({ cookie: true }));
     app.use(morgan("dev"));
-
     app.use("/static", express.static(path.join(__dirname, "../src/public")));
 
     app.use("/api", userRoute);
