@@ -45,10 +45,10 @@ export default class User extends BaseEntity {
     })
     public user_type: UserTypes;
 
-    @Column({ type: "bigint", name: "tckn" })
+    @Column({ unique: true, type: "bigint", name: "tckn" })
     public tckn: BigInt;
 
-    @Column({ type: "varchar", length: 20, name: "mobile" })
+    @Column({ unique: true, type: "varchar", length: 20, name: "mobile" })
     public mobile: string;
 
     @Column("int", { default: 0 })

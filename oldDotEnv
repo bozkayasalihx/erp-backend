@@ -1,0 +1,18 @@
+NODE_ENV=development
+DB_PORT=5432
+PORT=8080
+DB_NAME=test
+HOST=localhost
+DB_USER=postgres
+DB_PASSWORD=postgres
+REDIS_URL=127.0.0.1:6379
+ACCESS_TOKEN_SECRET_KEY=f458a57132a1c50ce5064937a10ed33bf27086ae89598daf33fb620d99bdb95b
+REFRESH_TOKEN_SECRET_KEY=0e55b5e88ab099ea526d263defafbb66f7586c7a3885dda1f93f01dbc2f562bf
+SALT=10
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER:natica_demo.mailer@gmail.com
+EMAIL_PASWORD=naticaDemo1001
+EMAIL_FROM=Natica Demo <natica_demo.mailer@gmail.com>
+TOKEN_EXPIRE=3600000
+ORIGIN=http://localhost:3000

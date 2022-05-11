@@ -2,13 +2,13 @@ import Joi from "joi";
 import { __prod__ } from "../scripts/dev";
 import { UserTypes } from "../types/types";
 
-const allowedTypes = ["VA", "V", "B", "BA", "D", "DA"];
+const allowedTypes = ["SA", "VA", "V", "B", "BA", "D", "DA"];
 export interface ILogin {
     email: string;
     password: string;
-    user_type: UserTypes;
-    tckn: string;
-    mobile: string;
+    //user_type: UserTypes;
+    //tckn: string;
+    //mobile: string;
 }
 
 export interface IRegister {
@@ -25,9 +25,9 @@ class ValidationSchema {
         return Joi.object<ILogin>({
             email: Joi.string().required().email(),
             password: Joi.string().required().min(5),
-            user_type: Joi.valid(...allowedTypes).required(),
-            mobile: Joi.string().required().min(10).max(11),
-            tckn: Joi.string().required().min(11).max(11),
+            //user_type: Joi.valid(...allowedTypes).required(),
+            //mobile: Joi.string().required().min(10).max(11),
+            //tckn: Joi.string().required().min(11).max(11),
         });
     }
     public registerValidation() {
