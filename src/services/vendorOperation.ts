@@ -1,16 +1,14 @@
 import { appDataSource } from "../loaders";
 import { Vendor, VendorRegion } from "../models";
+import BaseService from "./BaseService";
 
-export class VendorOperation {
-    private get source() {
-        return appDataSource;
-    }
+export class VendorOperation extends BaseService {
     public get repo() {
-        return this.source.getRepository(Vendor);
+        return appDataSource.getRepository(Vendor);
     }
 
     public get vendorRegionRepo() {
-        return this.source.getRepository(VendorRegion);
+        return appDataSource.getRepository(VendorRegion);
     }
 
     public createVendorRegion(params: Partial<VendorRegion>) {

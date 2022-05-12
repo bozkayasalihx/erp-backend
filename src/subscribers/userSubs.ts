@@ -10,20 +10,20 @@ import { UserTypes } from "../types/types";
 @EventSubscriber()
 export class UserCreateSubs implements EntitySubscriberInterface<any> {
     async beforeInsert(event: InsertEvent<any>) {
-        if (!event.entity.created_at || !event.entity.updated_at) {
+        if (!event.entity.created_by || !event.entity.updated_by) {
             let user: User | null = null;
 
             console.log("listening events...");
             try {
-                user = await User.findOne({ where: { username: "bob" } });
+                user = await User.findOne({ where: { username: "uncle bob" } });
             } catch (err) {
                 console.log("err", err);
                 const u = userOperation.creatUser({
-                    username: "bob",
-                    email: "bob@bob.com",
-                    mobile: "29384923749",
-                    password: "129381293712937123",
-                    tckn: BigInt("2873192372"),
+                    username: "uncle bob",
+                    email: "uncle_bob@gmail.com",
+                    mobile: "5376852365",
+                    password: "uncle_bob@gmail.com",
+                    tckn: BigInt("38492384289"),
                     user_type: UserTypes.VENDOR_ADMIN,
                 });
 

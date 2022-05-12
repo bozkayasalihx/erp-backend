@@ -23,10 +23,6 @@ declare global {
         }
     }
     namespace Express {
-        interface Response {
-            message: string;
-            data?: string;
-        }
         interface Request {
             user: User;
             refreshToken: string;

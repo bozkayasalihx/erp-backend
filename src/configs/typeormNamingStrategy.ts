@@ -42,7 +42,9 @@ export default class SnakeNamingStrategy
                 "_" +
                 firstPropertyName.replace(/\./gi, "_") +
                 "_" +
-                secondTableName
+                secondTableName +
+                "_" +
+                secondPropertyName.replace(/\./gi, "_")
         );
     }
 

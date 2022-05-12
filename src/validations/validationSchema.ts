@@ -6,9 +6,6 @@ const allowedTypes = ["SA", "VA", "V", "B", "BA", "D", "DA"];
 export interface ILogin {
     email: string;
     password: string;
-    //user_type: UserTypes;
-    //tckn: string;
-    //mobile: string;
 }
 
 export interface IRegister {
@@ -25,9 +22,6 @@ class ValidationSchema {
         return Joi.object<ILogin>({
             email: Joi.string().required().email(),
             password: Joi.string().required().min(5),
-            //user_type: Joi.valid(...allowedTypes).required(),
-            //mobile: Joi.string().required().min(10).max(11),
-            //tckn: Joi.string().required().min(11).max(11),
         });
     }
     public registerValidation() {
@@ -51,7 +45,9 @@ class ValidationSchema {
         return Joi.object({
             name: Joi.string().required().min(3),
             tax_no: Joi.string().required().min(3),
-            vendor_region_id: Joi.string().required(),
+            vendor_region_ids: Joi.array()
+                .items(Joi.number().optional())
+                .required(),
             created_by: __prod__ && Joi.number().required(),
             updated_by: __prod__ && Joi.number().required(),
         });
@@ -62,7 +58,9 @@ class ValidationSchema {
             id: Joi.number().required(),
             name: Joi.string().optional().min(3),
             tax_no: Joi.string().optional().min(3),
-            vendor_region_id: Joi.string().optional(),
+            vendor_region_ids: Joi.array()
+                .items(Joi.number().optional())
+                .required(),
             created_by: __prod__ && Joi.number().required(),
             updated_by: __prod__ && Joi.number().required(),
         });

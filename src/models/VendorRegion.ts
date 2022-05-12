@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
 import SuperEntity from "./SuperEntity";
 import Vendor from "./Vendor";
 
@@ -25,6 +25,6 @@ export default class VendorRegion extends SuperEntity {
     public attribute5: string;
 
     /** relations */
-    @OneToMany(() => Vendor, (vendor) => vendor.vendor_region)
-    public vendors: Array<Vendor>;
+    @ManyToOne(() => Vendor, (vendor) => vendor.vendor_regions)
+    public vendor: Vendor;
 }

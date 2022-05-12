@@ -15,6 +15,7 @@ import {
     fileUpload as fileUploadRoute,
     meRoute,
     testRoute,
+    userRelationRoute,
     userRoute,
     vendorRoute,
 } from "./routes";
@@ -50,6 +51,7 @@ const main = async () => {
     app.use("/api/vendor", vendorRoute);
     app.use("/api/buyer", buyerRoute);
     app.use("/api/dealer", dealerRoute);
+    app.use("/api/relations", userRelationRoute);
 
     // not found route;
     app.use("*", (_, res) => {

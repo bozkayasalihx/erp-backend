@@ -13,6 +13,7 @@ export { default as PaymentMatches } from "./PaymentMatches";
 export { default as PaymentSchedule } from "./PaymentSchedule";
 export { default as PaymentScheduleInterface } from "./PaymentScheduleInterface";
 export { default as User } from "./User";
+export { default as UserEntityRelation } from "./UserEntityRelation";
 export { default as Vendor } from "./Vendor";
 export { default as VendorRegion } from "./VendorRegion";
 export { default as VendorToDealerSite } from "./VendorToDealerSite";
