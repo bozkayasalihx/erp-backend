@@ -12,11 +12,13 @@ export default async function dealer(
     res: Response
 ) {
     const { name, tax_no } = req.body;
-
+    const user = req.user;
     try {
         await dealerOperation.insertDealer({
             name,
             tax_no: String(tax_no),
+            updated_by: user,
+            created_by: user,
         });
 
         return res.status(httpStatus.OK).json({
@@ -24,7 +26,7 @@ export default async function dealer(
         });
     } catch (err) {
         console.log("erro", err);
-        if (err.detail.includes("already exists")) {
+        if (err?.detail?.includes("already exists")) {
             // already exits error;
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "this record already exits",

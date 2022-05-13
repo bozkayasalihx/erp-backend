@@ -23,6 +23,7 @@ export default async function updateVendor(
 
         if (name) vendor.name = name;
         if (tax_no) vendor.tax_no = tax_no;
+        vendor.updated_by = user;
 
         await vendor.save();
 

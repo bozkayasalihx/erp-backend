@@ -12,13 +12,15 @@ export default async function createVendor(
     res: Response
 ) {
     const { name, tax_no } = req.body;
-
+    const user = req.user;
     const vendor = vendorOperation.createVendor({
         name,
         tax_no,
     });
 
     try {
+        vendor.updated_by = user;
+        vendor.created_by = user;
         await vendor.save();
         return res.status(httpStatus.CREATED).json({
             message: "succesfully created",
@@ -26,7 +28,7 @@ export default async function createVendor(
         });
     } catch (err) {
         console.log("err", err);
-        if (err.detail.includes("already exists")) {
+        if (err?.detail?.includes("already exists")) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "this vendor already exists",
             });

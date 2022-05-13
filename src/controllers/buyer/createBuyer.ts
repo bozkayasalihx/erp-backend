@@ -13,6 +13,7 @@ export default async function buyer(
     res: Response
 ) {
     const { name, tax_no } = req.body;
+    const user = req.user;
 
     try {
         const buyer = await buyerOperation.repo.findOne({
@@ -24,6 +25,8 @@ export default async function buyer(
             const buyer = await buyerOperation.insertBuyer({
                 name,
                 tax_no: String(tax_no),
+                updated_by: user,
+                created_by: user,
             });
 
             return res.status(httpStatus.OK).json({

@@ -34,4 +34,11 @@ export class UserCreateSubs implements EntitySubscriberInterface<any> {
             event.entity.updated_by = user;
         }
     }
+
+    async beforeUpdate() {
+        //
+    }
+    async beforeRemove() {
+        //
+    }
 }

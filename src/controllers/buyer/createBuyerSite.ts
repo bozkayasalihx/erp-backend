@@ -12,6 +12,7 @@ export default async function buyerSite(
     res: Response
 ) {
     const { buyer_id, name } = req.body;
+    const user = req.user;
     try {
         const buyerSite = await buyerSiteOperation.repo.findOne({
             where: { name },
@@ -24,6 +25,8 @@ export default async function buyerSite(
         if (buyer) {
             if (buyerSite) {
                 buyerSite.buyer = buyer;
+                buyerSite.created_by = user;
+                buyerSite.updated_by = user;
                 await buyerSite.save();
 
                 return res.status(httpStatus.OK).json({
@@ -35,6 +38,8 @@ export default async function buyerSite(
             const bs = await buyerSiteOperation.insertBuyerSite({
                 name,
                 buyer,
+                updated_by: user,
+                created_by: user,
             });
 
             return res.status(httpStatus.OK).json({

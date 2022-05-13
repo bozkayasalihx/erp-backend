@@ -13,6 +13,7 @@ export default async function createVendorRegion(
 ) {
     const { name, vendor_id } = req.body;
     const vendorRegion = vendorOperation.createVendorRegion({ name });
+    const user = req.user;
 
     try {
         const vendor = await vendorOperation.repo.findOne({
@@ -25,13 +26,15 @@ export default async function createVendorRegion(
             });
         }
         vendorRegion.vendor = vendor;
+        vendorRegion.updated_by = user;
+        vendorRegion.created_by = user;
         await vendorRegion.save();
         return res.status(httpStatus.OK).json({
             message: "succesfully created ",
         });
     } catch (err) {
         console.log("err", err);
-        if (err.detail.includes("already exists")) {
+        if (err?.detail?.includes("already exists")) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "this vendor region already exists",
             });

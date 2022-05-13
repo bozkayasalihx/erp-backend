@@ -11,14 +11,19 @@ export const eventHandler = () =>
                 pass: process.env.EMAIL_PASSWORD,
             },
         });
+        console.log("env", process.env);
 
-        const info = await transporter.sendMail({
-            from: process.env.EMAIL_FROM,
-            to: toEmail,
-            subject,
-            html,
-        });
-
-        console.log("Message sent: %s", info.messageId);
-        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        try {
+            const info = await transporter.sendMail({
+                from: process.env.EMAIL_FROM,
+                to: toEmail,
+                subject,
+                html,
+            });
+            console.log("info", info);
+            console.log("Message sent: %s", info.messageId);
+            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        } catch (err) {
+            console.log("err", err);
+        }
     });

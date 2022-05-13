@@ -13,6 +13,7 @@ export default async function dealerSite(
     res: Response
 ) {
     const { dealer_id, name } = req.body;
+    const user = req.user;
 
     try {
         const dealer = await dealerOperation.repo.findOne({
@@ -23,6 +24,8 @@ export default async function dealerSite(
             await dealerSiteOperation.insertDealerSite({
                 name,
                 dealer_id,
+                updated_by: user,
+                created_by: user,
             });
 
             return res.status(httpStatus.OK).json({
@@ -35,7 +38,7 @@ export default async function dealerSite(
     } catch (err) {
         console.log("err", err);
 
-        if (err.detail.includes("already exists")) {
+        if (err?.detail?.includes("already exists")) {
             //FIXME: make already exists error specific class;
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "this record already exits",

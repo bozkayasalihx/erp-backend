@@ -1,8 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import jwt, { TokenExpiredError } from "jsonwebtoken";
+import { userOperation } from "../services";
 
-export function authenticate(req: Request, res: Response, next: NextFunction) {
+export async function authenticate(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.replace("Bearer ", "");
 
@@ -27,6 +32,16 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
             userId: payload.userId,
             tokenVersion: payload.tokenVersion,
         };
+        const user = await userOperation.repo.findOne({
+            where: { id: payload.userId },
+        });
+
+        if (!user)
+            return res.status(httpStatus.BAD_REQUEST).json({
+                message: "unauthorized",
+            });
+
+        req.user = user;
         return next();
     } catch (err) {
         if (err instanceof TokenExpiredError) {

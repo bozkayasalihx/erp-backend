@@ -14,7 +14,7 @@ export const resetPasswordController = async (
         const user = await userOperation.repo.findOne({ where: { email } });
 
         if (!user) {
-            return res.sendStatus(httpStatus.BAD_REQUEST);
+            return res.sendStatus(httpStatus.BAD_REQUEST).json({});
         }
 
         await userOperation.insert({
@@ -33,7 +33,7 @@ export const resetPasswordController = async (
             .send("reset password mail sent your email ");
     } catch (err) {
         console.log("err", err);
-        if (err.detail.includes("already exists")) {
+        if (err?.detail?.includes("already exists")) {
             return res.status(httpStatus.BAD_REQUEST).send({
                 message: "this user already in exists",
             });
