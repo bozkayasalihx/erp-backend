@@ -42,6 +42,11 @@ export const responseFuncGen =
         } catch (err) {
             !__prod__ && console.log("err", err);
 
+            if (err.detail.includes("already exists")) {
+                return res.status(httpStatus.BAD_REQUEST).json({
+                    message: err.detail.split("=")[1],
+                });
+            }
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
                 message: "an error accured try again later",
             });
