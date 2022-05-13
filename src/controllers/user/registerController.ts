@@ -28,7 +28,7 @@ async function registerControler(req: Request<any, any, IBody>, res: Response) {
             maxAge: 24 * 60 * 60 * 1000,
         });
 
-        return res.status(httpStatus.OK).json({
+        return res.status(httpStatus.CREATED).json({
             username: user.username,
             email: user.email,
             access_token,

@@ -20,7 +20,7 @@ import {
     vendorRoute,
 } from "./routes";
 
-const main = async () => {
+export const main = async () => {
     await connectDb();
     eventHandler();
     const app = express();

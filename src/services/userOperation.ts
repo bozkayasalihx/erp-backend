@@ -1,14 +1,9 @@
-import { appDataSource } from "../loaders";
 import { User } from "../models";
 import BaseService from "./BaseService";
 
 export class UserOperation extends BaseService {
-    constructor() {
-        super();
-    }
-
     get repo() {
-        return appDataSource.getRepository(User);
+        return this.source.getRepository(User);
     }
     public async insert(user: Partial<User>) {
         const newUser = this.repo.create(user);

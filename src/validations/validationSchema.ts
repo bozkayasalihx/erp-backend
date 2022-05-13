@@ -45,9 +45,6 @@ class ValidationSchema {
         return Joi.object({
             name: Joi.string().required().min(3),
             tax_no: Joi.string().required().min(3),
-            vendor_region_ids: Joi.array()
-                .items(Joi.number().optional())
-                .required(),
             created_by: __prod__ && Joi.number().required(),
             updated_by: __prod__ && Joi.number().required(),
         });
@@ -58,9 +55,6 @@ class ValidationSchema {
             id: Joi.number().required(),
             name: Joi.string().optional().min(3),
             tax_no: Joi.string().optional().min(3),
-            vendor_region_ids: Joi.array()
-                .items(Joi.number().optional())
-                .required(),
             created_by: __prod__ && Joi.number().required(),
             updated_by: __prod__ && Joi.number().required(),
         });
@@ -69,6 +63,7 @@ class ValidationSchema {
     public createVendorRegionValidation() {
         return Joi.object({
             name: Joi.string().required().min(2),
+            vendor_id: Joi.number().required(),
             created_by: __prod__ && Joi.number().required(),
             updated_by: __prod__ && Joi.number().required(),
         });
@@ -78,6 +73,7 @@ class ValidationSchema {
         return Joi.object({
             id: Joi.number().required(),
             name: Joi.string().optional().min(2),
+            vendor_id: Joi.number().optional(),
             created_by: __prod__ && Joi.number().required(),
             updated_by: __prod__ && Joi.number().required(),
         });

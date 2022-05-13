@@ -4,7 +4,7 @@ import BaseService from "./BaseService";
 
 export class VendorOperation extends BaseService {
     public get repo() {
-        return appDataSource.getRepository(Vendor);
+        return this.source.getRepository(Vendor);
     }
 
     public get vendorRegionRepo() {

@@ -1,10 +1,9 @@
-import { appDataSource } from "../loaders";
 import { Buyer } from "../models";
 import BaseService from "./BaseService";
 
 export class BuyerOperation extends BaseService {
     public get repo() {
-        return appDataSource.getRepository(Buyer);
+        return this.source.getRepository(Buyer);
     }
 
     public async insertBuyer(params: Partial<Buyer>) {

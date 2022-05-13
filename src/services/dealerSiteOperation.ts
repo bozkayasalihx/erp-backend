@@ -1,10 +1,9 @@
-import { appDataSource } from "../loaders";
 import { DealerSite } from "../models";
 import BaseService from "./BaseService";
 
 export class DealerSiteOperation extends BaseService {
     public get repo() {
-        return appDataSource.getRepository(DealerSite);
+        return this.source.getRepository(DealerSite);
     }
 
     public async insertDealerSite(params: Partial<DealerSite>) {

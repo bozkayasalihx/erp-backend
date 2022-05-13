@@ -65,6 +65,8 @@ export default async function testControler(req: Request, res: Response) {
     ue.description = "vendor";
     ue.user = user;
 
+    const v = new Vendor();
+
     // await ue.save();
     const maker = await UserEntityRelation.findOne({
         where: { user: { id: user.id } },

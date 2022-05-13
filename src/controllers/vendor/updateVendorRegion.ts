@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
+import { Vendor } from "src/models";
 import { __prod__ } from "../../scripts/dev";
 import { vendorOperation } from "../../services";
 import { IVendorRegion } from "./createVendorRegion";
@@ -8,7 +9,7 @@ export default async function updateVendorRegion(
     req: Request<any, any, Partial<IVendorRegion> & { id: number }>,
     res: Response<{ message: string; data?: string }>
 ) {
-    const { id } = req.body;
+    const { id, name, vendor_id } = req.body;
     const user = req.user;
 
     try {
@@ -18,10 +19,26 @@ export default async function updateVendorRegion(
 
         if (!vendorRegion)
             return res.status(httpStatus.NOT_FOUND).json({
-                message: "invalid request",
+                message: "no such as vendor region",
             });
 
-        if (req.body.name) vendorRegion.name = req.body.name;
+        let vendor: Vendor | null = null;
+
+        if (vendor_id) {
+            vendor = await vendorOperation.repo.findOne({
+                where: { id: vendor_id },
+            });
+
+            if (!vendor) {
+                return res.status(httpStatus.NOT_FOUND).json({
+                    message: "not found such as vendor",
+                });
+            }
+        }
+
+        if (name) vendorRegion.name = name;
+
+        if (vendor) vendorRegion.vendor = vendor;
         vendorRegion.updated_by = user;
         await vendorRegion.save();
 

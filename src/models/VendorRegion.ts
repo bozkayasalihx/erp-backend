@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import SuperEntity from "./SuperEntity";
 import Vendor from "./Vendor";
 
@@ -6,7 +6,7 @@ import Vendor from "./Vendor";
 export default class VendorRegion extends SuperEntity {
     //** Properties */
 
-    @Column({ type: "varchar", length: 240, name: "name" })
+    @Column({ type: "varchar", length: 240, name: "name", unique: true })
     public name: string;
 
     @Column({ nullable: true, name: "attribute1" })
@@ -26,5 +26,6 @@ export default class VendorRegion extends SuperEntity {
 
     /** relations */
     @ManyToOne(() => Vendor, (vendor) => vendor.vendor_regions)
+    @JoinColumn({ name: "vendor_id" })
     public vendor: Vendor;
 }
