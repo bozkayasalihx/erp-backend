@@ -13,6 +13,6 @@ export enum Routes {
     CREATE_DEALER = "/create-dealer",
     CREATE_DEALER_SITE = "/create-dealersite",
     CREATE_VDS_RELATION = "/vds-relations",
-    CREATE_VDBS_RELATION = "/vdsbs-relations",
+    CREATE_VDSBS_RELATION = "/vdsbs-relations",
     VENDOR = "/vendor",
 }

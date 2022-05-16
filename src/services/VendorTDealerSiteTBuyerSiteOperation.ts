@@ -4,7 +4,7 @@ import BaseService from "../services/BaseService";
 class VendorTDealerSiteTBuyerSite extends BaseService {
     public async createVdsbs(params: Partial<VendorToDealerSiteToBuyerSite>) {
         const vdsbs = VendorToDealerSiteToBuyerSite.create({ ...params });
-        await vdsbs.save();
+        return this.repo.insert(vdsbs);
     }
 
     public get repo() {

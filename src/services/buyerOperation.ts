@@ -9,7 +9,7 @@ export class BuyerOperation extends BaseService {
     public async insertBuyer(params: Partial<Buyer>) {
         const newBuyer = this.repo.create(params);
 
-        return this.repo.save(newBuyer);
+        return this.repo.insert(newBuyer);
     }
 
     public async updateBuyer(params: Partial<Buyer>) {

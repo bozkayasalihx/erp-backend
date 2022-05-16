@@ -155,6 +155,22 @@ class ValidationSchema {
             ...options,
         });
     }
+
+    public createVdsValidation() {
+        return Joi.object({
+            vendor_id: Joi.number().required(),
+            dealer_site_id: Joi.number().required(),
+            description: Joi.string().optional(),
+        });
+    }
+
+    public createVdsbsValidation() {
+        return Joi.object({
+            vds_rltn_id: Joi.number().required(),
+            buyer_site_id: Joi.number().required(),
+            description: Joi.string().optional(),
+        });
+    }
 }
 
 export default new ValidationSchema();
