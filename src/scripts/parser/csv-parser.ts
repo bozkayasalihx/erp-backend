@@ -35,7 +35,6 @@ class Parser extends EventEmitter {
             const paths = await this.glob(this.path);
             return paths[0];
         } catch (err) {
-            console.log("err", err);
             throw new Error(JSON.stringify(err));
         }
     }
@@ -69,7 +68,6 @@ class Parser extends EventEmitter {
             });
             return true;
         } catch (err) {
-            console.log("err", err);
             return false;
         }
     }
@@ -122,14 +120,10 @@ parser
     .then(async ({ headerData, linesData }) => {
         const m = parser.lineSplit([headerData as string]);
         const p = parser.lineSplit(linesData as string[]);
-        console.log("m", m);
-        console.log("p", p);
         const matches = m[0];
         const otherSideMatches = p[0];
         for (let i = 0; i < matches.length; i++) {
             parser.toObject({ key: matches[i], value: otherSideMatches[i] });
         }
-
-        console.log(parser.jsonValue);
     })
     .catch((err) => console.log("err", err));

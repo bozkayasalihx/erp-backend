@@ -6,7 +6,6 @@ import { DealerOperation } from "../../services/dealerOperation";
 import { DealerSiteOperation } from "../../services/dealerSiteOperation";
 import { UserOperation } from "../../services/userOperation";
 import { VendorOperation } from "../../services/vendorOperation";
-import { __prod__ } from "../dev";
 
 type Maker =
     | UserOperation
@@ -27,7 +26,6 @@ export const responseFuncGen =
         try {
             const user = req.user;
             const results = await cb(req.body);
-            console.log("resutsl", results);
             if (!results)
                 return res.status(httpStatus.BAD_REQUEST).json({
                     message: "bad request",
@@ -40,8 +38,6 @@ export const responseFuncGen =
                 message: "successfully updated",
             });
         } catch (err) {
-            !__prod__ && console.log("err", err);
-
             if (err?.detail?.includes("already exists")) {
                 return res.status(httpStatus.BAD_REQUEST).json({
                     message: err.detail.split("=")[1],

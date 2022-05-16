@@ -6,9 +6,8 @@ export default async function revokeRefreshToken(userId: number) {
         await appDataSource
             .getRepository(User)
             .increment({ id: userId }, "tokenVersion", 1);
-        return true;
+        return userId + 1;
     } catch (err) {
-        console.log("err", err);
-        return false;
+        return userId;
     }
 }

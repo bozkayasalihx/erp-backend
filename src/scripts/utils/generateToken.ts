@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { __prod__ } from "../dev";
 
 export interface IGenerateToken {
     userId: number;
@@ -7,7 +8,7 @@ export interface IGenerateToken {
 
 export function generateAccessToken(params: IGenerateToken, secretKey: string) {
     return jwt.sign(params, secretKey, {
-        expiresIn: "10m",
+        expiresIn: !__prod__ ? "7d" : "10m",
     });
 }
 
