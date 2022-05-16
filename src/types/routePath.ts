@@ -4,6 +4,7 @@ export enum Routes {
     ME = "/me",
     VENDOR_REGISTER = "/vendor-register",
     RESET_PASSWORD = "/reset-password",
+    FORGOT_PASSWORD = "/forgot-password",
     REFRESH_TOKEN = "/refresh-token",
     FILE_UPLOAD = "/file-upload",
     CREATE_VENDOR = "/create-vendor",

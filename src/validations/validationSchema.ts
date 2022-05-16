@@ -171,6 +171,12 @@ class ValidationSchema {
             description: Joi.string().optional(),
         });
     }
+    public createPasswordValidation() {
+        return Joi.object<{ token: string; newPassword: string }>({
+            token: Joi.string().required().min(10),
+            newPassword: Joi.string().required().email(),
+        });
+    }
 }
 
 export default new ValidationSchema();
