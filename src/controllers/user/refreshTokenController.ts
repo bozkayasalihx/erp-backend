@@ -1,10 +1,7 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import jwt from "jsonwebtoken";
-import {
-    generateAccessToken,
-    generateRefreshToken,
-} from "../../scripts/utils/generateToken";
+import { generateRefreshToken } from "../../scripts/utils/generateToken";
 import revokeRefreshToken from "../../scripts/utils/revokeRefreshToken";
 import { userOperation } from "../../services";
 
@@ -13,9 +10,6 @@ async function refreshController(req: Request, res: Response) {
     res.clearCookie("jwt", { httpOnly: true, sameSite: "lax", secure: true });
 
     const decoded = jwt.decode(refreshToken) as jwt.JwtPayload;
-    // { userId: user.id, tokenVersion: user.tokenVersion }
-
-    console.log(decoded);
 
     const user = await userOperation.repo.findOne({
         where: { id: decoded.userId },
@@ -38,18 +32,10 @@ async function refreshController(req: Request, res: Response) {
             process.env.REFRESH_TOKEN_SECRET_KEY
         ) as jwt.JwtPayload;
 
-        await revokeRefreshToken(user.id);
-
-        const accessToken = generateAccessToken(
-            {
-                tokenVersion: 2,
-                userId: user.id,
-            },
-            process.env.ACCESS_TOKEN_SECRET_KEY
-        );
+        const tokenVersion = await revokeRefreshToken(user.id);
 
         const newRefreshToken = generateRefreshToken(
-            { tokenVersion: 2, userId: user.id },
+            { tokenVersion, userId: user.id },
             process.env.REFRESH_TOKEN_SECRET_KEY
         );
 
@@ -62,7 +48,7 @@ async function refreshController(req: Request, res: Response) {
 
         return res.status(httpStatus.OK).json({
             message: "succesful operation",
-            data: { accessToken },
+            data: { refreshToken },
         });
     } catch (err) {
         return res.status(httpStatus.UNAUTHORIZED).json({

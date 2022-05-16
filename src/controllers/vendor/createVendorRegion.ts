@@ -33,7 +33,6 @@ export default async function createVendorRegion(
             message: "succesfully created ",
         });
     } catch (err) {
-        console.log("err", err);
         if (err?.detail?.includes("already exists")) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "this vendor region already exists",

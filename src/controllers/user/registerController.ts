@@ -37,7 +37,6 @@ async function registerControler(req: Request<any, any, IBody>, res: Response) {
             },
         });
     } catch (err) {
-        console.log("erro", err);
         if (err?.detail?.includes("already exists")) {
             //FIXME: some other stuff goes here
             return res.status(httpStatus.BAD_REQUEST).send({

@@ -50,7 +50,6 @@ async function loginController(req: Request<any, any, IBody>, res: Response) {
             },
         });
     } catch (err) {
-        console.log("err", err);
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             message: "an error accoured try again later",
             data: err?.detail,

@@ -27,7 +27,6 @@ export default async function createVendor(
             data: { vendor },
         });
     } catch (err) {
-        console.log("err", err);
         if (err?.detail?.includes("already exists")) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "this vendor already exists",

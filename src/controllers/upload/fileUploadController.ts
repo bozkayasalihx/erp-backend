@@ -28,7 +28,6 @@ export default async function fileUpload(req: Request, res: Response) {
             message: "file succesfuly uploaded",
         });
     } catch (err) {
-        console.log("err", err);
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             message: "an error accured",
         });

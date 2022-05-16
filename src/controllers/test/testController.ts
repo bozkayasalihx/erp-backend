@@ -14,7 +14,6 @@ export default async function testControler(req: Request, res: Response) {
     // userRelation.updated_by = user.id;
 
     // const maker = await appDataSource.manager.save(userRelation);
-    // console.log("maker", maker);
 
     // const user = new User();
     // user.username = "salih";
@@ -41,7 +40,6 @@ export default async function testControler(req: Request, res: Response) {
     // usrRelation.user_id = user.id;
 
     // const maker = await appDataSource.manager.save(usrRelation);
-    // console.log("maker", maker);
 
     // const vendor = new Vendor()
     // vendor.name = "tuborg";
@@ -50,7 +48,6 @@ export default async function testControler(req: Request, res: Response) {
     const user = (await appDataSource.manager.findOne(User, {
         where: { username: "james" },
     })) as User;
-    console.log("user", user);
     const vendor = (await appDataSource.manager.findOne(Vendor, {
         where: { name: "vendor" },
     })) as Vendor;
