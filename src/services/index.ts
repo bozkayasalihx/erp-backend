@@ -5,3 +5,5 @@ export { default as dealerSiteOperation } from "./dealerSiteOperation";
 export { default as UserEntityRelationOperation } from "./UserEntityRelation";
 export { default as userOperation } from "./userOperation";
 export { default as vendorOperation } from "./vendorOperation";
+export { default as vendorToDealerSiteOperation } from "./VendorTDealerSiteOperation";
+export { default as vendorToDealerSiteToBuyerSiteOperation } from "./VendorTDealerSiteTBuyerSiteOperation";

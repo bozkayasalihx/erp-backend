@@ -17,4 +17,7 @@ export { default as UserEntityRelation } from "./UserEntityRelation";
 export { default as Vendor } from "./Vendor";
 export { default as VendorRegion } from "./VendorRegion";
 export { default as VendorToDealerSite } from "./VendorToDealerSite";
-export { default as VendorToDealerSiteToBuyerSite } from "./VendorToDealerSiteToBuyerSite";
+export {
+    default as VendorTDealerSTBuyerSite,
+    default as VendorToDealerSiteToBuyerSite,
+} from "./VendorToDealerSiteToBuyerSite";

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import { Vendor } from "src/models";
+import { Vendor } from "../../models";
 import { __prod__ } from "../../scripts/dev";
 import { vendorOperation } from "../../services";
 import { IVendorRegion } from "./createVendorRegion";
