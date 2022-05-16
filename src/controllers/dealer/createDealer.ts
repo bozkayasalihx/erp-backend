@@ -25,7 +25,6 @@ export default async function dealer(
             message: "successfully created",
         });
     } catch (err) {
-        console.log("erro", err);
         if (err?.detail?.includes("already exists")) {
             // already exits error;
             return res.status(httpStatus.BAD_REQUEST).json({

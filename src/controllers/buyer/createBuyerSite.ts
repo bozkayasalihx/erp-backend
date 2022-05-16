@@ -28,7 +28,6 @@ export default async function buyerSite(
                 buyerSite.created_by = user;
                 buyerSite.updated_by = user;
                 await buyerSite.save();
-
                 return res.status(httpStatus.OK).json({
                     message: "succesfully updated",
                     data: buyerSite,
@@ -52,7 +51,6 @@ export default async function buyerSite(
             message: "buyer id not found",
         });
     } catch (err) {
-        console.log("err", err);
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             message: "an error accured try again later",
         });

@@ -13,16 +13,15 @@ export const eventHandler = () =>
             },
         });
         try {
-            const info = await transporter.sendMail({
+            await transporter.sendMail({
                 from: process.env.EMAIL_FROM,
                 to: toEmail,
                 subject,
                 html,
             });
-            console.log("info", info);
-            console.log("Message sent: %s", info.messageId);
-            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+            return true;
         } catch (err) {
-            console.log("err", err);
+            return false;
         }
     });
