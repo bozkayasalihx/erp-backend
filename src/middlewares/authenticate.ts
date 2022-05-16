@@ -37,7 +37,6 @@ export async function authenticate(
         );
 
         if (typeof payload === "string") {
-            console.log("paylaod type is string", payload);
             return;
         }
 

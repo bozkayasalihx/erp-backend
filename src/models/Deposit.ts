@@ -1,7 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Column, Entity } from "typeorm";
 import { Currency, DepositStatusType } from "../types/types";
 import SuperEntity from "./SuperEntity";
-import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
 @Entity("deposits")
 export default class Deposit extends SuperEntity {
@@ -19,7 +18,7 @@ export default class Deposit extends SuperEntity {
 
     /** relations */
 
-    @ManyToOne(() => VendorToDealerSiteToBuyerSite, (vdsbs) => vdsbs.deposits)
-    @JoinColumn({ name: "vdsbs_id" })
-    public vdsbs: VendorToDealerSiteToBuyerSite;
+    // @ManyToOne(() => VendorToDealerSiteToBuyerSite, (vdsbs) => vdsbs.deposits)
+    // @JoinColumn({ name: "vdsbs_id" })
+    // public vdsbs: VendorToDealerSiteToBuyerSite;
 }

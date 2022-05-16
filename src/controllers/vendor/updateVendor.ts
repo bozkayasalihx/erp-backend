@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import { __prod__ } from "../../scripts/dev";
 import { vendorOperation } from "../../services";
 import { IVendor } from "./createVendor";
 
@@ -31,7 +30,6 @@ export default async function updateVendor(
             message: "successfully updated",
         });
     } catch (err) {
-        !__prod__ && console.log("err", err);
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             message: "an error accured try again later",
         });

@@ -19,7 +19,6 @@ export default async function getVendor(
                 data: vendor,
             });
         } catch (err) {
-            console.log("err", err);
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "bad request",
             });
@@ -32,8 +31,6 @@ export default async function getVendor(
             data: allVendors,
         });
     } catch (err) {
-        console.log("err", err);
-
         return res.status(httpStatus.BAD_REQUEST).json({
             message: "bad request",
         });
