@@ -1,5 +1,4 @@
 import Joi from "joi";
-import { __prod__ } from "../scripts/dev";
 import { UserTypes } from "../types/types";
 
 const allowedTypes = ["SA", "VA", "V", "B", "BA", "D", "DA"];
@@ -16,6 +15,22 @@ export interface IRegister {
     tckn: string;
     mobile: string;
 }
+
+export interface Options {
+    attribute1: string;
+    attribute2: string;
+    attribute3: string;
+    attribute4: string;
+    attribute5: string;
+}
+
+const options = {
+    attribute1: Joi.string().optional(),
+    attribute2: Joi.string().optional(),
+    attribute3: Joi.string().optional(),
+    attribute4: Joi.string().optional(),
+    attribute5: Joi.string().optional(),
+};
 
 class ValidationSchema {
     public loginValidation() {
@@ -45,8 +60,7 @@ class ValidationSchema {
         return Joi.object({
             name: Joi.string().required().min(3),
             tax_no: Joi.string().required().min(3),
-            created_by: __prod__ && Joi.number().required(),
-            updated_by: __prod__ && Joi.number().required(),
+            ...options,
         });
     }
 
@@ -55,8 +69,7 @@ class ValidationSchema {
             id: Joi.number().required(),
             name: Joi.string().optional().min(3),
             tax_no: Joi.string().optional().min(3),
-            created_by: __prod__ && Joi.number().required(),
-            updated_by: __prod__ && Joi.number().required(),
+            ...options,
         });
     }
 
@@ -64,8 +77,7 @@ class ValidationSchema {
         return Joi.object({
             name: Joi.string().required().min(2),
             vendor_id: Joi.number().required(),
-            created_by: __prod__ && Joi.number().required(),
-            updated_by: __prod__ && Joi.number().required(),
+            ...options,
         });
     }
 
@@ -74,8 +86,7 @@ class ValidationSchema {
             id: Joi.number().required(),
             name: Joi.string().optional().min(2),
             vendor_id: Joi.number().optional(),
-            created_by: __prod__ && Joi.number().required(),
-            updated_by: __prod__ && Joi.number().required(),
+            ...options,
         });
     }
 
@@ -83,8 +94,7 @@ class ValidationSchema {
         return Joi.object({
             name: Joi.string().required().min(3),
             tax_no: Joi.number().required().min(3),
-            created_by: __prod__ && Joi.number().required(),
-            updated_by: __prod__ && Joi.number().required(),
+            ...options,
         });
     }
 
@@ -93,8 +103,7 @@ class ValidationSchema {
             id: Joi.number().required(),
             name: Joi.string().optional().min(3),
             tax_no: Joi.number().optional().min(3),
-            created_by: __prod__ && Joi.number().required(),
-            updated_by: __prod__ && Joi.number().required(),
+            ...options,
         });
     }
 
@@ -102,8 +111,7 @@ class ValidationSchema {
         return Joi.object({
             name: Joi.string().required().min(3),
             buyer_id: Joi.number().required(),
-            created_by: __prod__ && Joi.number().required(),
-            updated_by: __prod__ && Joi.number().required(),
+            ...options,
         });
     }
 
@@ -112,8 +120,7 @@ class ValidationSchema {
             name: Joi.string().optional().min(3),
             id: Joi.number().required(),
             buyer_id: Joi.number().optional(),
-            created_by: __prod__ && Joi.number().required(),
-            updated_by: __prod__ && Joi.number().required(),
+            ...options,
         });
     }
 
@@ -121,8 +128,7 @@ class ValidationSchema {
         return Joi.object({
             name: Joi.string().required().min(3),
             tax_no: Joi.number().required().min(3),
-            created_by: __prod__ && Joi.number().required(),
-            updated_by: __prod__ && Joi.number().required(),
+            ...options,
         });
     }
 
@@ -130,8 +136,7 @@ class ValidationSchema {
         return Joi.object({
             name: Joi.string().optional().min(3),
             tax_no: Joi.number().optional().min(3),
-            created_by: __prod__ && Joi.number().required(),
-            updated_by: __prod__ && Joi.number().required(),
+            ...options,
         });
     }
 
@@ -139,8 +144,7 @@ class ValidationSchema {
         return Joi.object({
             name: Joi.string().required().min(3),
             dealer_id: Joi.number().required(),
-            created_by: __prod__ && Joi.number().required(),
-            updated_by: __prod__ && Joi.number().required(),
+            ...options,
         });
     }
 
@@ -148,8 +152,7 @@ class ValidationSchema {
         return Joi.object({
             name: Joi.string().optional().min(3),
             dealer_id: Joi.number().optional(),
-            created_by: __prod__ && Joi.number().required(),
-            updated_by: __prod__ && Joi.number().required(),
+            ...options,
         });
     }
 }

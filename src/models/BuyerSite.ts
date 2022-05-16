@@ -10,7 +10,7 @@ import Buyer from "./Buyer";
 import SuperEntity from "./SuperEntity";
 import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
-@Entity("buyer_site")
+@Entity("buyer_sites")
 export default class BuyerSite extends SuperEntity {
     /** Properties */
     @Column({ name: "name", unique: true })
@@ -33,7 +33,7 @@ export default class BuyerSite extends SuperEntity {
 
     /** Relations */
     @ManyToOne(() => Buyer, (buyer) => buyer.buyer_sites)
-    @Index("buyer_id", { unique: true })
+    @Index("buyer_id")
     @JoinColumn({ name: "buyer_id" })
     public buyer: Buyer;
 

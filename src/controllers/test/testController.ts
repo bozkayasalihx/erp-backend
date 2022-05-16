@@ -76,7 +76,8 @@ export default async function testControler(req: Request, res: Response) {
             buyer_site_ref_table: true,
         },
     });
-    console.log("maker", maker);
 
-    return res.send("not found");
+    return res.send({
+        message: "done with that",
+    });
 }

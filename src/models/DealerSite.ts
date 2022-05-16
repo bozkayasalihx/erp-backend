@@ -10,8 +10,8 @@ import Dealer from "./Dealer";
 import SuperEntity from "./SuperEntity";
 import VendorToDealerSite from "./VendorToDealerSite";
 
-@Entity("dealer_site")
-@Index(["dealer_id"], { unique: true })
+@Entity("dealer_sites")
+@Index(["dealer_id"])
 export default class DealerSite extends SuperEntity {
     /** Properites*/
     @Column({ name: "name" })
@@ -25,6 +25,7 @@ export default class DealerSite extends SuperEntity {
 
     @Column({ default: null, name: "attribute3" })
     attribute3: string;
+    e;
 
     @Column({ default: null, name: "attribute4" })
     attribute4: string;

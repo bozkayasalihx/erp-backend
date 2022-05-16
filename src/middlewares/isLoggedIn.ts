@@ -12,7 +12,7 @@ export default function isLoggedIn(
 ) {
     if (!req.user) {
         return res.status(401).json({
-            messsage: "NOT FOUND",
+            message: "NOT FOUND",
         });
     }
 

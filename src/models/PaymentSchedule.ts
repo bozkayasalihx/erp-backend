@@ -4,7 +4,7 @@ import Invoices from "./Invoices";
 import PaymentMatches from "./PaymentMatches";
 import SuperEntity from "./SuperEntity";
 
-@Entity("payment_schedule")
+@Entity("payment_schedules")
 export default class PaymentSchedule extends SuperEntity {
     @Column()
     public invoice_id: number;

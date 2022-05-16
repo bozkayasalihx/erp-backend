@@ -1,7 +1,11 @@
 import { EventEmitter } from "events";
 
 interface IEvents {
-    send_email: (params: Record<string, string>) => void;
+    send_email: (params: {
+        toEmail: string;
+        subject: string;
+        html: string;
+    }) => void;
 }
 
 declare interface EmitterClass {

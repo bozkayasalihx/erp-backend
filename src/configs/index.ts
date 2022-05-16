@@ -4,13 +4,6 @@ import { password } from "../types/index";
 
 export const eventHandler = () =>
     eventemitter.on("send_email", async ({ toEmail, subject, html }) => {
-        await nodemailer.createTestAccount();
-        console.log(
-            "process.env",
-            process.env.EMAIL_PASWORD,
-            process.env.EMAIL_HOST,
-            process.env.EMAIL_USER
-        );
         const transporter = nodemailer.createTransport({
             host: process.env.EMAIL_HOST,
             port: process.env.EMAIL_PORT,

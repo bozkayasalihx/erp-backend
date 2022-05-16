@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany } from "typeorm";
 import BuyerSite from "./BuyerSite";
 import SuperEntity from "./SuperEntity";
 
-@Entity("buyer")
+@Entity("buyers")
 export default class Buyer extends SuperEntity {
     /** Properties */
     @Column({ type: "varchar", length: 240, name: "name", unique: true })

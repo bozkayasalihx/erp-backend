@@ -42,13 +42,19 @@ async function loginController(req: Request<any, any, IBody>, res: Response) {
             maxAge: 24 * 60 * 60 * 1000,
         });
         return res.status(httpStatus.OK).json({
-            username: user.username,
-            user_type: user.user_type,
-            access_token,
+            message: "operation succesful",
+            data: {
+                username: user.username,
+                user_type: user.user_type,
+                access_token,
+            },
         });
     } catch (err) {
         console.log("err", err);
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            message: "an error accoured try again later",
+            data: err?.detail,
+        });
     }
 }
 

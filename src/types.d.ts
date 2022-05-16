@@ -1,4 +1,9 @@
+/* eslint-disable @typescript-eslint/triple-slash-reference */
+/// <reference types="express-serve-static-core" />
+
+import * as core from "express-serve-static-core";
 import { User } from "./models";
+
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
@@ -20,9 +25,18 @@ declare global {
             EMAIL_FROM: string;
             TOKEN_EXPIRE: number;
             ORIGIN: string;
+            FORGOT_PASSWORD_SECRET_KEY: string;
         }
     }
     namespace Express {
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface Response<
+            ResBody = { message: string; data?: Record<string, any> },
+            Locals extends Record<string, any> = Record<string, any>
+        > extends core.Response<ResBody, Locals> {}
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface TypedResponse
+            extends Response<{ message: string; data?: Record<string, any> }> {}
         interface Request {
             user: User;
             refreshToken: string;

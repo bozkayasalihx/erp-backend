@@ -2,7 +2,7 @@ import { Column, Entity } from "typeorm";
 import { FileStatusType, LineStatusType } from "../types/types";
 import SuperEntity from "./SuperEntity";
 
-@Entity("ps_schedule")
+@Entity("ps_interface")
 export default class PaymentScheduleInteface extends SuperEntity {
     @Column()
     file_process_id: number;

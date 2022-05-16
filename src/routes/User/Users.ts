@@ -1,9 +1,9 @@
 import { Router } from "express";
 import {
+    forgotPasswordController,
     loginController,
     logoutController,
     refreshTokenController,
-    resetPasswordController,
 } from "../../controllers";
 import registerControler from "../../controllers/user/registerController";
 import { isSetCookie } from "../../middlewares/isSetCookie";
@@ -38,7 +38,7 @@ userRoute
         new Validate<{ email: string }>().validate(
             validationSchema.resetPasswordValidation()
         ),
-        resetPasswordController
+        forgotPasswordController
     );
 
 userRoute.post("/logout", logoutController);

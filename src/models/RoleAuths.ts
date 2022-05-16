@@ -2,7 +2,7 @@ import { Column, Entity, Index } from "typeorm";
 import { UserTypes } from "../types/types";
 import SuperEntity from "./SuperEntity";
 
-@Entity("role_auth")
+@Entity("role_auths")
 @Index(["role_name", "route_name"], { unique: true })
 export default class RoleAuth extends SuperEntity {
     @Column({ type: "enum", enum: UserTypes, name: "role_name" })

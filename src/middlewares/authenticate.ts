@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import jwt, { TokenExpiredError } from "jsonwebtoken";
+import { StringValidator } from "../scripts/utils/stringValidator";
 import { userOperation } from "../services";
 
 export async function authenticate(
@@ -9,12 +10,24 @@ export async function authenticate(
     next: NextFunction
 ) {
     const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.replace("Bearer ", "");
+    if (!authHeader)
+        return res.status(httpStatus.UNAUTHORIZED).json({
+            message: "unauthorized request",
+        });
+    const strValidator = new StringValidator(authHeader);
+    const { head, body } = strValidator.parse(res);
+    const valid = strValidator.validateHeader(head);
+    if (!valid)
+        return res.status(httpStatus.BAD_REQUEST).json({
+            message: "invalid request",
+        });
+
+    const token = body;
 
     if (!token) {
-        return res
-            .status(httpStatus.BAD_REQUEST)
-            .send("you must logged in for further operations");
+        return res.status(httpStatus.BAD_REQUEST).json({
+            message: "you must logged in for further operations",
+        });
     }
 
     try {
@@ -45,13 +58,13 @@ export async function authenticate(
         return next();
     } catch (err) {
         if (err instanceof TokenExpiredError) {
-            // do nothings;
-        } else {
-            console.log("err", err);
+            return res.status(httpStatus.BAD_REQUEST).json({
+                message: "expired token",
+            });
         }
 
         return res.status(httpStatus.FORBIDDEN).json({
-            messsage: "forbidden request",
+            message: "forbidden request",
         });
     }
 }

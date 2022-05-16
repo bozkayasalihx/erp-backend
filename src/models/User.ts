@@ -5,12 +5,13 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    Index,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
 import { UserTypes } from "../types/types";
 
-@Entity("user_tbl")
+@Entity("users")
 export default class User extends BaseEntity {
     /** Properties */
     @PrimaryGeneratedColumn({ name: "id" })
@@ -43,6 +44,7 @@ export default class User extends BaseEntity {
         default: UserTypes.VENDOR_ADMIN,
         name: "user_type",
     })
+    @Index("user_type")
     public user_type: UserTypes;
 
     @Column({ unique: true, type: "bigint", name: "tckn" })

@@ -1,46 +1,42 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import jwt from "jsonwebtoken";
-import { generateRefreshToken } from "../../scripts/utils/generateToken";
+import decoder from "../../scripts/utils/decoder";
 import revokeRefreshToken from "../../scripts/utils/revokeRefreshToken";
-import userOperation from "../../services/userOperation";
+import { userOperation } from "../../services";
 
 export default async function me(req: Request, res: Response) {
-    try {
-        const refreshToken = req.refreshToken;
-        const payload = jwt.verify(
-            refreshToken,
-            process.env.REFRESH_TOKEN_SECRET_KEY as string
-        ) as jwt.JwtPayload;
+    const user = req.user;
+    const refreshToken = req.refreshToken;
+    decoder.setValue(refreshToken);
+    const { userId, tokenVersion } = decoder.decode();
 
-        const user = await userOperation.repo.findOne({
-            where: { id: payload.userId },
+    const refreshUser = await userOperation.repo.findOne({
+        where: { id: userId },
+    });
+
+    if (!refreshUser) {
+        return res.status(httpStatus.UNAUTHORIZED).json({
+            message: "unauthorizated user",
         });
-
-        if (!user)
-            return res.status(httpStatus.BAD_REQUEST).json({
-                message: "user not found",
-            });
-
-        const valid = await revokeRefreshToken(user.id);
-        if (!valid)
-            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-                message: "an error accured",
-            });
-
-        const newToken = generateRefreshToken(
-            {
-                userId: user.id,
-                tokenVersion: user.tokenVersion,
-            },
-            process.env.ACCESS_TOKEN_SECRET_KEY as string
-        );
-
-        return res.status(httpStatus.OK).json({
-            token: newToken,
-        });
-    } catch (err) {
-        console.log("err", err);
-        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    if (
+        user.username !== refreshUser.username ||
+        user.password !== refreshUser.password
+    ) {
+        return res.status(httpStatus.UNAUTHORIZED).json({
+            message: "unauthorizated attempt",
+        });
+    }
+
+    await revokeRefreshToken(user.id);
+
+    return res.status(httpStatus.OK).json({
+        message: "operation succesful",
+        data: {
+            username: user.username,
+            user_type: user.user_type,
+            id: user.id,
+        },
+    });
 }

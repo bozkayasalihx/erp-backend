@@ -12,7 +12,6 @@ export class UserCreateSubs implements EntitySubscriberInterface<any> {
     async beforeInsert(event: InsertEvent<any>) {
         if (!event.entity.created_by || !event.entity.updated_by) {
             let user: User | null = null;
-
             console.log("listening events...");
             try {
                 user = await User.findOne({ where: { username: "uncle bob" } });

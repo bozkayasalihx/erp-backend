@@ -29,9 +29,12 @@ async function registerControler(req: Request<any, any, IBody>, res: Response) {
         });
 
         return res.status(httpStatus.CREATED).json({
-            username: user.username,
-            email: user.email,
-            access_token,
+            message: "operation succesful",
+            data: {
+                username: user.username,
+                email: user.email,
+                access_token,
+            },
         });
     } catch (err) {
         console.log("erro", err);
@@ -42,7 +45,9 @@ async function registerControler(req: Request<any, any, IBody>, res: Response) {
             });
         }
 
-        return res.status(httpStatus.FORBIDDEN).send("error accured");
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            message: "an error accured try again later",
+        });
     }
 }
 

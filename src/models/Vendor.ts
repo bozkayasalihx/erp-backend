@@ -3,7 +3,7 @@ import SuperEntity from "./SuperEntity";
 import VendorRegion from "./VendorRegion";
 import VendorToDealerSite from "./VendorToDealerSite";
 
-@Entity("vendor")
+@Entity("vendors")
 export default class Vendor extends SuperEntity {
     //** Properties */
     @Column({ type: "varchar", length: 240, name: "name", unique: true })

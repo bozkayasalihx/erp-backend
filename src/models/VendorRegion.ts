@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
 import SuperEntity from "./SuperEntity";
 import Vendor from "./Vendor";
 
@@ -26,6 +26,7 @@ export default class VendorRegion extends SuperEntity {
 
     /** relations */
     @ManyToOne(() => Vendor, (vendor) => vendor.vendor_regions)
+    @Index("vendor_id")
     @JoinColumn({ name: "vendor_id" })
     public vendor: Vendor;
 }

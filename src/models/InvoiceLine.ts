@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import Invoices from "./Invoices";
 import SuperEntity from "./SuperEntity";
 
-@Entity("invoice_line")
+@Entity("invoice_lines")
 export default class InvoiceLine extends SuperEntity {
     @Column({ type: "int" })
     public invoice_id: number;

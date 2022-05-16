@@ -31,6 +31,6 @@ export default async function checkFileType(
     }
 
     return res.status(httpStatus.BAD_REQUEST).json({
-        messasge: "invalid file type",
+        message: "invalid file type",
     });
 }

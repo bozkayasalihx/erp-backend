@@ -24,7 +24,7 @@ export default async function createVendor(
         await vendor.save();
         return res.status(httpStatus.CREATED).json({
             message: "succesfully created",
-            vendor,
+            data: { vendor },
         });
     } catch (err) {
         console.log("err", err);

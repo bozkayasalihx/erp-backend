@@ -62,7 +62,7 @@ async function refreshController(req: Request, res: Response) {
 
         return res.status(httpStatus.OK).json({
             message: "succesful operation",
-            accessToken,
+            data: { accessToken },
         });
     } catch (err) {
         return res.status(httpStatus.UNAUTHORIZED).json({

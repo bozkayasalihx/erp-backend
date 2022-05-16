@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-interface IGenerateToken {
+export interface IGenerateToken {
     userId: number;
     tokenVersion: number;
 }
