@@ -26,6 +26,7 @@ declare global {
             TOKEN_EXPIRE: number;
             ORIGIN: string;
             FORGOT_PASSWORD_SECRET_KEY: string;
+            SENDER_EMAIL_PASSWORD: string;
         }
     }
     namespace Express {
