@@ -3,6 +3,7 @@ import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import helmet from "helmet";
+import httpStatus from "http-status";
 import morgan from "morgan";
 import path from "path";
 import "reflect-metadata";
@@ -55,7 +56,7 @@ export const main = async () => {
 
     // not found route;
     app.use("*", (_, res) => {
-        return res.send("<h1>NOT FOUND</h1>");
+        return res.status(httpStatus.BAD_REQUEST).send("<h1>NOT FOUND</h1>");
     });
 
     app.listen(process.env.PORT, () => {
