@@ -1,3 +1,5 @@
+import { UserTypes } from "./types";
+
 export enum Routes {
     REGISTER = "/register",
     LOGIN = "/login",
@@ -18,12 +20,7 @@ export enum Routes {
     VENDOR = "/vendor",
 }
 
-export enum PrivateRoutes {
-    VendorRoutes = "/vendors/",
-    VendorRegionRoutes = "/vendor-regions/",
-    DealerRoutes = "/dealer/",
-    DealerSiteRoutes = "/dealer-site/",
-    BuyerRoutes = "/buyer/",
-    BuyerSiteRoutes = "/buyer-site/",
-    SiteAdminRoutes = "/site-admin/",
-}
+export const accesableRoute = new Map<string, Array<string>>();
+accesableRoute.set(UserTypes.BUYER_ADMIN, ["buyer", "buyer-site"]);
+accesableRoute.set(UserTypes.DEALER_ADMIN, ["dealer", "dealer-site"]);
+accesableRoute.set(UserTypes.VENDOR_ADMIN, ["vendor", "vendor-region"]);
