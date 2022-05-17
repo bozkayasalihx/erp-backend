@@ -17,3 +17,13 @@ export enum Routes {
     CREATE_VDSBS_RELATION = "/vdsbs-relations",
     VENDOR = "/vendor",
 }
+
+export enum PrivateRoutes {
+    VendorRoutes = "/vendors/",
+    VendorRegionRoutes = "/vendor-regions/",
+    DealerRoutes = "/dealer/",
+    DealerSiteRoutes = "/dealer-site/",
+    BuyerRoutes = "/buyer/",
+    BuyerSiteRoutes = "/buyer-site/",
+    SiteAdminRoutes = "/site-admin/",
+}

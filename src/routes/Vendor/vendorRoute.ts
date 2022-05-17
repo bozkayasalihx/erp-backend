@@ -1,10 +1,8 @@
 import { Router } from "express";
 import {
     createVendorController,
-    createVendorRegionController,
     getVendorController,
     updateVendorController,
-    updateVendorRegionController,
 } from "../../controllers";
 import { IVendor } from "../../controllers/vendor/createVendor";
 import Validate from "../../middlewares/validate";
@@ -20,13 +18,6 @@ router.post(
 );
 
 router.get(`/:vendorId?`, getVendorController);
-router.post(
-    Routes.CREATE_VENDOR_REGION,
-    new Validate<{ name: string }>().validate(
-        validationSchema.createVendorRegionValidation()
-    ),
-    createVendorRegionController
-);
 
 router.patch(
     Routes.CREATE_VENDOR,
@@ -34,14 +25,6 @@ router.patch(
         validationSchema.updateVendorValidation()
     ),
     updateVendorController
-);
-
-router.patch(
-    Routes.CREATE_VENDOR_REGION,
-    new Validate<{ name: string }>().validate(
-        validationSchema.updateVendorRegionValidation()
-    ),
-    updateVendorRegionController
 );
 
 export default router;

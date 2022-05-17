@@ -9,15 +9,18 @@ import path from "path";
 import "reflect-metadata";
 import { eventHandler } from "./configs";
 import { connectDb } from "./loaders/database";
-import { authenticate } from "./middlewares/authenticate";
+import { authenticate, permission } from "./middlewares";
 import {
     buyerRoute,
+    BuyerSiteRoute,
     dealerRoute,
+    DealerSiteRoute,
     fileUpload as fileUploadRoute,
     meRoute,
     relationRoute,
     testRoute,
     userRoute,
+    VendorRegionRoute,
     vendorRoute,
 } from "./routes";
 
@@ -45,13 +48,17 @@ export const main = async () => {
     app.use("/api", userRoute);
     //after thsi middeleware all route protected;
     app.use(authenticate);
+    app.use(permission);
     /** routes */
     app.use("/api", meRoute);
     app.use("/api", testRoute);
     app.use("/api", fileUploadRoute);
     app.use("/api/vendor", vendorRoute);
+    app.use("/api/vendor-region", VendorRegionRoute);
     app.use("/api/buyer", buyerRoute);
+    app.use("/api/buyer-site", BuyerSiteRoute);
     app.use("/api/dealer", dealerRoute);
+    app.use("/api/dealer-site", DealerSiteRoute);
     app.use("/api/relations", relationRoute);
 
     // not found route;

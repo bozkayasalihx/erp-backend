@@ -4,7 +4,7 @@ import jwt, { TokenExpiredError } from "jsonwebtoken";
 import { StringValidator } from "../scripts/utils/stringValidator";
 import { userOperation } from "../services";
 
-export async function authenticate(
+export default async function authenticate(
     req: Request,
     res: Response,
     next: NextFunction

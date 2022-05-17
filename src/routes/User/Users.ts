@@ -7,7 +7,7 @@ import {
     resetPasswordController,
 } from "../../controllers";
 import registerControler from "../../controllers/user/registerController";
-import { isSetCookie } from "../../middlewares/isSetCookie";
+import { isSetCookie } from "../../middlewares";
 import Validate from "../../middlewares/validate";
 import { Routes } from "../../types/routePath";
 import validationSchema, {
