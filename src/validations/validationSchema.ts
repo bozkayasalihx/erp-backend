@@ -174,7 +174,7 @@ class ValidationSchema {
     public createPasswordValidation() {
         return Joi.object<{ token: string; newPassword: string }>({
             token: Joi.string().required().min(10),
-            newPassword: Joi.string().required().email(),
+            newPassword: Joi.string().required().min(5),
         });
     }
 }

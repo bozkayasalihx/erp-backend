@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import {
     BaseEntity,
     BeforeInsert,
+    BeforeUpdate,
     Column,
     CreateDateColumn,
     Entity,
@@ -59,6 +60,10 @@ export default class User extends BaseEntity {
     /** before insert operations */
     @BeforeInsert()
     private async beforeInsert() {
+        this.password = await bcrypt.hash(this.password, +process.env.SALT);
+    }
+    @BeforeUpdate()
+    private async beforeUpdate() {
         this.password = await bcrypt.hash(this.password, +process.env.SALT);
     }
 }

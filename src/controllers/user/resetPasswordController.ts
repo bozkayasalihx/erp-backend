@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
-import { userOperation } from "src/services";
+import genHash from "../../scripts/utils/generateHash";
+import { userOperation } from "../../services";
 
 interface Iparams {
     token: string;
@@ -28,7 +29,7 @@ export default async function resetPasswordController(
                 message: "true",
             });
 
-        user.password = newPassword;
+        user.password = await genHash.gen(newPassword);
         await user.save();
 
         return res.status(httpStatus.OK).json({
