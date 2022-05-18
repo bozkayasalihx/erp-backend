@@ -50,8 +50,7 @@ export default async function createUserEntityRelation(
         });
 
         return res.status(httpStatus.OK).json({
-            message: "ok",
-            data: userEntity,
+            message: "operation succesful",
         });
     } catch (err) {
         console.log("err", err);

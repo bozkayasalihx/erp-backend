@@ -1,8 +1,9 @@
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { InvoiceStatusType } from "../types/types";
 import InvoiceLine from "./InvoiceLine";
 import PaymentSchedule from "./PaymentSchedule";
 import SuperEntity from "./SuperEntity";
+import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
 @Entity("invoices")
 export default class Invoices extends SuperEntity {
@@ -42,9 +43,9 @@ export default class Invoices extends SuperEntity {
 
     /** RElations */
 
-    // @ManyToOne(() => VendorToDealerSiteToBuyerSite, (vdsbs) => vdsbs.invoices)
-    // @JoinColumn({ name: "vdsbs_id" })
-    // public vdsbs: VendorToDealerSiteToBuyerSite;
+    @ManyToOne(() => VendorToDealerSiteToBuyerSite, (vdsbs) => vdsbs.invoices)
+    @JoinColumn({ name: "vdsbs_id" })
+    public vdsbs: VendorToDealerSiteToBuyerSite;
 
     @OneToMany(() => PaymentSchedule, (ps) => ps.invoices)
     public payment_schedules: Array<PaymentSchedule>;
