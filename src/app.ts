@@ -15,6 +15,7 @@ import {
     BuyerSiteRoute,
     dealerRoute,
     DealerSiteRoute,
+    depositRoute,
     fileUpload as fileUploadRoute,
     meRoute,
     relationRoute,
@@ -60,6 +61,7 @@ export const main = async () => {
     app.use("/api/dealer", dealerRoute);
     app.use("/api/dealer-site", DealerSiteRoute);
     app.use("/api/relations", relationRoute);
+    app.use("/api/deposit", depositRoute);
 
     // not found route;
     app.use("*", (_, res) => {

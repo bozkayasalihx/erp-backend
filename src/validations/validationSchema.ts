@@ -1,7 +1,8 @@
 import Joi from "joi";
+import { IDeposit } from "../controllers/deposit/createDeposit";
 import { IDealerRouteUser } from "../controllers/relations/createDealerRouteUser";
 import { IUserEntityRelation } from "../controllers/relations/createUserEntityRelation";
-import { UserTypes } from "../types/types";
+import { Currency, DepositStatusType, UserTypes } from "../types/types";
 
 const allowedTypes = ["SA", "VA", "V", "B", "BA", "D", "DA"];
 export interface ILogin {
@@ -193,6 +194,15 @@ class ValidationSchema {
         return Joi.object<IDealerRouteUser>({
             description: Joi.string().optional(),
             user_id: Joi.number().required(),
+            vdsbs_id: Joi.number().required(),
+        });
+    }
+    public createDeposit() {
+        return Joi.object<IDeposit>({
+            amount: Joi.number().required(),
+            currency: Joi.valid(...Object.values(Currency)).required(),
+            status: Joi.valid(...Object.values(DepositStatusType)).required(),
+            approval_date: Joi.date().required(),
             vdsbs_id: Joi.number().required(),
         });
     }

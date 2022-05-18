@@ -21,7 +21,6 @@ export default class Advance extends SuperEntity {
     public approval_date: Date;
 
     /** relations */
-
     @ManyToOne(() => VendorToDealerSiteToBuyerSite, (vdsbs) => vdsbs.advances)
     @JoinColumn({ name: "vdsbs_id" })
     public vdsbs: VendorToDealerSiteToBuyerSite;
