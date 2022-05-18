@@ -65,7 +65,7 @@ export const main = async () => {
 
     // not found route;
     app.use("*", (_, res) => {
-        return res.status(httpStatus.BAD_REQUEST).send("<h1>NOT FOUND</h1>");
+        return res.status(httpStatus.FORBIDDEN).send("<h1>NOT FOUND</h1>");
     });
 
     app.listen(process.env.PORT, () => {

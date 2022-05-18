@@ -47,7 +47,7 @@ class ValidationSchema {
             username: Joi.string().min(3),
             email: Joi.string().required().email(),
             password: Joi.string().required().min(5),
-            user_type: Joi.valid(...allowedTypes).required(),
+            user_type: Joi.valid(...Object.values(UserTypes)).required(),
             mobile: Joi.string().required().min(10).max(11),
             tckn: Joi.string().required().min(11).max(11),
         });
