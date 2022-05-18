@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+    createUserEntityRelationController,
     getVdsbsRelationsController,
     getVdsRelationsController,
     vdsbsRelationController,
@@ -26,6 +27,11 @@ router.post(
         validationSchema.createVdsbsValidation()
     ),
     vdsbsRelationController
+);
+router.post(
+    "/create-user-entity",
+    new Validate().validate(validationSchema.createUserEntityValidation()),
+    createUserEntityRelationController
 );
 
 router.get(`${Routes.CREATE_VDS_RELATION}/:vds_id?`, getVdsRelationsController);

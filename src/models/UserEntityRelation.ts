@@ -7,7 +7,12 @@ import Vendor from "./Vendor";
 
 @Entity("user_entity_relations")
 export default class UserEntityRelation extends SuperEntity {
-    @Column({ type: "varchar", length: 240, name: "description" })
+    @Column({
+        type: "varchar",
+        length: 240,
+        name: "description",
+        nullable: true,
+    })
     public description: string;
 
     @ManyToOne(() => User)
@@ -15,16 +20,16 @@ export default class UserEntityRelation extends SuperEntity {
     public user: User;
 
     @ManyToOne(() => Vendor)
-    @JoinColumn({ name: "vendor_table_id" })
-    public vendor_ref_table: Vendor;
+    @JoinColumn({ name: "vendor_table_ref_id" })
+    public vendor_table_ref: Vendor;
 
     @ManyToOne(() => BuyerSite)
     @JoinColumn({ name: "buyer_site_ref_id" })
-    public buyer_site_ref_table: BuyerSite;
+    public buyer_site_table_ref: BuyerSite;
 
     @ManyToOne(() => DealerSite)
     @JoinColumn({ name: "dealer_site_ref_id" })
-    public dealer_site_ref_table: DealerSite;
+    public dealer_site_table_ref: DealerSite;
 }
 
 // vendor => vendor.id
