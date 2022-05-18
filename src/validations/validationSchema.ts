@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { IDealerRouteUser } from "../controllers/relations/createDealerRouteUser";
 import { IUserEntityRelation } from "../controllers/relations/createUserEntityRelation";
 import { UserTypes } from "../types/types";
 
@@ -185,6 +186,14 @@ class ValidationSchema {
             vendor_table_ref: Joi.number().optional(),
             description: Joi.string().optional(),
             user_id: Joi.number().required(),
+        });
+    }
+
+    public createDealerRouteUser() {
+        return Joi.object<IDealerRouteUser>({
+            description: Joi.string().optional(),
+            user_id: Joi.number().required(),
+            vdsbs_id: Joi.number().required(),
         });
     }
 }

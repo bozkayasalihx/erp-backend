@@ -17,7 +17,8 @@ export enum Routes {
     CREATE_DEALER_SITE = "/create-dealersite",
     CREATE_VDS_RELATION = "/vds-relations",
     CREATE_VDSBS_RELATION = "/vdsbs-relations",
-    VENDOR = "/vendor",
+    CREATE_USER_ENTITY = "/create-user-entity",
+    CREATE_DEALER_USER_ROUTE = "/create-dealer-user-route",
 }
 
 export const accesableRoute = new Map<string, Array<string>>();

@@ -1,11 +1,13 @@
 import { Router } from "express";
 import {
+    createDealerRouteUser,
     createUserEntityRelationController,
     getVdsbsRelationsController,
     getVdsRelationsController,
     vdsbsRelationController,
     vdsRelationController,
 } from "../../controllers";
+import { IDealerRouteUser } from "../../controllers/relations/createDealerRouteUser";
 import { IVDSBSRelations } from "../../controllers/relations/createVdsbsRelations";
 import { IVdsRelations } from "../../controllers/relations/createVdsRelations";
 import Validate from "../../middlewares/validate";
@@ -29,9 +31,17 @@ router.post(
     vdsbsRelationController
 );
 router.post(
-    "/create-user-entity",
+    Routes.CREATE_USER_ENTITY,
     new Validate().validate(validationSchema.createUserEntityValidation()),
     createUserEntityRelationController
+);
+
+router.post(
+    Routes.CREATE_DEALER_USER_ROUTE,
+    new Validate<IDealerRouteUser>().validate(
+        validationSchema.createDealerRouteUser()
+    ),
+    createDealerRouteUser
 );
 
 router.get(`${Routes.CREATE_VDS_RELATION}/:vds_id?`, getVdsRelationsController);

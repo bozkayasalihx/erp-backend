@@ -22,10 +22,10 @@ export default class PaymentMatches extends SuperEntity {
     @JoinColumn({ name: "payment_id" })
     public payments: Payments;
 
-    // @ManyToOne(
-    //     () => VendorToDealerSiteToBuyerSite,
-    //     (vdsbs) => vdsbs.payment_matches
-    // )
+    @ManyToOne(
+        () => VendorToDealerSiteToBuyerSite,
+        (vdsbs) => vdsbs.payment_matches
+    )
     @JoinColumn({ name: "vdsbs_id" })
     public vdsbs: VendorToDealerSiteToBuyerSite;
 }

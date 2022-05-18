@@ -19,6 +19,7 @@ export default class VendorToDealerSite extends SuperEntity {
         length: 240,
         default: null,
         name: "description",
+        nullable: true,
     })
     public description: string;
 
