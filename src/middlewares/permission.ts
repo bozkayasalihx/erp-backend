@@ -48,6 +48,39 @@ export default function permission(
             }
             return res.sendStatus(httpStatus.UNAUTHORIZED);
         }
+
+        case UserTypes.BUYER: {
+            for (const route of accesableRoute.get(UserTypes.BUYER)!) {
+                if (routeType === route) {
+                    return next();
+                }
+            }
+
+            return res.sendStatus(httpStatus.UNAUTHORIZED);
+        }
+
+        case UserTypes.DEALER: {
+            for (const route of accesableRoute.get(UserTypes.DEALER)!) {
+                if (routeType === route) {
+                    return next();
+                }
+            }
+
+            return res.sendStatus(httpStatus.UNAUTHORIZED);
+        }
+
+        case UserTypes.VENDOR: {
+            for (const route of accesableRoute.get(UserTypes.VENDOR)!) {
+                if (routeType === route) {
+                    return next();
+                }
+            }
+
+            return res.sendStatus(httpStatus.UNAUTHORIZED);
+        }
+        case UserTypes.SITE_ADMIN: {
+            return next();
+        }
         default: {
             return next();
         }

@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { IUserEntityRelation } from "../controllers/relations/createUserEntityRelation";
 import { UserTypes } from "../types/types";
 
 const allowedTypes = ["SA", "VA", "V", "B", "BA", "D", "DA"];
@@ -175,6 +176,15 @@ class ValidationSchema {
         return Joi.object<{ token: string; newPassword: string }>({
             token: Joi.string().required().min(10),
             newPassword: Joi.string().required().min(5),
+        });
+    }
+    public createUserEntityValidation() {
+        return Joi.object<IUserEntityRelation>({
+            buyer_site_table_ref: Joi.number().optional(),
+            dealer_site_table_ref: Joi.number().optional(),
+            vendor_table_ref: Joi.number().optional(),
+            description: Joi.string().optional(),
+            user_id: Joi.number().required(),
         });
     }
 }

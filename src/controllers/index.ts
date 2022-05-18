@@ -2,6 +2,7 @@ export { default as buyerControler } from "./buyer/createBuyer";
 export { default as buyerSiteController } from "./buyer/createBuyerSite";
 export { default as dealerController } from "./dealer/createDealer";
 export { default as dealerSiteController } from "./dealer/createDealerSite";
+export { default as createUserEntityRelationController } from "./relations/createUserEntityRelation";
 export { default as vdsbsRelationController } from "./relations/createVdsbsRelations";
 export { default as vdsRelationController } from "./relations/createVdsRelations";
 export { default as getVdsbsRelationsController } from "./relations/getVdsbsRelations";

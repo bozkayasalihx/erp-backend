@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { appDataSource } from "../../loaders";
 import { BuyerSite, User, Vendor } from "../../models";
-import UserEntityRelation from "../../models/UserEntityRelation";
 
 export default async function testControler(req: Request, res: Response) {
     // const userRelation = new UserEntityRelation();
@@ -55,24 +54,24 @@ export default async function testControler(req: Request, res: Response) {
         where: { name: "buyer site" },
     })) as BuyerSite;
 
-    const ue = new UserEntityRelation();
-    ue.created_by = user;
-    ue.updated_by = user;
-    ue.buyer_site_ref_table = buyerSite;
-    ue.description = "vendor";
-    ue.user = user;
+    // const ue = new UserEntityRelation();
+    // ue.created_by = user;
+    // ue.updated_by = user;
+    // ue.buyer_site_ref_table = buyerSite;
+    // ue.description = "vendor";
+    // ue.user = user;
 
     const v = new Vendor();
 
     // await ue.save();
-    const maker = await UserEntityRelation.findOne({
-        where: { user: { id: user.id } },
-        relations: {
-            dealer_site_ref_table: true,
-            vendor_ref_table: true,
-            buyer_site_ref_table: true,
-        },
-    });
+    // const maker = await UserEntityRelation.findOne({
+    //     where: { user: { id: user.id } },
+    //     relations: {
+    //         dealer_site_ref_table: true,
+    //         vendor_ref_table: true,
+    //         buyer_site_ref_table: true,
+    //     },
+    // });
 
     return res.send({
         message: "done with that",
