@@ -6,6 +6,7 @@ export { default as Dealer } from "./Dealer";
 export { default as DealerRouteUser } from "./DealerRouteUser";
 export { default as DealerSite } from "./DealerSite";
 export { default as Deposit } from "./Deposit";
+export { default as Invoice } from "./Invoice";
 export { default as InvoiceInterface } from "./InvoiceInterface";
 export { default as InvoiceLine } from "./InvoiceLine";
 export { default as Payment } from "./Payment";

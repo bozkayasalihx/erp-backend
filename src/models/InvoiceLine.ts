@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import Invoices from "./Invoices";
+import Invoices from "./Invoice";
 import SuperEntity from "./SuperEntity";
 
 @Entity("invoice_lines")

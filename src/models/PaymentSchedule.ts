@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import { PaymentStatusType } from "../types/types";
-import Invoices from "./Invoices";
+import Invoices from "./Invoice";
 import PaymentMatches from "./PaymentMatches";
 import SuperEntity from "./SuperEntity";
 

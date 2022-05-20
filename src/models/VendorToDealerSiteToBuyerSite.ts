@@ -11,7 +11,7 @@ import Advance from "./Advance";
 import BuyerSite from "./BuyerSite";
 import DealerRouteUser from "./DealerRouteUser";
 import Deposit from "./Deposit";
-import Invoices from "./Invoices";
+import Invoices from "./Invoice";
 import Payments from "./Payment";
 import PaymentMatches from "./PaymentMatches";
 import SuperEntity from "./SuperEntity";

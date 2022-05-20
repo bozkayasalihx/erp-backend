@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { IAdvance } from "../controllers/advance/createAdvance";
 import { IDeposit } from "../controllers/deposit/createDeposit";
+import { IInvoice } from "../controllers/invoice/createInvoice";
 import { IDealerRouteUser } from "../controllers/relations/createDealerRouteUser";
 import { IUserEntityRelation } from "../controllers/relations/createUserEntityRelation";
 import {
@@ -8,6 +9,7 @@ import {
     AdvanceType,
     Currency,
     DepositStatusType,
+    InvoiceStatusType,
     UserTypes,
 } from "../types/types";
 
@@ -221,6 +223,20 @@ class ValidationSchema {
             vdsbs_id: Joi.number().required(),
             status: Joi.valid(...Object.values(AdvanceStatusType)).required(),
             approvalDate: Joi.date().required(),
+        });
+    }
+
+    public createInvoice() {
+        return Joi.object<IInvoice>({
+            currency: Joi.valid(...Object.values(Currency)).required(),
+            invoice_no: Joi.string().required().min(30).max(30).required(),
+            invoice_date: Joi.date().required(),
+            invoice_amount: Joi.number().required(),
+            status: Joi.valid(...Object.values(InvoiceStatusType)).required(),
+            ref_file_id: Joi.number().required(),
+            due_date: Joi.date().required(),
+            vdsbs_id: Joi.number().required(),
+            ...options,
         });
     }
 }
