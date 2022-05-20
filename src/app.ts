@@ -11,6 +11,7 @@ import { eventHandler } from "./configs";
 import { connectDb } from "./loaders/database";
 import { authenticate, permission } from "./middlewares";
 import {
+    advanceRoute,
     buyerRoute,
     BuyerSiteRoute,
     dealerRoute,
@@ -62,6 +63,7 @@ export const main = async () => {
     app.use("/api/dealer-site", DealerSiteRoute);
     app.use("/api/relations", relationRoute);
     app.use("/api/deposit", depositRoute);
+    app.use("/api/advance", advanceRoute);
 
     // not found route;
     app.use("*", (_, res) => {

@@ -48,5 +48,7 @@ userRoute.post(
     new Validate().validate(validationSchema.createPasswordValidation()),
     resetPasswordController
 );
+
 userRoute.route(Routes.REFRESH_TOKEN).get(isSetCookie, refreshTokenController);
+
 export default userRoute;

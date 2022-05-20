@@ -20,6 +20,7 @@ export enum Routes {
     CREATE_USER_ENTITY = "/create-user-entity",
     CREATE_DEALER_USER_ROUTE = "/create-dealer-user-route",
     CREATE_DEPOSIT = "/create-deposit",
+    CREATE_ADVANCE = "/create-advance",
 }
 
 export const accesableRoute = new Map<string, Array<string>>();

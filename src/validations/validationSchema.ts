@@ -1,10 +1,16 @@
 import Joi from "joi";
+import { IAdvance } from "../controllers/advance/createAdvance";
 import { IDeposit } from "../controllers/deposit/createDeposit";
 import { IDealerRouteUser } from "../controllers/relations/createDealerRouteUser";
 import { IUserEntityRelation } from "../controllers/relations/createUserEntityRelation";
-import { Currency, DepositStatusType, UserTypes } from "../types/types";
+import {
+    AdvanceStatusType,
+    AdvanceType,
+    Currency,
+    DepositStatusType,
+    UserTypes,
+} from "../types/types";
 
-const allowedTypes = ["SA", "VA", "V", "B", "BA", "D", "DA"];
 export interface ILogin {
     email: string;
     password: string;
@@ -204,6 +210,17 @@ class ValidationSchema {
             status: Joi.valid(...Object.values(DepositStatusType)).required(),
             approval_date: Joi.date().required(),
             vdsbs_id: Joi.number().required(),
+        });
+    }
+
+    public createAdvance() {
+        return Joi.object<IAdvance>({
+            advance_type: Joi.valid(...Object.values(AdvanceType)).required(),
+            amount: Joi.number().required(),
+            currency: Joi.valid(...Object.values(Currency)).required(),
+            vdsbs_id: Joi.number().required(),
+            status: Joi.valid(...Object.values(AdvanceStatusType)).required(),
+            approvalDate: Joi.date().required(),
         });
     }
 }
