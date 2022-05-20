@@ -5,6 +5,7 @@ export { default as dealerRoute } from "./Dealer/dealerRoute";
 export { default as DealerSiteRoute } from "./Dealer/dealerSiteRoute";
 export { default as depositRoute } from "./Deposit/depositRoute";
 export { default as fileUpload } from "./Generic/FileUpload";
+export { default as invoiceRoute } from "./Invoice/invoiceRoute";
 export { default as meRoute } from "./Me/Me";
 export { default as relationRoute } from "./relations/relationRoute";
 export { default as testRoute } from "./test/Test";

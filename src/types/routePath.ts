@@ -21,6 +21,7 @@ export enum Routes {
     CREATE_DEALER_USER_ROUTE = "/create-dealer-user-route",
     CREATE_DEPOSIT = "/create-deposit",
     CREATE_ADVANCE = "/create-advance",
+    CREATE_INVOICE = "/create-invoice",
 }
 
 export const accesableRoute = new Map<string, Array<string>>();

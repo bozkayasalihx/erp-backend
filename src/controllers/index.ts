@@ -4,6 +4,7 @@ export { default as buyerSiteController } from "./buyer/createBuyerSite";
 export { default as dealerController } from "./dealer/createDealer";
 export { default as dealerSiteController } from "./dealer/createDealerSite";
 export { default as createDeposit } from "./deposit/createDeposit";
+export { default as createInvoiceController } from "./invoice/createInvoice";
 export { default as createDealerRouteUser } from "./relations/createDealerRouteUser";
 export { default as createUserEntityRelationController } from "./relations/createUserEntityRelation";
 export { default as vdsbsRelationController } from "./relations/createVdsbsRelations";

@@ -18,6 +18,7 @@ import {
     DealerSiteRoute,
     depositRoute,
     fileUpload as fileUploadRoute,
+    invoiceRoute,
     meRoute,
     relationRoute,
     testRoute,
@@ -64,6 +65,7 @@ export const main = async () => {
     app.use("/api/relations", relationRoute);
     app.use("/api/deposit", depositRoute);
     app.use("/api/advance", advanceRoute);
+    app.use("/api/invoice", invoiceRoute);
 
     // not found route;
     app.use("*", (_, res) => {
