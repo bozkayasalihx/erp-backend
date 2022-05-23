@@ -8,10 +8,14 @@ export default class Deposit extends SuperEntity {
     @Column({ type: "real" })
     public amount: number;
 
-    @Column({ length: 3, type: "varchar" })
+    @Column({ length: 3, type: "varchar", default: Currency.TRY })
     public currency: Currency;
 
-    @Column({ type: "enum", enum: DepositStatusType })
+    @Column({
+        type: "enum",
+        enum: DepositStatusType,
+        default: DepositStatusType.PENDING_APPROVAL,
+    })
     public status: DepositStatusType;
 
     @Column({ type: "timestamp", default: null })

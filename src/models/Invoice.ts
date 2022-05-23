@@ -23,7 +23,11 @@ export default class Invoice extends SuperEntity {
     @Column({ type: "timestamp" })
     public due_date: Date;
 
-    @Column({ type: "enum", enum: InvoiceStatusType })
+    @Column({
+        type: "enum",
+        enum: InvoiceStatusType,
+        default: InvoiceStatusType.PENDING_APPROVAL,
+    })
     public status: InvoiceStatusType;
 
     @Column({ type: "int" })
@@ -51,12 +55,10 @@ export default class Invoice extends SuperEntity {
     public vdsbs: VendorToDealerSiteToBuyerSite;
 
     @OneToMany(() => PaymentSchedule, (ps) => ps.invoices, { nullable: false })
-    @JoinColumn({ name: "payment_schedule_ids" })
     public payment_schedules: Array<PaymentSchedule>;
 
     @OneToMany(() => InvoiceLine, (invoicesLine) => invoicesLine.invoice, {
         nullable: false,
     })
-    @JoinColumn({ name: "invoice_lines_ids" })
     public invoices_lines: Array<InvoiceLine>;
 }

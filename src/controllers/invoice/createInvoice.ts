@@ -22,15 +22,11 @@ export interface IInvoice {
     vdsbs_id: number;
 }
 
-export default async function createInvoice(
-    req: Request<any, any, IInvoice>,
-    res: Response
-) {
-    //
+type TypedRequest = Request<any, any, IInvoice>;
 
+export default async function createInvoice(req: TypedRequest, res: Response) {
     const user = req.user;
     const params = req.body;
-
     try {
         const vdsbs = await vendorToDealerSiteToBuyerSiteOperation.repo.findOne(
             {
@@ -55,7 +51,6 @@ export default async function createInvoice(
         });
     } catch (err) {
         console.log("err", err);
-
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             message: "an error accured try again later",
         });

@@ -19,16 +19,19 @@ export default class PaymentSchedule extends SuperEntity {
     public due_amount: number;
 
     @Column({ type: "real" })
-    public remanined_amount: number;
+    public remained_amount: number;
 
     @Column({ type: "varchar", length: 3 })
     public currency: string;
 
-    @Column({ type: "enum", enum: PaymentStatusType })
+    @Column({
+        type: "enum",
+        enum: PaymentStatusType,
+        default: PaymentStatusType.NO_PAYMENT,
+    })
     public payment_status: PaymentStatusType;
 
     /** relations */
-
     @OneToMany(() => PaymentMatches, (pm) => pm.payment_schedule)
     public payment_matches: Array<PaymentMatches>;
 

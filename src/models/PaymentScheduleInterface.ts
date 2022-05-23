@@ -10,7 +10,7 @@ export default class PaymentScheduleInteface extends SuperEntity {
     @Column({ length: 100 })
     file_name: string;
 
-    @Column({ type: "enum", enum: FileStatusType })
+    @Column({ type: "enum", enum: FileStatusType, default: FileStatusType.NEW })
     file_status: FileStatusType;
 
     @Column({ type: "varchar", length: 30 })
@@ -31,7 +31,7 @@ export default class PaymentScheduleInteface extends SuperEntity {
     @Column({ length: 3 })
     currency: string;
 
-    @Column({ type: "enum", enum: LineStatusType })
+    @Column({ type: "enum", enum: LineStatusType, default: LineStatusType.NEW })
     line_status: LineStatusType;
 
     @Column({ length: 500 })

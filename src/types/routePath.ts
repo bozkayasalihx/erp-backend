@@ -22,6 +22,9 @@ export enum Routes {
     CREATE_DEPOSIT = "/create-deposit",
     CREATE_ADVANCE = "/create-advance",
     CREATE_INVOICE = "/create-invoice",
+    CREATE_INVOICE_LINE = "/create-invoice_line",
+    CREATE_PAYMENT_SCHEDULE = "/create-payment-schedule",
+    CREAT_PAYMENT = "/create-payment",
 }
 
 export const accesableRoute = new Map<string, Array<string>>();

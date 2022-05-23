@@ -41,7 +41,7 @@ export default class User extends BaseEntity {
     @Column({
         type: "enum",
         enum: UserTypes,
-        default: UserTypes.VENDOR_ADMIN,
+        default: UserTypes.SITE_ADMIN,
         name: "user_type",
     })
     @Index("user_type")

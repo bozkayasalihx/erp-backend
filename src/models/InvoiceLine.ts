@@ -5,9 +5,6 @@ import SuperEntity from "./SuperEntity";
 @Entity("invoice_lines")
 export default class InvoiceLine extends SuperEntity {
     @Column({ type: "int" })
-    public invoice_id: number;
-
-    @Column({ type: "int" })
     public line_no: number;
 
     @Column({ type: "real" })
@@ -23,7 +20,7 @@ export default class InvoiceLine extends SuperEntity {
     @Column({ length: 20 })
     public item_uom: string;
 
-    @Column({ length: 100 })
+    @Column({ length: 100, nullable: true })
     public item_desc: string;
 
     // relations

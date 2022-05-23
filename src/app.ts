@@ -20,6 +20,7 @@ import {
     fileUpload as fileUploadRoute,
     invoiceRoute,
     meRoute,
+    paymentRoute,
     relationRoute,
     testRoute,
     userRoute,
@@ -66,6 +67,7 @@ export const main = async () => {
     app.use("/api/deposit", depositRoute);
     app.use("/api/advance", advanceRoute);
     app.use("/api/invoice", invoiceRoute);
+    app.use("/api/payment", paymentRoute);
 
     // not found route;
     app.use("*", (_, res) => {

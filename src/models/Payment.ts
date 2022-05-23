@@ -6,7 +6,7 @@ import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
 @Entity("payments")
 export default class Payments extends SuperEntity {
-    @Column({ type: "enum", enum: PaymentType })
+    @Column({ type: "enum", enum: PaymentType, default: PaymentType.CASH })
     public payment_type: PaymentType;
 
     @Column()
@@ -18,13 +18,17 @@ export default class Payments extends SuperEntity {
     @Column({ type: "real" })
     public remained_amount: number;
 
-    @Column({ type: "varchar", length: 3 })
+    @Column({ type: "varchar", length: 3, default: Currency.TRY })
     public currency: Currency;
 
     @Column({ type: "timestamp" })
     public effective_date: Date;
 
-    @Column({ type: "enum", enum: InvoiceStatusType })
+    @Column({
+        type: "enum",
+        enum: InvoiceStatusType,
+        default: InvoiceStatusType.PENDING_APPROVAL,
+    })
     public invoiced_status: InvoiceStatusType;
 
     /** relations */

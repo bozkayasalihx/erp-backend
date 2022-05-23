@@ -2,6 +2,8 @@ import Joi from "joi";
 import { IAdvance } from "../controllers/advance/createAdvance";
 import { IDeposit } from "../controllers/deposit/createDeposit";
 import { IInvoice } from "../controllers/invoice/createInvoice";
+import { IInvoiceLine } from "../controllers/invoice/createInvoiceLine";
+import { IPaymentSchedule } from "../controllers/payment/createPayment";
 import { IDealerRouteUser } from "../controllers/relations/createDealerRouteUser";
 import { IUserEntityRelation } from "../controllers/relations/createUserEntityRelation";
 import {
@@ -10,6 +12,7 @@ import {
     Currency,
     DepositStatusType,
     InvoiceStatusType,
+    PaymentType,
     UserTypes,
 } from "../types/types";
 
@@ -237,6 +240,32 @@ class ValidationSchema {
             due_date: Joi.date().required(),
             vdsbs_id: Joi.number().required(),
             ...options,
+        });
+    }
+
+    public createInvoiceLine() {
+        return Joi.object<IInvoiceLine>({
+            amount: Joi.number().required(),
+            currency: Joi.valid(...Object.values(Currency)).required(),
+            invoice_id: Joi.number().required(),
+            item_desc: Joi.string().optional(),
+            item_quantity: Joi.number().required(),
+            item_uom: Joi.string().required(),
+            line_no: Joi.number().required(),
+        });
+    }
+    public createPaymentSchedule() {
+        return Joi.object<IPaymentSchedule>({
+            currency: Joi.valid(...Object.values(Currency)).optional(),
+            remained_amount: Joi.number().required(),
+            effective_date: Joi.date().required(),
+            invoiced_status: Joi.valid(
+                ...Object.values(InvoiceStatusType)
+            ).optional(),
+            original_amount: Joi.number().required(),
+            payment_type: Joi.valid(...Object.values(PaymentType)).optional(),
+            reference_id: Joi.number().required(),
+            vdsbs_id: Joi.number().required(),
         });
     }
 }
