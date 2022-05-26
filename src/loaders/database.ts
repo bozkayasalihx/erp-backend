@@ -2,6 +2,7 @@
 import path from "path";
 import { DataSource } from "typeorm";
 import SnakeNamingStrategy from "../configs/typeormNamingStrategy";
+import { InvoiceInterface } from "../models";
 import { __prod__ } from "../scripts/dev";
 import { UserCreateSubs } from "../subscribers/userSubs";
 
@@ -26,5 +27,10 @@ export const appDataSource = new DataSource({
 
 const connectDb = async () => {
     await appDataSource.initialize();
+    await appDataSource
+        .getRepository(InvoiceInterface)
+        .query(
+            `CREATE SEQUENCE IF NOT EXISTS file_process_id INCREMENT 1 START 1;`
+        );
 };
 export { connectDb };

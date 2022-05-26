@@ -5,6 +5,7 @@ import httpStatus from "http-status";
 import { checkFileType } from "../../middlewares";
 import { __prod__ } from "../../scripts/dev";
 import CsvParser from "../../scripts/parser/csv-parser";
+import { increment } from "../../scripts/utils/revokeRefreshToken";
 import { invoiceOperation } from "../../services";
 import { Routes } from "../../types/routePath";
 
@@ -38,6 +39,10 @@ router.post(Routes.PROCESS_UPLOAD, file(), checkFileType, async (req, res) => {
         });
         const filename = file.name;
         const user = req.user;
+        let file_process_id = 1;
+        process.nextTick(async () => {
+            file_process_id = await increment();
+        });
 
         stream.on("end", () => {
             parser.readData(data);
@@ -46,7 +51,7 @@ router.post(Routes.PROCESS_UPLOAD, file(), checkFileType, async (req, res) => {
                     await invoiceOperation.createInvoiceInterface({
                         ...item,
                         file_name: filename,
-                        file_process_id: 1,
+                        file_process_id: file_process_id,
                         created_by: user,
                         updated_by: user,
                     });

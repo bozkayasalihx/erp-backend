@@ -20,10 +20,10 @@ export default class SuperEntity extends BaseEntity {
     @CreateDateColumn({ name: "created_at" })
     public created_at: Date;
 
-    @Column({ default: null, name: "start_date" })
+    @Column({ default: null, name: "start_date", type: "date" })
     public start_date: Date;
 
-    @Column({ default: null, name: "end_date" })
+    @Column({ default: null, name: "end_date", type: "date" })
     public end_date: Date;
 
     @ManyToOne(() => User, { nullable: false })

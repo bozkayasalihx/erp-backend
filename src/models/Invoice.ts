@@ -12,7 +12,7 @@ export default class Invoice extends SuperEntity {
     @Column({ type: "varchar", length: 30 })
     public invoice_no: string;
 
-    @Column({ type: "timestamp" })
+    @Column({ type: "date" })
     public invoice_date: Date;
 
     @Column({ type: "real" })
@@ -21,7 +21,7 @@ export default class Invoice extends SuperEntity {
     @Column({ type: "varchar", length: 3 })
     public currency: string;
 
-    @Column({ type: "timestamp" })
+    @Column({ type: "date" })
     public due_date: Date;
 
     @Column({
