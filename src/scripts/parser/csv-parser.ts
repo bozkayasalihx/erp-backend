@@ -1,129 +1,116 @@
-import { readFile, writeFile } from "fs/promises";
-import { glob } from "glob";
-import { join, resolve } from "node:path";
-import { EventEmitter } from "node:stream";
-import { promisify } from "node:util";
+type Data = Set<Record<string, any>>;
+class CsvParser {
+    private data: string;
+    private delimiter: string;
+    private newLineOrTabRemoveRegex = /(\r\n|\n|\r)/gm;
+    private fullset: Data;
+    private RELATED_USER = "related_users";
+    private CURRENCY = "currency";
+    private RECORD_TYPE = "record_type";
 
-type OnNames = "data" | "drain";
+    constructor(delimiter = ",") {
+        this.delimiter = delimiter;
+    }
 
-type IData = {
-    data: string;
-    fileName: string;
-};
-type ObjectType = {
-    key: string;
-    value: string;
-};
+    public readData(data: string) {
+        this.data = data;
+    }
+    private get getData() {
+        return this.data;
+    }
+    public get parsedData() {
+        return this.fullset;
+    }
 
-declare interface Parser extends EventEmitter {
-    on(eventName: OnNames, listener: (...args: any[]) => void): this;
+    private get dataArray() {
+        return this.getData.split("\n");
+    }
+
+    public get header() {
+        const header = this.dataArray[0];
+        return header;
+    }
+
+    public get body() {
+        const body: Array<string> = [];
+        for (let i = 0; i < this.dataArray.length; i++) {
+            if (i === 0) continue;
+            body.push(this.dataArray[i]);
+        }
+        return body;
+    }
+
+    private transformHeader() {
+        const delimiter = this.delimiter;
+        const headerItem = this.header.split(delimiter);
+        let i = 0;
+        while (i < headerItem.length) {
+            headerItem[i] = headerItem[i].replace(
+                this.newLineOrTabRemoveRegex,
+                ""
+            );
+            headerItem[0] = this.RECORD_TYPE;
+            i++;
+        }
+        return headerItem;
+    }
+
+    public transformBody() {
+        const body = this.body;
+        const delimiter = this.delimiter;
+        const returnType: Map<number, Array<string>> = new Map();
+        let i = 0;
+        while (i < body.length) {
+            const eachItem = body[i].trim().split(delimiter);
+            for (let j = i; j < eachItem.length; j++) {
+                //@ts-ignore
+                if (!eachItem[j]) eachItem[j] = null;
+                else {
+                    eachItem[j] = eachItem[j].replace(
+                        this.newLineOrTabRemoveRegex,
+                        ""
+                    );
+                }
+            }
+            returnType.set(i, eachItem);
+            i++;
+        }
+
+        return returnType;
+    }
+
+    public matcher(cb: (data: Data) => void) {
+        const body = this.transformBody();
+        const header = this.transformHeader();
+        let headerCurrency: string;
+        const fullSet: Set<Record<string, any>> = new Set();
+        for (const [key, values] of body) {
+            // [{ record_type: h},...}];
+            // which means its header
+            const newObj = {};
+            values.reduce((acc, cur, idx) => {
+                // current object property name;
+                const curHeader = header[idx];
+                if (key === 0) {
+                    if (curHeader === this.CURRENCY) headerCurrency = cur;
+                }
+                if (curHeader === this.CURRENCY) {
+                    if (!cur) cur = headerCurrency;
+                }
+                if (curHeader === this.RELATED_USER) cur = JSON.parse(cur);
+                const newOne = (newObj[curHeader] = cur);
+                return { ...acc, newOne };
+            }, {} as Record<string, any>);
+            fullSet.add(newObj);
+        }
+        this.fullset = fullSet;
+        cb(fullSet);
+    }
+
+    public log() {
+        // console.log(this.transformBody());
+        // console.log(this.transformHeader());
+    }
 }
 
-class Parser extends EventEmitter {
-    private glob = promisify(glob);
-    private path: string;
-    private obj: Record<string, string> = {};
-    private writeFile = promisify(writeFile);
-    private dist = resolve("../writer");
-    constructor(path: string) {
-        super();
-        this.path = path;
-    }
-
-    private async getFile() {
-        try {
-            const paths = await this.glob(this.path);
-            return paths[0];
-        } catch (err) {
-            throw new Error(JSON.stringify(err));
-        }
-    }
-
-    private async readData() {
-        const path = await this.getFile();
-        const contents = (await readFile(path)).toString().split("\n");
-        return contents;
-    }
-
-    private cleanUp(clean: string | Array<string>) {
-        const regex = /\s\r\n/gi;
-        if (typeof clean === "string") {
-            return clean.replace(regex, "");
-        }
-        const strings: Array<string> = [];
-        for (let i = 0; i < clean.length; i++) {
-            clean[i].replace(regex, "");
-            strings.push(clean[i]);
-        }
-
-        return strings;
-    }
-
-    public async writer({ data, fileName }: IData) {
-        const filePath = join(this.dist, fileName);
-        try {
-            await this.writeFile(filePath, data, {
-                encoding: "utf-8",
-                flag: "a",
-            });
-            return true;
-        } catch (err) {
-            return false;
-        }
-    }
-
-    private commndDetector(data: string) {
-        const regex = new RegExp(/\s*,\s*|\s+,/gi);
-        return data.replace(regex, "\n");
-    }
-
-    async parseData() {
-        const contens = await this.readData();
-        const header = contens[0];
-        const lines = contens.splice(1);
-
-        return {
-            header,
-            lines,
-        };
-    }
-
-    async extractData() {
-        const { header, lines } = await this.parseData();
-        const linesData = this.cleanUp(lines);
-        const headerData = this.cleanUp(header);
-
-        return {
-            linesData,
-            headerData,
-        };
-    }
-
-    public lineSplit(data: Array<string>) {
-        // return this.commndDetector(data).split("\n");
-        return data.reduce((acc, cur, idx) => {
-            acc[idx] = this.commndDetector(cur).split("\n");
-            return acc;
-        }, {} as Record<string, Array<string>>);
-    }
-
-    public toObject({ key, value }: ObjectType) {
-        this.obj = { ...this.obj, [key]: value };
-    }
-    public get jsonValue() {
-        return JSON.stringify(this.obj, null, 2);
-    }
-}
-const parser = new Parser("../storage/*.csv");
-parser
-    .extractData()
-    .then(async ({ headerData, linesData }) => {
-        const m = parser.lineSplit([headerData as string]);
-        const p = parser.lineSplit(linesData as string[]);
-        const matches = m[0];
-        const otherSideMatches = p[0];
-        for (let i = 0; i < matches.length; i++) {
-            parser.toObject({ key: matches[i], value: otherSideMatches[i] });
-        }
-    })
-    .catch((err) => console.log("err", err));
+export default CsvParser;
