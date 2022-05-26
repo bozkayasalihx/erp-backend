@@ -44,8 +44,8 @@ export default async function createUserEntityRelation(
         const userEntity = await userEntityRelationOperation.insertUE({
             description,
             user,
-            updated_by: user,
-            created_by: user,
+            updated_by: req.user,
+            created_by: req.user,
             [key]: value,
         });
 
