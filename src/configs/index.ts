@@ -9,17 +9,16 @@ export const eventHandler = () =>
             port: process.env.EMAIL_PORT,
             auth: {
                 user: process.env.EMAIL_USER,
-                pass,
+                pass: "N3h9!73t26", // will be fixed later
             },
         });
         try {
-            await transporter.sendMail({
+            const resp = await transporter.sendMail({
                 from: process.env.EMAIL_FROM,
                 to: toEmail,
                 subject,
                 html,
             });
-
             return true;
         } catch (err) {
             return false;
