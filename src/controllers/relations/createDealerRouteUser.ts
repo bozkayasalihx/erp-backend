@@ -53,7 +53,11 @@ export default async function dealerRouteUser(
             message: "operation successful",
         });
     } catch (err) {
-        console.log("err", err);
+        if (err?.detail?.includes("already exists")) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                message: "already exists",
+            });
+        }
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             message: "an error accured try again later",
         });

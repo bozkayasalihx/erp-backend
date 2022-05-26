@@ -17,7 +17,6 @@ import {
     dealerRoute,
     DealerSiteRoute,
     depositRoute,
-    fileUpload as fileUploadRoute,
     invoiceRoute,
     meRoute,
     paymentRoute,
@@ -57,7 +56,6 @@ export const main = async () => {
     /** routes */
     app.use("/api", meRoute);
     app.use("/api", testRoute);
-    app.use("/api", fileUploadRoute);
     app.use("/api", processUpload);
     app.use("/api/vendor", vendorRoute);
     app.use("/api/vendor-region", VendorRegionRoute);

@@ -10,7 +10,7 @@ export interface IInvoiceLine {
     currency: Currency;
     item_quantity: number;
     item_uom: string;
-    item_desc?: string;
+    item_description?: string;
 }
 
 type TypedRequest = Request<any, any, IInvoiceLine>;
@@ -25,7 +25,7 @@ export default async function createInvoiceLine(
         item_quantity,
         item_uom,
         line_no,
-        item_desc,
+        item_description,
     } = req.body;
 
     const user = req.user;
@@ -44,7 +44,7 @@ export default async function createInvoiceLine(
             amount,
             currency,
             invoice,
-            item_desc,
+            item_description,
             line_no,
             item_uom,
             item_quantity,
