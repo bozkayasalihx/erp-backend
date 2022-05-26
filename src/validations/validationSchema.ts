@@ -248,7 +248,7 @@ class ValidationSchema {
             amount: Joi.number().required(),
             currency: Joi.valid(...Object.values(Currency)).required(),
             invoice_id: Joi.number().required(),
-            item_desc: Joi.string().optional(),
+            item_description: Joi.string().optional(),
             item_quantity: Joi.number().required(),
             item_uom: Joi.string().required(),
             line_no: Joi.number().required(),

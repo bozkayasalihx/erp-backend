@@ -8,7 +8,7 @@ import validationSchema from "../../validations/validationSchema";
 const router = Router();
 
 router.post(
-    Routes.CREATE_PAYMENT_SCHEDULE,
+    Routes.CREATE_PAYMENT,
     new Validate<IPaymentSchedule>().validate(
         validationSchema.createPaymentSchedule()
     ),

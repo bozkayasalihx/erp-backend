@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { InvoiceStatusType } from "../types/types";
+import InvoiceInterface from "./InvoiceInterface";
 import InvoiceLine from "./InvoiceLine";
 import PaymentSchedule from "./PaymentSchedule";
 import SuperEntity from "./SuperEntity";
@@ -30,8 +31,12 @@ export default class Invoice extends SuperEntity {
     })
     public status: InvoiceStatusType;
 
-    @Column({ type: "int" })
-    public ref_file_id: number;
+    @OneToMany(
+        () => InvoiceInterface,
+        (InvoiceInterface) => InvoiceInterface.invoice
+    )
+    @JoinColumn({ name: "ref_file_id" })
+    public invoiceInterfaces: Array<InvoiceInterface>;
 
     @Column({ type: "varchar", length: 150, nullable: true })
     public attribute1: string;
@@ -49,7 +54,6 @@ export default class Invoice extends SuperEntity {
     public attribute5: string;
 
     /** RElations */
-
     @ManyToOne(() => VendorToDealerSiteToBuyerSite, (vdsbs) => vdsbs.invoices)
     @JoinColumn({ name: "vdsbs_id" })
     public vdsbs: VendorToDealerSiteToBuyerSite;

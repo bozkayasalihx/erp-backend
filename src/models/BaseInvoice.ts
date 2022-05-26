@@ -3,12 +3,6 @@ import { FileRecordType } from "../types/types";
 import SuperEntity from "./SuperEntity";
 
 export default abstract class BaseInvoice extends SuperEntity {
-    @Column({ name: "file_id", type: "int" })
-    public file_id: number;
-
-    @Column({ name: "file_name", type: "varchar", length: 100 })
-    public file_name: string;
-
     @Column({ name: "record_type", enum: FileRecordType })
     public record_type: FileRecordType;
 
@@ -18,10 +12,10 @@ export default abstract class BaseInvoice extends SuperEntity {
     @Column({ name: "vdsbs_id" })
     public vdsbs_id: number;
 
-    @Column({ name: "invoice_date", type: "timestamp" })
+    @Column({ name: "invoice_date", type: "timestamp", default: null })
     public invoice_date: Date;
 
-    @Column({ name: "due_date", type: "timestamp" })
+    @Column({ name: "due_date", type: "timestamp", default: null })
     public due_date: Date;
 
     @Column({ name: "amount", type: "varchar", length: 20 })

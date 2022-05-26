@@ -12,14 +12,12 @@ export default function permission(
     const userType = req.user.user_type;
     const url = req.url;
     const routeType = url.split("/").filter(Boolean)[1];
-    const enumArray = Object.values(UserTypes);
-    const valid = enumArray.indexOf(userType) !== -1;
+    const valid = Object.values(UserTypes).indexOf(userType) !== -1;
 
-    if (!valid) {
-        res.status(httpStatus.UNAUTHORIZED).json({
+    if (!valid)
+        return res.status(httpStatus.UNAUTHORIZED).json({
             message: "not autorizated",
         });
-    }
 
     switch (userType) {
         case UserTypes.BUYER_ADMIN: {
@@ -82,7 +80,9 @@ export default function permission(
             return next();
         }
         default: {
-            return next();
+            return res.status(httpStatus.BAD_REQUEST).json({
+                message: "no such as user type",
+            });
         }
     }
 }

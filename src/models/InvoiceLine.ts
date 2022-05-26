@@ -21,7 +21,7 @@ export default class InvoiceLine extends SuperEntity {
     public item_uom: string;
 
     @Column({ length: 100, nullable: true })
-    public item_desc: string;
+    public item_description: string;
 
     // relations
     @ManyToOne(() => Invoices, (invoices) => invoices.invoices_lines)

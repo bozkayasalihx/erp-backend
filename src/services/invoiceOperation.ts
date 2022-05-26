@@ -1,4 +1,4 @@
-import { Invoice, InvoiceLine } from "../models";
+import { Invoice, InvoiceInterface, InvoiceLine } from "../models";
 import BaseService from "./BaseService";
 
 export class InvoiceOperation extends BaseService {
@@ -10,6 +10,10 @@ export class InvoiceOperation extends BaseService {
         return this.source.getRepository(this.Model.Invoice);
     }
 
+    public get invoiceInterface() {
+        return this.source.getRepository(InvoiceInterface);
+    }
+
     public get invoiceLineRepo() {
         return this.source.getRepository(this.Model.InvoiceLine);
     }
@@ -19,6 +23,10 @@ export class InvoiceOperation extends BaseService {
     }
     public createInvoiceLine(params: Partial<InvoiceLine>) {
         return this.invoiceLineRepo.insert({ ...params });
+    }
+
+    public createInvoiceInterface(params: Partial<InvoiceInterface>) {
+        return this.invoiceInterface.insert({ ...params });
     }
 }
 
