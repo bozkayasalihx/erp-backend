@@ -8,7 +8,7 @@ export enum Routes {
     RESET_PASSWORD = "/reset-password",
     FORGOT_PASSWORD = "/forgot-password",
     REFRESH_TOKEN = "/refresh-token",
-    FILE_UPLOAD = "/file-upload",
+    PROCESS_UPLOAD = "/process-upload",
     CREATE_VENDOR = "/create-vendor",
     CREATE_VENDOR_REGION = "/create-vendor-region",
     CREATE_BUYER = "/create-buyer",
@@ -24,7 +24,7 @@ export enum Routes {
     CREATE_INVOICE = "/create-invoice",
     CREATE_INVOICE_LINE = "/create-invoice_line",
     CREATE_PAYMENT_SCHEDULE = "/create-payment-schedule",
-    CREAT_PAYMENT = "/create-payment",
+    CREATE_PAYMENT = "/create-payment",
 }
 
 export const accesableRoute = new Map<string, Array<string>>();

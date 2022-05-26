@@ -21,6 +21,7 @@ import {
     invoiceRoute,
     meRoute,
     paymentRoute,
+    processUpload,
     relationRoute,
     testRoute,
     userRoute,
@@ -57,6 +58,7 @@ export const main = async () => {
     app.use("/api", meRoute);
     app.use("/api", testRoute);
     app.use("/api", fileUploadRoute);
+    app.use("/api", processUpload);
     app.use("/api/vendor", vendorRoute);
     app.use("/api/vendor-region", VendorRegionRoute);
     app.use("/api/buyer", buyerRoute);
@@ -68,7 +70,6 @@ export const main = async () => {
     app.use("/api/advance", advanceRoute);
     app.use("/api/invoice", invoiceRoute);
     app.use("/api/payment", paymentRoute);
-
     // not found route;
     app.use("*", (_, res) => {
         return res.status(httpStatus.FORBIDDEN).send("<h1>NOT FOUND</h1>");
