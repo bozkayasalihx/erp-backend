@@ -6,7 +6,6 @@ class CsvParser {
     private fullset: Data;
     private RELATED_USER = "related_users";
     private CURRENCY = "currency";
-    private RECORD_TYPE = "record_type";
 
     constructor(delimiter = ",") {
         this.delimiter = delimiter;
@@ -49,7 +48,6 @@ class CsvParser {
                 this.newLineOrTabRemoveRegex,
                 ""
             );
-            headerItem[0] = this.RECORD_TYPE;
             i++;
         }
         return headerItem;
@@ -91,6 +89,7 @@ class CsvParser {
             values.reduce((acc, cur, idx) => {
                 // current object property name;
                 const curHeader = header[idx];
+
                 if (key === 0) {
                     if (curHeader === this.CURRENCY) headerCurrency = cur;
                 }

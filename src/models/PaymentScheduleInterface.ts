@@ -4,36 +4,36 @@ import SuperEntity from "./SuperEntity";
 
 @Entity("ps_interface")
 export default class PaymentScheduleInteface extends SuperEntity {
-    @Column()
-    file_process_id: number;
+    @Column({ type: "int", name: "file_process_id" })
+    public file_process_id: number;
 
-    @Column({ length: 100 })
-    file_name: string;
+    @Column({ type: "varchar", name: "file_name", length: 100 })
+    public file_name: string;
 
     @Column({ type: "enum", enum: FileStatusType, default: FileStatusType.NEW })
-    file_status: FileStatusType;
+    public file_status: FileStatusType;
 
     @Column({ type: "varchar", length: 30 })
-    invoice_no: string;
+    public invoice_no: string;
 
     @Column({ length: 10 })
-    vdsbs_id: string;
+    public vdsbs_id: string;
 
-    @Column({ length: 3 })
-    line_no: string;
+    @Column({ name: "line_no", length: 3, type: "varchar", default: null })
+    public line_no: string;
 
-    @Column({ length: 20 })
-    due_date: string;
+    @Column({ name: "due_date", type: "varchar", default: null })
+    public due_date: string;
 
-    @Column({ length: 20 })
-    amount: string;
+    @Column({ name: "amount", type: "varchar", length: 20 })
+    public amount: string;
 
-    @Column({ length: 3 })
-    currency: string;
+    @Column({ name: "currency", length: 3, type: "varchar" })
+    public currency: string;
 
     @Column({ type: "enum", enum: LineStatusType, default: LineStatusType.NEW })
-    line_status: LineStatusType;
+    public line_status: LineStatusType;
 
-    @Column({ length: 500 })
-    error_desc: string;
+    @Column({ name: "error_desc", length: 500, default: null })
+    public error_desc: string;
 }
