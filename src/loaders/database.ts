@@ -2,7 +2,7 @@
 import path from "path";
 import { DataSource } from "typeorm";
 import SnakeNamingStrategy from "../configs/typeormNamingStrategy";
-import { InvoiceInterface } from "../models";
+import { InvoiceInterface, PaymentScheduleInterface } from "../models";
 import { __prod__ } from "../scripts/dev";
 import { UserCreateSubs } from "../subscribers/userSubs";
 
@@ -30,7 +30,12 @@ const connectDb = async () => {
     await appDataSource
         .getRepository(InvoiceInterface)
         .query(
-            `CREATE SEQUENCE IF NOT EXISTS file_process_id INCREMENT 1 START 1;`
+            `CREATE SEQUENCE IF NOT EXISTS invoice_file_process_id INCREMENT 1 START 1;`
+        );
+    await appDataSource
+        .getRepository(PaymentScheduleInterface)
+        .query(
+            `CREATE SEQUENCE IF NOT EXISTS ps_file_process_id INCREMENT 1 START 1;`
         );
 };
 export { connectDb };

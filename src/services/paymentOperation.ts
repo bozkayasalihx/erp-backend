@@ -1,14 +1,24 @@
-import { Payment, PaymentMatches, PaymentSchedule } from "../models";
+import {
+    Payment,
+    PaymentMatches,
+    PaymentSchedule,
+    PaymentScheduleInterface,
+} from "../models";
 import BaseService from "./BaseService";
 
 export class PaymentOperation extends BaseService {
     private Models = {
-        PaymentSchedule,
-        PaymentMatches,
         Payment,
+        PaymentMatches,
+        PaymentSchedule,
+        PaymentScheduleInterface,
     };
     public get paymentRepo() {
         return this.source.getRepository(this.Models.Payment);
+    }
+
+    public get PSIRepo() {
+        return this.source.getRepository(this.Models.PaymentScheduleInterface);
     }
 
     public get psRepo() {
@@ -17,6 +27,10 @@ export class PaymentOperation extends BaseService {
 
     public get pmRepo() {
         return this.source.getRepository(this.Models.PaymentMatches);
+    }
+
+    public createPSI(params: Partial<PaymentScheduleInterface>) {
+        return this.PSIRepo.insert({ ...params });
     }
 
     public createPayment(params: Partial<Payment>) {

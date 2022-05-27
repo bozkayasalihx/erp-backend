@@ -12,11 +12,13 @@ export default async function revokeRefreshToken(userId: number) {
     }
 }
 
-export async function increment() {
+type IName = "invoice_file_process_id" | "ps_file_process_id";
+
+export async function increment(name: IName) {
     try {
         const value: [{ nextval: string }] = await appDataSource
             .getRepository(InvoiceInterface)
-            .query(`SELECT nextval('file_process_id');`);
+            .query(`SELECT nextval('${name}');`);
         return +value[0].nextval;
     } catch (err) {
         return 1;
