@@ -27,6 +27,7 @@ declare global {
             ORIGIN: string;
             FORGOT_PASSWORD_SECRET_KEY: string;
             SENDER_EMAIL_PASSWORD: string;
+            TCP_CONNECTION_URL: string;
         }
     }
     namespace Express {

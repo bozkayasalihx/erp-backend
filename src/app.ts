@@ -8,7 +8,7 @@ import morgan from "morgan";
 import path from "path";
 import "reflect-metadata";
 import { eventHandler } from "./configs";
-import { connectDb } from "./loaders/database";
+import { config } from "./loaders";
 import { authenticate, permission } from "./middlewares";
 import {
     advanceRoute,
@@ -29,7 +29,7 @@ import {
 } from "./routes";
 
 export const main = async () => {
-    await connectDb();
+    await config();
     eventHandler();
     const app = express();
 
@@ -77,6 +77,9 @@ export const main = async () => {
         console.log("server started at port: " + process.env.PORT);
     });
 };
+process.on("unhandledRejection", (reason, promise) => {
+    console.log("rejections reason", reason, promise);
+});
 main().catch((err) => {
     console.log("server down =>", err);
     process.exit(1);
