@@ -1,4 +1,4 @@
-import { EventEmitter } from "events";
+import { captureRejectionSymbol, EventEmitter } from "events";
 
 interface IEvents {
     send_email: (params: {
@@ -6,6 +6,8 @@ interface IEvents {
         subject: string;
         html: string;
     }) => void;
+    process_invoiceInterface: ({ file_process_id: number }) => void;
+    process_psi: ({ file_process_id: number }) => void;
 }
 
 declare interface EmitterClass {
@@ -18,7 +20,16 @@ declare interface EmitterClass {
 
 class EmitterClass extends EventEmitter {
     constructor() {
-        super();
+        super({ captureRejections: true });
+    }
+
+    [captureRejectionSymbol](err: Error, event: any, ...args: any[]) {
+        console.log("rejection happened", event, "with", err, ...args);
+        this.destroy(err);
+    }
+
+    private destroy(err: Error) {
+        console.log("err", err);
     }
 }
 

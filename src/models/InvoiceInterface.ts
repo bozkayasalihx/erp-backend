@@ -39,6 +39,15 @@ export default class InvoiceInterface extends SuperEntity {
     @Column({ name: "amount", type: "varchar", length: 20 })
     public amount: string;
 
+    @Column({ name: "item_quantity", type: "varchar", default: null })
+    public item_quantity: string;
+
+    @Column({ name: "item_oum", type: "varchar", default: null })
+    public item_uom: string;
+
+    @Column({ name: "item_description", type: "varchar", default: null })
+    public item_description: string;
+
     @Column({ name: "currency", length: 3, type: "varchar" })
     public currency: string;
 

@@ -2,6 +2,7 @@ import { Router } from "express";
 import fileUpload, { UploadedFile } from "express-fileupload";
 import { createReadStream } from "fs";
 import httpStatus from "http-status";
+import { customEventEmitter } from "../../loaders";
 import { checkFileType } from "../../middlewares";
 import { __prod__ } from "../../scripts/dev";
 import CsvParser from "../../scripts/parser/csv-parser";
@@ -43,13 +44,11 @@ router.post(
             });
             const filename = file.name;
             const user = req.user;
-            let file_process_id = 1;
-            process.nextTick(async () => {
-                file_process_id = await increment("ps_file_process_id");
-            });
-
             try {
-                stream.on("end", () => {
+                stream.on("end", async () => {
+                    const file_process_id = await increment(
+                        "invoice_file_process_id"
+                    );
                     parser.readData(data);
                     parser.matcher(async (data) => {
                         for (const item of data) {
@@ -57,12 +56,16 @@ router.post(
                             await invoiceOperation.createInvoiceInterface({
                                 ...item,
                                 file_name: filename,
-                                file_process_id: file_process_id,
+                                file_process_id,
                                 created_by: user,
                                 updated_by: user,
                                 record_type: firstValue,
                             });
                         }
+
+                        customEventEmitter.emit("process_invoiceInterface", {
+                            file_process_id,
+                        });
                     });
                 });
 
@@ -103,13 +106,12 @@ router.post(
             });
             const filename = file.name;
             const user = req.user;
-            let file_process_id = 1;
-            process.nextTick(async () => {
-                file_process_id = await increment("invoice_file_process_id");
-            });
 
             try {
-                stream.on("end", () => {
+                stream.on("end", async () => {
+                    const file_process_id = await increment(
+                        "invoice_file_process_id"
+                    );
                     parser.readData(data);
                     parser.matcher(async (data) => {
                         for (const item of data) {
@@ -123,6 +125,10 @@ router.post(
                                 invoice_no: firstValue,
                             });
                         }
+                    });
+
+                    customEventEmitter.emit("process_psi", {
+                        file_process_id,
                     });
                 });
 

@@ -67,9 +67,9 @@ export enum PaymentType {
     KMH = "K",
 }
 export enum Currency {
-    USD = "usd",
-    EUR = "eur",
-    TRY = "try",
+    USD = "USD",
+    EUR = "EUR",
+    TRY = "TRY",
 }
 export enum DepositStatusType {
     ENTERED = "E",
