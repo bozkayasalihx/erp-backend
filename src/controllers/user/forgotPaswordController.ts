@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { sign } from "jsonwebtoken";
-import eventclass from "../../scripts/eventEmitter";
+import eventclass from "../../loaders/eventEmitter";
 import { generateForgotPasswordHTML } from "../../scripts/utils/generateForgotPasswordHtml";
 import userOperation from "../../services/userOperation";
 

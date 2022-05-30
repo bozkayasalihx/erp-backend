@@ -1,7 +1,8 @@
 import nodemailer from "nodemailer";
-import eventemitter from "../scripts/eventEmitter";
+import eventemitter from "../loaders/eventEmitter";
+import DataVerifier from "../scripts/parser/dataVerifier";
 
-export const eventHandler = () =>
+export const eventHandler = () => {
     eventemitter.on("send_email", async ({ toEmail, subject, html }) => {
         const pass = process.env.SENDER_EMAIL_PASSWORD as string;
         const transporter = nodemailer.createTransport({
@@ -24,3 +25,11 @@ export const eventHandler = () =>
             return false;
         }
     });
+
+    eventemitter.on("process_invoiceInterface", async ({ file_process_id }) => {
+        const dataverifier = new DataVerifier("vi");
+        await dataverifier.setter({ file_process_id });
+        const validate = dataverifier.validate();
+        console.log("validate", validate);
+    });
+};
