@@ -4,9 +4,14 @@ import {
     advanceOperation,
     vendorToDealerSiteToBuyerSiteOperation,
 } from "../../services";
-import { AdvanceStatusType, AdvanceType, Currency } from "../../types/types";
+import {
+    AdvanceStatusType,
+    AdvanceType,
+    Currency,
+    OptionalDates,
+} from "../../types/types";
 
-export interface IAdvance {
+export interface IAdvance extends OptionalDates {
     advance_type: AdvanceType;
     amount: number;
     currency: Currency;
@@ -19,8 +24,15 @@ export default async function createAdvance(
     req: Request<any, any, IAdvance>,
     res: Response
 ) {
-    const { advance_type, amount, approvalDate, currency, status, vdsbs_id } =
-        req.body;
+    const {
+        advance_type,
+        amount,
+        approvalDate,
+        currency,
+        status,
+        vdsbs_id,
+        ...optionalDates
+    } = req.body;
     const user = req.user;
     try {
         const vdsbs = await vendorToDealerSiteToBuyerSiteOperation.repo.findOne(
@@ -41,6 +53,7 @@ export default async function createAdvance(
             currency,
             status,
             vdsbs,
+            ...optionalDates,
             created_by: user,
             updated_by: user,
         });
@@ -49,8 +62,6 @@ export default async function createAdvance(
             message: "operation succesful",
         });
     } catch (err) {
-        console.log("err", err);
-
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             message: "an error accured try again later",
         });

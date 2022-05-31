@@ -53,7 +53,6 @@ export default async function createPayment(req: TypedRequest, res: Response) {
             message: "operation succesful",
         });
     } catch (err) {
-        console.log("err", err);
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             message: "an error accured try again later",
         });

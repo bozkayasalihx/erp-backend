@@ -3,8 +3,9 @@ import httpStatus from "http-status";
 import { isContain } from "../../scripts/utils/isContains";
 import userEntityRelationOperation from "../../services/userEntityRelationOperation";
 import userOperation from "../../services/userOperation";
+import { OptionalDates } from "../../types/types";
 
-export interface IUserEntityRelation {
+export interface IUserEntityRelation extends OptionalDates {
     user_id: number;
     description: string;
     vendor_table_ref?: number;
@@ -32,8 +33,7 @@ export default async function createUserEntityRelation(
                 message: "must container ref ids",
             });
         const results = isContain(ids);
-
-        if (results.size > 1) {
+        if (results.size > 1 || !results.size) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "must be only one column of id defined",
             });

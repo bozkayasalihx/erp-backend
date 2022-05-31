@@ -7,8 +7,12 @@ import {
     generateRefreshToken,
 } from "../../scripts/utils/generateToken";
 import userOperation from "../../services/userOperation";
+import { OptionalDates } from "../../types/types";
 
-async function registerControler(req: Request<any, any, IBody>, res: Response) {
+async function registerControler(
+    req: Request<any, any, IBody & OptionalDates>,
+    res: Response
+) {
     try {
         const user = await userOperation.insert(req.body);
         const access_token = generateAccessToken(

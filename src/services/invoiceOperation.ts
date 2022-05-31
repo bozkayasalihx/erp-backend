@@ -10,7 +10,7 @@ export class InvoiceOperation extends BaseService {
         return this.source.getRepository(this.Model.Invoice);
     }
 
-    public get invoiceInterface() {
+    public get invoiceInterfaceRepo() {
         return this.source.getRepository(InvoiceInterface);
     }
 
@@ -26,7 +26,7 @@ export class InvoiceOperation extends BaseService {
     }
 
     public createInvoiceInterface(params: Partial<InvoiceInterface>) {
-        return this.invoiceInterface.insert({ ...params });
+        return this.invoiceInterfaceRepo.insert({ ...params });
     }
 }
 

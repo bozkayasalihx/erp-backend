@@ -48,7 +48,6 @@ export default async function createDeposit(
             message: "operation successful",
         });
     } catch (err) {
-        console.log("err", err);
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             message: "an error accured try again later",
         });

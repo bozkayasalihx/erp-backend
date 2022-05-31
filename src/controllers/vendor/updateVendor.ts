@@ -7,7 +7,7 @@ export default async function updateVendor(
     req: Request<any, any, Partial<IVendor> & { id: number }>,
     res: Response<{ message: string; data?: string }>
 ) {
-    const { id, name, tax_no } = req.body;
+    const { id, name, tax_no, ...attributes } = req.body;
     const user = req.user;
 
     try {
@@ -20,8 +20,10 @@ export default async function updateVendor(
                 message: "not such as vendor",
             });
 
-        if (name) vendor.name = name;
-        if (tax_no) vendor.tax_no = tax_no;
+        const keys = Object.keys(attributes);
+        for (let i = 0; i < keys.length; i++) {
+            if (attributes[keys[i]]) vendor[keys[i]] = attributes[keys[i]];
+        }
         vendor.updated_by = user;
 
         await vendor.save();

@@ -40,6 +40,11 @@ export interface Options {
     attribute5: string;
 }
 
+const dateOptions = {
+    start_date: Joi.date().optional(),
+    end_date: Joi.date().optional(),
+};
+
 const options = {
     attribute1: Joi.string().optional(),
     attribute2: Joi.string().optional(),
@@ -63,8 +68,7 @@ class ValidationSchema {
             user_type: Joi.valid(...Object.values(UserTypes)).required(),
             mobile: Joi.string().required().min(10).max(11),
             tckn: Joi.string().required().min(11).max(11),
-            start_date: Joi.date().optional(),
-            end_date: Joi.date().optional(),
+            ...dateOptions,
         });
     }
 
@@ -79,6 +83,7 @@ class ValidationSchema {
             name: Joi.string().required().min(3),
             tax_no: Joi.string().required().min(3),
             ...options,
+            ...dateOptions,
         });
     }
 
@@ -88,6 +93,7 @@ class ValidationSchema {
             name: Joi.string().optional().min(3),
             tax_no: Joi.string().optional().min(3),
             ...options,
+            ...dateOptions,
         });
     }
 
@@ -96,6 +102,7 @@ class ValidationSchema {
             name: Joi.string().required().min(2),
             vendor_id: Joi.number().required(),
             ...options,
+            ...dateOptions,
         });
     }
 
@@ -105,6 +112,7 @@ class ValidationSchema {
             name: Joi.string().optional().min(2),
             vendor_id: Joi.number().optional(),
             ...options,
+            ...dateOptions,
         });
     }
 
@@ -113,6 +121,7 @@ class ValidationSchema {
             name: Joi.string().required().min(3),
             tax_no: Joi.number().required().min(3),
             ...options,
+            ...dateOptions,
         });
     }
 
@@ -122,6 +131,7 @@ class ValidationSchema {
             name: Joi.string().optional().min(3),
             tax_no: Joi.number().optional().min(3),
             ...options,
+            ...dateOptions,
         });
     }
 
@@ -130,6 +140,7 @@ class ValidationSchema {
             name: Joi.string().required().min(3),
             buyer_id: Joi.number().required(),
             ...options,
+            ...dateOptions,
         });
     }
 
@@ -139,6 +150,7 @@ class ValidationSchema {
             id: Joi.number().required(),
             buyer_id: Joi.number().optional(),
             ...options,
+            ...dateOptions,
         });
     }
 
@@ -147,6 +159,7 @@ class ValidationSchema {
             name: Joi.string().required().min(3),
             tax_no: Joi.number().required().min(3),
             ...options,
+            ...dateOptions,
         });
     }
 
@@ -155,6 +168,7 @@ class ValidationSchema {
             name: Joi.string().optional().min(3),
             tax_no: Joi.number().optional().min(3),
             ...options,
+            ...dateOptions,
         });
     }
 
@@ -163,6 +177,7 @@ class ValidationSchema {
             name: Joi.string().required().min(3),
             dealer_id: Joi.number().required(),
             ...options,
+            ...dateOptions,
         });
     }
 
@@ -171,6 +186,8 @@ class ValidationSchema {
             name: Joi.string().optional().min(3),
             dealer_id: Joi.number().optional(),
             ...options,
+
+            ...dateOptions,
         });
     }
 
@@ -179,6 +196,8 @@ class ValidationSchema {
             vendor_id: Joi.number().required(),
             dealer_site_id: Joi.number().required(),
             description: Joi.string().optional(),
+
+            ...dateOptions,
         });
     }
 
@@ -187,21 +206,33 @@ class ValidationSchema {
             vds_rltn_id: Joi.number().required(),
             buyer_site_id: Joi.number().required(),
             description: Joi.string().optional(),
+
+            ...dateOptions,
         });
     }
     public createPasswordValidation() {
         return Joi.object<{ token: string; newPassword: string }>({
             token: Joi.string().required().min(10),
             newPassword: Joi.string().required().min(5),
+
+            ...dateOptions,
         });
     }
     public createUserEntityValidation() {
         return Joi.object<IUserEntityRelation>({
-            buyer_site_table_ref: Joi.number().optional(),
-            dealer_site_table_ref: Joi.number().optional(),
-            vendor_table_ref: Joi.number().optional(),
+            buyer_site_table_ref: Joi.alternatives()
+                .try(Joi.valid(null), Joi.number())
+                .required(),
+            dealer_site_table_ref: Joi.alternatives()
+                .try(Joi.valid(null), Joi.number())
+                .required(),
+            vendor_table_ref: Joi.alternatives()
+                .try(Joi.valid(null), Joi.number())
+                .required(),
             description: Joi.string().optional(),
             user_id: Joi.number().required(),
+
+            ...dateOptions,
         });
     }
 
@@ -210,6 +241,8 @@ class ValidationSchema {
             description: Joi.string().optional(),
             user_id: Joi.number().required(),
             vdsbs_id: Joi.number().required(),
+
+            ...dateOptions,
         });
     }
     public createDeposit() {
@@ -219,6 +252,8 @@ class ValidationSchema {
             status: Joi.valid(...Object.values(DepositStatusType)).required(),
             approval_date: Joi.date().required(),
             vdsbs_id: Joi.number().required(),
+
+            ...dateOptions,
         });
     }
 
@@ -230,6 +265,8 @@ class ValidationSchema {
             vdsbs_id: Joi.number().required(),
             status: Joi.valid(...Object.values(AdvanceStatusType)).required(),
             approvalDate: Joi.date().required(),
+
+            ...dateOptions,
         });
     }
 
@@ -243,6 +280,7 @@ class ValidationSchema {
             ref_file_id: Joi.number().required(),
             due_date: Joi.date().required(),
             vdsbs_id: Joi.number().required(),
+            ...dateOptions,
             ...options,
         });
     }
@@ -256,6 +294,8 @@ class ValidationSchema {
             item_quantity: Joi.number().required(),
             item_uom: Joi.string().required(),
             line_no: Joi.number().required(),
+
+            ...dateOptions,
         });
     }
     public createPaymentSchedule() {
@@ -270,6 +310,8 @@ class ValidationSchema {
             payment_type: Joi.valid(...Object.values(PaymentType)).optional(),
             reference_id: Joi.number().required(),
             vdsbs_id: Joi.number().required(),
+
+            ...dateOptions,
         });
     }
 }

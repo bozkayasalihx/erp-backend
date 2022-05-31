@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { dealerSiteOperation } from "../../services";
 import dealerOperation from "../../services/dealerOperation";
+import { AttributeFields, OptionalDates } from "../../types/types";
 
-export interface IDealerSite {
+export interface IDealerSite extends AttributeFields, OptionalDates {
     name: string;
     dealer_id: number;
 }
@@ -12,7 +13,7 @@ export default async function dealerSite(
     req: Request<any, any, IDealerSite>,
     res: Response
 ) {
-    const { dealer_id, name } = req.body;
+    const { dealer_id, name, ...attributes } = req.body;
     const user = req.user;
 
     try {
@@ -24,6 +25,7 @@ export default async function dealerSite(
             await dealerSiteOperation.insertDealerSite({
                 name,
                 dealer_id,
+                ...attributes,
                 updated_by: user,
                 created_by: user,
             });

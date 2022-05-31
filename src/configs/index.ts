@@ -16,7 +16,7 @@ export const eventHandler = () => {
             },
         });
         try {
-            const resp = await transporter.sendMail({
+            await transporter.sendMail({
                 from: process.env.EMAIL_FROM,
                 to: toEmail,
                 subject,
@@ -48,8 +48,10 @@ export const eventHandler = () => {
                 } else {
                     console.log(dataverifier.errors);
                 }
+
+                return true;
             } catch (err) {
-                console.log("err", err);
+                return false;
             } finally {
                 filePath && (await unlink(filePath));
             }

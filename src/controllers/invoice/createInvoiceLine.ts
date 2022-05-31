@@ -55,7 +55,6 @@ export default async function createInvoiceLine(
             message: "operation succesful",
         });
     } catch (err) {
-        console.log("err");
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             message: "an error accured try again later",
         });

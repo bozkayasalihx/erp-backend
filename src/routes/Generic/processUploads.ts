@@ -50,9 +50,12 @@ router.post(
                         "invoice_file_process_id"
                     );
                     parser.readData(data);
+                    //@ts-ignore
                     parser.matcher(async (err, data) => {
                         if (err || !data) {
-                            console.log(err?.message);
+                            // res.status(httpStatus.BAD_REQUEST).json({
+                            //     message: err?.message,
+                            // });
                             return;
                         }
                         for (const item of data) {
@@ -75,6 +78,17 @@ router.post(
                             },
                             file.tempFilePath
                         );
+
+                        // return res.status(httpStatus.CREATED).json({
+                        //     message: "operation succesful",
+                        // });
+                    });
+                });
+
+                stream.on("error", (error) => {
+                    console.log("____err_____", error);
+                    return res.status(httpStatus.BAD_REQUEST).json({
+                        message: "bad request",
                     });
                 });
 
@@ -123,14 +137,13 @@ router.post(
                     );
                     parser.readData(data);
                     parser.matcher(async (err, data) => {
-                        if (err) {
-                            console.log("err", err);
-                            return;
+                        if (err || !data) {
+                            return res.status(httpStatus.BAD_REQUEST).json({
+                                message: err?.message,
+                            });
                         }
-                        if (!data) return;
                         for (const item of data) {
                             const firstValue = Object.values(item)[0];
-                            console.log("first value", firstValue);
                             await paymentOperation.createPSI({
                                 ...item,
                                 file_name: filename,
@@ -140,6 +153,10 @@ router.post(
                                 invoice_no: firstValue,
                             });
                         }
+
+                        return res.status(httpStatus.CREATED).json({
+                            message: "operation succesful",
+                        });
                     });
 
                     customEventEmitter.emit(

@@ -75,17 +75,13 @@ class DataVerifier {
     public async setter(whereClause: FindOptionsWhere<DataType>) {
         if (this.type == "vi") {
             try {
-                const resl = await this.invoiceOP.invoiceInterface.findOne({
-                    where: [
-                        {
-                            ...(whereClause as FindOptionsWhere<InvoiceInterface>),
-                        },
-                        {
-                            record_type: FileRecordType.HEADER,
-                        },
-                    ],
+                const resl = await this.invoiceOP.invoiceInterfaceRepo.findOne({
+                    where: {
+                        ...whereClause,
+                        record_type: FileRecordType.HEADER,
+                    } as FindOptionsWhere<InvoiceInterface>,
                 });
-
+                //  this.invoiceOP.invoiceInterfaceRepo.createQueryBuilder('vi').where(`vi.file`)
                 if (resl) this.data[0] = resl;
             } catch (err) {
                 this.errorObj.set(err?.message || ErrorSecondName.INVOICE, err);
@@ -150,21 +146,21 @@ class DataVerifier {
             currency: Joi.object({
                 currency: this.Joi.valid(...Object.values(Currency)).optional(),
             }),
-            remained_amount: Joi.object({
+            remained_amount: this.Joi.object({
                 remained_amount: this.Joi.number().required(),
             }),
-            effective_date: Joi.object({
+            effective_date: this.Joi.object({
                 effective_date: this.Joi.date().required(),
             }),
-            invoiced_status: Joi.object({
+            invoiced_status: this.Joi.object({
                 invoiced_status: this.Joi.valid(
                     ...Object.values(InvoiceStatusType)
                 ).optional(),
             }),
-            original_amount: Joi.object({
+            original_amount: this.Joi.object({
                 original_amount: this.Joi.number().required(),
             }),
-            payment_type: Joi.object({
+            payment_type: this.Joi.object({
                 payment_type: this.Joi.valid(
                     ...Object.values(PaymentType)
                 ).optional(),
@@ -186,7 +182,6 @@ class DataVerifier {
                 const cur = data[i] as NewType;
                 try {
                     cur.amount = parseInt(cur.amount as string) as number;
-                    // cur.currency = Currency[cur.currency] as Currency;
                     cur.due_date = this.dateFormater(cur.due_date).format(
                         "DD/MM/YYYY"
                     );
@@ -197,7 +192,7 @@ class DataVerifier {
 
                     newDate.push(cur as InvoiceInterface);
                 } catch (err) {
-                    //
+                    console.log("err", err);
                 }
             } else if (this.type === "psi") {
                 return data;
@@ -215,7 +210,6 @@ class DataVerifier {
                 const keys = Object.keys(data[i]);
                 for (let j = 0; j < keys.length; j++) {
                     try {
-                        console.log({ [keys[j]]: data[i][keys[j]] });
                         const { error } = this.PSIValidatonSchema()
                             .extract(keys[j])
                             .validate(data[i][keys[j]]);
@@ -234,15 +228,12 @@ class DataVerifier {
             }
         } else if (this.type === "vi") {
             const data = this.transform(this.data)[0] as InvoiceInterface;
-            console.log("data", data);
             const keys = Object.keys(data);
             for (let j = 0; j < keys.length; j++) {
                 try {
                     const { error } = this.invoiceIntefaceValidationSchema()
                         .extract(keys[j])
                         .validate({ [keys[j]]: data[keys[j]] });
-                    console.log({ [keys[j]]: data[keys[j]] });
-                    console.log("errors", error);
                     error &&
                         this.errorObj.set(
                             keys[j],

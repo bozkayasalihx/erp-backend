@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { buyerOperation, buyerSiteOperation } from "../../services";
+import { AttributeFields, OptionalDates } from "../../types/types";
 
-export interface IBuyerSite {
+export interface IBuyerSite extends AttributeFields, OptionalDates {
     name: string;
     buyer_id: number;
 }
@@ -11,7 +12,7 @@ export default async function buyerSite(
     req: Request<any, any, IBuyerSite>,
     res: Response
 ) {
-    const { buyer_id, name } = req.body;
+    const { buyer_id, name, ...attributes } = req.body;
     const user = req.user;
     try {
         const buyerSite = await buyerSiteOperation.repo.findOne({
@@ -37,6 +38,7 @@ export default async function buyerSite(
             const bs = await buyerSiteOperation.insertBuyerSite({
                 name,
                 buyer,
+                ...attributes,
                 updated_by: user,
                 created_by: user,
             });

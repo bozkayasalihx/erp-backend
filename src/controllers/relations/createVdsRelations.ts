@@ -5,8 +5,9 @@ import {
     vendorOperation,
     vendorToDealerSiteOperation,
 } from "../../services";
+import { OptionalDates } from "../../types/types";
 
-export interface IVdsRelations {
+export interface IVdsRelations extends OptionalDates {
     vendor_id: number;
     dealer_site_id: number;
     description?: string;
@@ -16,7 +17,7 @@ export default async function vdsRelations(
     req: Request<any, any, IVdsRelations>,
     res: Response
 ) {
-    const { dealer_site_id, vendor_id, description } = req.body;
+    const { dealer_site_id, vendor_id, description, ...dates } = req.body;
 
     try {
         const dealerSite = await dealerSiteOperation.repo.findOne({
@@ -42,6 +43,7 @@ export default async function vdsRelations(
             vendor,
             dealerSite,
             description,
+            ...dates,
             updated_by: req.user,
             created_by: req.user,
         });

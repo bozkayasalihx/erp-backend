@@ -5,8 +5,9 @@ import {
     vendorToDealerSiteOperation,
     vendorToDealerSiteToBuyerSiteOperation,
 } from "../../services";
+import { OptionalDates } from "../../types/types";
 
-export interface IVDSBSRelations {
+export interface IVDSBSRelations extends OptionalDates {
     vds_rltn_id: number;
     buyer_site_id: number;
     description: string;
@@ -16,7 +17,7 @@ export default async function vdsbsRelationsController(
     req: Request<any, any, IVDSBSRelations>,
     res: Response
 ) {
-    const { buyer_site_id, description, vds_rltn_id } = req.body;
+    const { buyer_site_id, description, vds_rltn_id, ...dates } = req.body;
 
     try {
         const buyerSite = await buyerSiteOperation.repo.findOne({
@@ -43,6 +44,7 @@ export default async function vdsbsRelationsController(
             buyer_site_id: buyerSite.id,
             description,
             vds_rltn_id: vds.id,
+            ...dates,
             updated_by: req.user,
             created_by: req.user,
         });

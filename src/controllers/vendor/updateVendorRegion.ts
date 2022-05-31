@@ -8,7 +8,7 @@ export default async function updateVendorRegion(
     req: Request<any, any, Partial<IVendorRegion> & { id: number }>,
     res: Response<{ message: string; data?: string }>
 ) {
-    const { id, name, vendor_id } = req.body;
+    const { id, name, vendor_id, ...attributes } = req.body;
     const user = req.user;
 
     try {
@@ -35,9 +35,11 @@ export default async function updateVendorRegion(
             }
         }
 
-        if (name) vendorRegion.name = name;
-
-        if (vendor) vendorRegion.vendor = vendor;
+        const keys = Object.keys(attributes);
+        for (let i = 0; i < keys.length; i++) {
+            if (attributes[keys[i]])
+                vendorRegion[keys[i]] = attributes[keys[i]];
+        }
         vendorRegion.updated_by = user;
         await vendorRegion.save();
 

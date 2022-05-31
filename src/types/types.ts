@@ -6,6 +6,18 @@ export interface IBaseParams {
     deleted_at: Date;
 }
 
+export interface AttributeFields {
+    attribute1?: string;
+    attribute2?: string;
+    attribute3?: string;
+    attribute4?: string;
+}
+
+export interface OptionalDates {
+    start_date?: Date;
+    end_date?: Date;
+}
+
 export interface GenericError {
     field: string;
     message: string;
