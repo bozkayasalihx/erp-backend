@@ -90,3 +90,8 @@ export enum AdvanceStatusType {
     APPROVED = "A",
     REJECTED = "R",
 }
+
+export enum HAS_PS {
+    YES = "Y",
+    NO = "N",
+}

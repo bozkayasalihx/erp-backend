@@ -24,7 +24,7 @@ const file = () => {
 
 const DELIMITER = ";";
 const LIMIT = 20;
-const HIGHTWATERMARK = 150 * 1024;
+const HIGHWATERMARK = 150 * 1024;
 
 router.post(
     Routes.PROCESS_INVOICE_UPLOAD,
@@ -35,7 +35,7 @@ router.post(
         const parser = new CsvParser(DELIMITER);
         const stream = createReadStream(file.tempFilePath, {
             encoding: "utf-8",
-            highWaterMark: HIGHTWATERMARK,
+            highWaterMark: HIGHWATERMARK,
         });
         try {
             let data = "";
@@ -50,7 +50,11 @@ router.post(
                         "invoice_file_process_id"
                     );
                     parser.readData(data);
-                    parser.matcher(async (data) => {
+                    parser.matcher(async (err, data) => {
+                        if (err || !data) {
+                            console.log(err?.message);
+                            return;
+                        }
                         for (const item of data) {
                             const firstValue = Object.values(item)[0];
                             await invoiceOperation.createInvoiceInterface({
@@ -63,9 +67,14 @@ router.post(
                             });
                         }
 
-                        customEventEmitter.emit("process_invoiceInterface", {
-                            file_process_id,
-                        });
+                        customEventEmitter.emit(
+                            "process_invoiceInterface",
+                            {
+                                file_process_id,
+                                user,
+                            },
+                            file.tempFilePath
+                        );
                     });
                 });
 
@@ -97,7 +106,7 @@ router.post(
         const parser = new CsvParser(DELIMITER);
         const stream = createReadStream(file.tempFilePath, {
             encoding: "utf-8",
-            highWaterMark: HIGHTWATERMARK,
+            highWaterMark: HIGHWATERMARK,
         });
         try {
             let data = "";
@@ -110,12 +119,18 @@ router.post(
             try {
                 stream.on("end", async () => {
                     const file_process_id = await increment(
-                        "invoice_file_process_id"
+                        "ps_file_process_id"
                     );
                     parser.readData(data);
-                    parser.matcher(async (data) => {
+                    parser.matcher(async (err, data) => {
+                        if (err) {
+                            console.log("err", err);
+                            return;
+                        }
+                        if (!data) return;
                         for (const item of data) {
                             const firstValue = Object.values(item)[0];
+                            console.log("first value", firstValue);
                             await paymentOperation.createPSI({
                                 ...item,
                                 file_name: filename,
@@ -127,9 +142,14 @@ router.post(
                         }
                     });
 
-                    customEventEmitter.emit("process_psi", {
-                        file_process_id,
-                    });
+                    customEventEmitter.emit(
+                        "process_psi",
+                        {
+                            file_process_id,
+                            user,
+                        },
+                        file.tempFilePath
+                    );
                 });
 
                 return res.status(httpStatus.CREATED).json({

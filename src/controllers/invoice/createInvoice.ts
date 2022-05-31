@@ -9,7 +9,7 @@ import { Currency, InvoiceStatusType } from "../../types/types";
 export interface IInvoice {
     invoice_no: string;
     invoice_date: Date;
-    invoice_amount: number;
+    amount: number;
     currency: Currency;
     status: InvoiceStatusType;
     ref_file_id: number;

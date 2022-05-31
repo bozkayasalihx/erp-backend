@@ -6,6 +6,8 @@ class CsvParser {
     private fullset: Data;
     private RELATED_USER = "related_users";
     private CURRENCY = "currency";
+    private has_ps = "has_ps";
+    private newLine = "\n";
 
     constructor(delimiter = ",") {
         this.delimiter = delimiter;
@@ -59,6 +61,10 @@ class CsvParser {
         const returnType: Map<number, Array<string>> = new Map();
         let i = 0;
         while (i < body.length) {
+            if (body[i] === this.newLine) {
+                console.log("empty new line not allwed");
+                break;
+            }
             const eachItem = body[i].trim().split(delimiter);
             for (let j = i; j < eachItem.length; j++) {
                 //@ts-ignore
@@ -77,12 +83,18 @@ class CsvParser {
         return returnType;
     }
 
-    public matcher(cb: (data: Data) => void) {
+    public matcher(cb: (err: Error | null, data?: Data) => void) {
         const body = this.transformBody();
         const header = this.transformHeader();
         let headerCurrency: string;
+        let headerHasPs: string;
         const fullSet: Set<Record<string, any>> = new Set();
         for (const [key, values] of body) {
+            console.log();
+            if (!values[0]) {
+                return cb(new Error("empty new line not allowed"));
+            }
+            // if (!body.size) cb(new Error("not found"));
             // [{ record_type: h},...}];
             // which means its header
             const newObj = {};
@@ -92,9 +104,12 @@ class CsvParser {
 
                 if (key === 0) {
                     if (curHeader === this.CURRENCY) headerCurrency = cur;
+                    if (curHeader === this.has_ps) headerHasPs = cur;
                 }
                 if (curHeader === this.CURRENCY) {
                     if (!cur) cur = headerCurrency;
+                } else if (curHeader === this.has_ps) {
+                    if (!cur) cur = headerHasPs;
                 }
                 if (curHeader === this.RELATED_USER) cur = JSON.parse(cur);
                 const newOne = (newObj[curHeader] = cur);
@@ -103,7 +118,7 @@ class CsvParser {
             fullSet.add(newObj);
         }
         this.fullset = fullSet;
-        cb(fullSet);
+        cb(null, fullSet);
     }
 
     public log() {

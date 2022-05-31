@@ -1,6 +1,8 @@
+import { unlink } from "fs/promises";
 import nodemailer from "nodemailer";
 import eventemitter from "../loaders/eventEmitter";
 import DataVerifier from "../scripts/parser/dataVerifier";
+import { invoiceOperation } from "../services";
 
 export const eventHandler = () => {
     eventemitter.on("send_email", async ({ toEmail, subject, html }) => {
@@ -26,10 +28,31 @@ export const eventHandler = () => {
         }
     });
 
-    eventemitter.on("process_invoiceInterface", async ({ file_process_id }) => {
-        const dataverifier = new DataVerifier("vi");
-        await dataverifier.setter({ file_process_id });
-        const validate = dataverifier.validate();
-        console.log("validate", validate);
-    });
+    eventemitter.on(
+        "process_invoiceInterface",
+        async ({ file_process_id, user }, filePath) => {
+            const dataverifier = new DataVerifier("vi");
+            await dataverifier.setter({ file_process_id });
+            dataverifier.validate();
+            dataverifier.getData;
+
+            try {
+                if (!dataverifier.errors.size) {
+                    for (let i = 0; i < dataverifier.getData.length; i++) {
+                        await invoiceOperation.invoiceRepo.save({
+                            ...(dataverifier.getData[i] as any),
+                            created_by: user,
+                            updated_by: user,
+                        });
+                    }
+                } else {
+                    console.log(dataverifier.errors);
+                }
+            } catch (err) {
+                console.log("err", err);
+            } finally {
+                filePath && (await unlink(filePath));
+            }
+        }
+    );
 };

@@ -6,8 +6,14 @@ interface IEvents {
         subject: string;
         html: string;
     }) => void;
-    process_invoiceInterface: ({ file_process_id: number }) => void;
-    process_psi: ({ file_process_id: number }) => void;
+    process_invoiceInterface: (
+        { file_process_id: number, user: User },
+        filePath?: string
+    ) => void;
+    process_psi: (
+        { file_process_id: number, user: User },
+        filePath?: string
+    ) => void;
 }
 
 declare interface EmitterClass {

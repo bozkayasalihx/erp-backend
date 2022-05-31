@@ -16,13 +16,16 @@ export default class Invoice extends SuperEntity {
     public invoice_date: Date;
 
     @Column({ type: "real" })
-    public invoice_amount: number;
+    public amount: number;
 
     @Column({ type: "varchar", length: 3 })
     public currency: string;
 
     @Column({ type: "date" })
     public due_date: Date;
+
+    @Column("int", { array: true, default: [] })
+    public ref_user_list: Array<number>;
 
     @Column({
         type: "enum",

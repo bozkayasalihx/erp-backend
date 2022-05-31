@@ -1,5 +1,10 @@
 import { Column, Entity, ManyToOne } from "typeorm";
-import { FileRecordType, FileStatusType, LineStatusType } from "../types/types";
+import {
+    FileRecordType,
+    FileStatusType,
+    HAS_PS,
+    LineStatusType,
+} from "../types/types";
 import Invoice from "./Invoice";
 import SuperEntity from "./SuperEntity";
 
@@ -24,11 +29,14 @@ export default class InvoiceInterface extends SuperEntity {
     })
     public record_type: FileRecordType;
 
+    @Column({ type: "enum", enum: HAS_PS, default: HAS_PS.NO })
+    public has_ps: HAS_PS;
+
     @Column({ name: "invoice_no", length: 30 })
     public invoice_no: string;
 
     @Column({ name: "vdsbs_id" })
-    public vdsbs_id: number;
+    public vdsbs_id: string;
 
     @Column({ name: "invoice_date", type: "varchar", default: null })
     public invoice_date: string;
