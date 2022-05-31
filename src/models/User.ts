@@ -17,16 +17,16 @@ export default class User extends BaseEntity {
     @PrimaryGeneratedColumn({ name: "id" })
     public id: number;
 
-    @UpdateDateColumn({ name: "updated_at" })
+    @UpdateDateColumn({ name: "updated_at", type: "timestamp" })
     public updated_at: Date;
 
-    @CreateDateColumn({ name: "created_at" })
+    @CreateDateColumn({ name: "created_at", type: "timestamp" })
     public created_at: Date;
 
-    @Column({ default: null, name: "start_date" })
+    @Column({ default: null, name: "start_date", type: "date" })
     public start_date: Date;
 
-    @Column({ default: null, name: "end_date" })
+    @Column({ default: null, name: "end_date", type: "date" })
     public end_date: Date;
 
     @Column({ unique: true, nullable: true, name: "username" })

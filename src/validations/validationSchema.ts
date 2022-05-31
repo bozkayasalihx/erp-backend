@@ -28,6 +28,8 @@ export interface IRegister {
     user_type: UserTypes;
     tckn: string;
     mobile: string;
+    start_date: Date;
+    end_date: Date;
 }
 
 export interface Options {
@@ -61,6 +63,8 @@ class ValidationSchema {
             user_type: Joi.valid(...Object.values(UserTypes)).required(),
             mobile: Joi.string().required().min(10).max(11),
             tckn: Joi.string().required().min(11).max(11),
+            start_date: Joi.date().optional(),
+            end_date: Joi.date().optional(),
         });
     }
 
@@ -234,7 +238,7 @@ class ValidationSchema {
             currency: Joi.valid(...Object.values(Currency)).required(),
             invoice_no: Joi.string().required().min(30).max(30).required(),
             invoice_date: Joi.date().required(),
-            invoice_amount: Joi.number().required(),
+            amount: Joi.number().required(),
             status: Joi.valid(...Object.values(InvoiceStatusType)).required(),
             ref_file_id: Joi.number().required(),
             due_date: Joi.date().required(),
