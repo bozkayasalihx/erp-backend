@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import { isContain, makeSure } from "../../scripts/utils/isContains";
+import { hasAccess, isContain, makeSure } from "../../scripts/utils/isContains";
 import userEntityRelationOperation from "../../services/userEntityRelationOperation";
 import userOperation from "../../services/userOperation";
 import { OptionalDates } from "../../types/types";
@@ -38,6 +38,22 @@ export default async function createUserEntityRelation(
                 message: "more than one or zero nonnullable field not allowed",
             });
 
+        const valid = await makeSure(validOne);
+
+        if (!valid)
+            return res.status(httpStatus.NOT_FOUND).json({
+                message: "not found",
+            });
+
+        // data access check on user_type and entity_type
+        const accessRight: boolean = hasAccess(validOne, user.user_type);
+
+        if (!accessRight) {
+            return res.status(httpStatus.FORBIDDEN).json({
+                message: "user_type has no access to create data",
+            });
+        }
+
         const data = await userEntityRelationOperation.repo
             .createQueryBuilder("uer")
             .where(
@@ -48,12 +64,6 @@ export default async function createUserEntityRelation(
             .select("1")
             .execute();
 
-        const valid = await makeSure(validOne);
-
-        if (!valid)
-            return res.status(httpStatus.NOT_FOUND).json({
-                message: "not found",
-            });
         if (data.length)
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "already exists",
