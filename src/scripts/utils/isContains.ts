@@ -3,6 +3,7 @@ import {
     dealerSiteOperation,
     vendorOperation,
 } from "../../services";
+import { UserTypes } from "../../types/types";
 
 export function isContain(params: Record<string, any>) {
     const hashMap = {};
@@ -66,4 +67,42 @@ export async function makeSure(obj: { [x: string]: number }) {
             return false;
         }
     }
+}
+
+export function hasAccess(obj: { [x: string]: number }, user_type: string) {
+    const entity_type = Object.keys(obj)[0].split("_table")[0];
+
+    switch (entity_type) {
+        case Types.VENDOR: {
+            if (
+                user_type === UserTypes.VENDOR ||
+                user_type === UserTypes.VENDOR_ADMIN
+            ) {
+                return true;
+            }
+            return false;
+        }
+        case Types.DEALER_SITE: {
+            if (
+                user_type === UserTypes.DEALER ||
+                user_type === UserTypes.DEALER_ADMIN
+            ) {
+                return true;
+            }
+            return false;
+        }
+        case Types.BUYER_SITE: {
+            if (
+                user_type === UserTypes.BUYER ||
+                user_type === UserTypes.BUYER_ADMIN
+            ) {
+                return true;
+            }
+            return false;
+        }
+        default: {
+            return false;
+        }
+    }
+    return false;
 }
