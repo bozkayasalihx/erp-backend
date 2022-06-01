@@ -24,11 +24,11 @@ export default class UserEntityRelation extends SuperEntity {
     public vendor_table_ref: Vendor;
 
     @ManyToOne(() => BuyerSite)
-    @JoinColumn({ name: "buyer_site_ref_id" })
+    @JoinColumn({ name: "buyer_site_table_ref_id" })
     public buyer_site_table_ref: BuyerSite;
 
     @ManyToOne(() => DealerSite)
-    @JoinColumn({ name: "dealer_site_ref_id" })
+    @JoinColumn({ name: "dealer_site_table_ref_id" })
     public dealer_site_table_ref: DealerSite;
 }
 

@@ -1,9 +1,20 @@
 export function isContain(params: Record<string, any>) {
-    const hashMap = new Map<string, number>();
+    const hashMap = {};
+    const error: { invalid: boolean } = { invalid: false };
+    const validOne: { [x: string]: number } = {};
+    let i = 0;
     for (const [key, value] of Object.entries(params)) {
         if (value) {
-            if (!hashMap.get(key)) hashMap.set(key, value);
+            validOne[key] = value;
+            i++;
         }
+        if (i > 1) error["invalid"] = true;
+        if (!(key in hashMap)) hashMap[key] = value;
     }
-    return hashMap;
+    i = 0;
+    return {
+        hashMap,
+        error,
+        validOne,
+    };
 }

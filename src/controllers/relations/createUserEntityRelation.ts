@@ -9,7 +9,7 @@ export interface IUserEntityRelation extends OptionalDates {
     user_id: number;
     description: string;
     vendor_table_ref?: number;
-    buyer_site_table_ref: number;
+    buyer_site_table_ref?: number;
     dealer_site_table_ref?: number;
 }
 
@@ -18,7 +18,7 @@ export default async function createUserEntityRelation(
     res: Response
 ) {
     try {
-        const { description, user_id, ...ids } = req.body;
+        const { description, user_id, end_date, start_date, ...ids } = req.body;
 
         const user = await userOperation.repo.findOne({
             where: { id: user_id },
@@ -32,21 +32,35 @@ export default async function createUserEntityRelation(
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "must container ref ids",
             });
-        const results = isContain(ids);
-        if (results.size > 1 || !results.size) {
-            return res.status(httpStatus.BAD_REQUEST).json({
-                message: "must be only one column of id defined",
-            });
-        }
+        const { error, hashMap, validOne } = isContain(ids);
 
-        const [key, value] = Array.from(results)[0];
+        if (error.invalid)
+            return res.status(httpStatus.BAD_REQUEST).json({
+                message: "more than one nonnullable field not allowed",
+            });
+
+        const data = await userEntityRelationOperation.repo
+            .createQueryBuilder("uer")
+            .where(
+                `${Object.keys(validOne)[0]}_id = ${
+                    Object.values(validOne)[0]
+                } AND user_id = ${user_id}`
+            )
+            .select(`${Object.keys(validOne)[0]}_id, user_id`)
+            .execute();
+        if (data.length)
+            return res.status(httpStatus.BAD_REQUEST).json({
+                message: "already exists",
+            });
 
         await userEntityRelationOperation.insertUE({
             description,
             user,
             updated_by: req.user,
             created_by: req.user,
-            [key]: value,
+            start_date,
+            end_date,
+            ...hashMap,
         });
 
         return res.status(httpStatus.OK).json({
@@ -54,6 +68,11 @@ export default async function createUserEntityRelation(
         });
     } catch (err) {
         console.log("err", err);
+        if (err?.detail?.includes("already exists")) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                message: "already exists",
+            });
+        }
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             message: "an error accured try again later",
         });
