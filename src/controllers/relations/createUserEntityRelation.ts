@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import { isContain } from "../../scripts/utils/isContains";
+import { isContain, makeSure } from "../../scripts/utils/isContains";
 import userEntityRelationOperation from "../../services/userEntityRelationOperation";
 import userOperation from "../../services/userOperation";
 import { OptionalDates } from "../../types/types";
@@ -33,10 +33,9 @@ export default async function createUserEntityRelation(
                 message: "must container ref ids",
             });
         const { error, hashMap, validOne } = isContain(ids);
-
-        if (error.invalid)
+        if (!error.valid)
             return res.status(httpStatus.BAD_REQUEST).json({
-                message: "more than one nonnullable field not allowed",
+                message: "more than one or zero nonnullable field not allowed",
             });
 
         const data = await userEntityRelationOperation.repo
@@ -46,8 +45,15 @@ export default async function createUserEntityRelation(
                     Object.values(validOne)[0]
                 } AND user_id = ${user_id}`
             )
-            .select(`${Object.keys(validOne)[0]}_id, user_id`)
+            .select("1")
             .execute();
+
+        const valid = await makeSure(validOne);
+
+        if (!valid)
+            return res.status(httpStatus.NOT_FOUND).json({
+                message: "not found",
+            });
         if (data.length)
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "already exists",
