@@ -1,111 +1,51 @@
 import dayjs from "dayjs";
-import Joi, { ValidationErrorItem } from "joi";
-import { FindOptionsWhere } from "typeorm";
+import Joi from "joi";
 import { IInvoice } from "../../controllers/invoice/createInvoice";
 import { IPaymentSchedule } from "../../controllers/payment/createPayment";
 import { InvoiceInterface, PaymentScheduleInterface } from "../../models";
-import { invoiceOperation, paymentOperation } from "../../services";
-import {
-    Currency,
-    FileRecordType,
-    FileStatusType,
-    HAS_PS,
-    InvoiceStatusType,
-    LineStatusType,
-    PaymentType,
-} from "../../types/types";
+import { Currency, InvoiceStatusType } from "../../types/types";
 
 type Tabletype = "psi" | "vi";
 
-type DataType = PaymentScheduleInterface | InvoiceInterface;
+type PSIDataType = Partial<PaymentScheduleInterface>;
+type VIDataType = Partial<InvoiceInterface>;
 
 enum ErrorSecondName {
     PAYMENT = "payment_schedule_interface",
     INVOICE = "invoice_interface",
 }
-
-// cur.amount = parseInt(cur.amount);
-// cur.currency = Currency[cur.currency];
-// //@ts-ignore
-// cur.due_date = this.dateFormater(cur.due_date).format(
-//     "DD/MM/YYYY"
-// );
-// //@ts-ignore
-// cur.invoice_date = this.dateFormater(
-//     cur.invoice_date
-// ).format("DD/MM/YYYY");
-// //@ts-ignore
-// cur.vdsbs_id = parseInt(cur.vdsbs_id);
-
-interface NewType {
-    amount: string | number;
-    vdsbs_id: number | string;
-    invoice_date: Date | string;
-    currency: Currency | string;
-    file_status: string | FileStatusType;
-    line_status: string | LineStatusType;
-    file_process_id: string | number;
-    record_type: string | FileRecordType;
-    has_ps: string | HAS_PS;
-    due_date: string | Date | null;
-    related_user?: number[] | string;
-}
-
 class DataVerifier {
     private type: Tabletype;
-    private data: Array<DataType> = [];
-    private paymentOP = paymentOperation;
-    private invoiceOP = invoiceOperation;
-    private Joi = Joi;
+    private data: { psi: Array<PSIDataType>; vi: Array<VIDataType> };
     private errorObj: Map<string, any> = new Map();
     private dateFormater = dayjs;
+    private dateFormat = "DD/MM/YYYY";
 
     constructor(type: Tabletype) {
         this.type = type;
+        this.data = {
+            psi: [],
+            vi: [],
+        };
     }
 
     public get errors() {
         return this.errorObj;
     }
 
-    public get getData() {
-        return this.data;
+    public setPSIData(data: Array<PSIDataType>) {
+        this.data.psi = data;
+    }
+    public setVIData(data: Array<VIDataType>) {
+        this.data.vi = data;
     }
 
-    public async setter(whereClause: FindOptionsWhere<DataType>) {
-        if (this.type == "vi") {
-            try {
-                const resl = await this.invoiceOP.invoiceInterfaceRepo.findOne({
-                    where: {
-                        ...whereClause,
-                        record_type: FileRecordType.HEADER,
-                    } as FindOptionsWhere<InvoiceInterface>,
-                });
-                //  this.invoiceOP.invoiceInterfaceRepo.createQueryBuilder('vi').where(`vi.file`)
-                if (resl) this.data[0] = resl;
-            } catch (err) {
-                this.errorObj.set(err?.message || ErrorSecondName.INVOICE, err);
-            }
-        } else if (this.type === "psi") {
-            try {
-                const resl = await this.paymentOP.PSIRepo.find({
-                    where: {
-                        ...(whereClause as FindOptionsWhere<PaymentScheduleInterface>),
-                    },
-                });
-                this.data = resl;
-            } catch (err) {
-                this.errorObj.set(err?.message || ErrorSecondName.PAYMENT, err);
-            }
-        } else throw new Error("enter valid table name");
+    public get getVIData() {
+        return this.data.vi;
     }
 
-    private errorSlugify(error: Array<ValidationErrorItem>) {
-        return error
-            .map((detail) => {
-                return detail.message;
-            })
-            .join(", ");
+    public get getPSIData() {
+        return this.data.psi;
     }
 
     private erorrKeyGen(err: string) {
@@ -114,130 +54,152 @@ class DataVerifier {
         return null;
     }
 
+    private strToFloat(str: string) {
+        return parseFloat(str.replace(",", "."));
+    }
+
+    private strToInt(str: string) {
+        return parseInt(str);
+    }
+
     private invoiceIntefaceValidationSchema() {
-        return this.Joi.object<IInvoice>({
-            currency: this.Joi.object({
-                currency: this.Joi.valid(...Object.values(Currency)).required(),
+        return Joi.object<IInvoice>({
+            currency: Joi.object({
+                currency: Joi.valid(...Object.values(Currency)).required(),
             }),
-            invoice_no: this.Joi.object({
-                invoice_no: this.Joi.string().required().max(30).required(),
+            invoice_no: Joi.object({
+                invoice_no: Joi.string().required().max(30).required(),
             }),
-            invoice_date: this.Joi.object({
-                invoice_date: this.Joi.date().required(),
+            invoice_date: Joi.object({
+                invoice_date: Joi.date().required(),
             }),
-            amount: this.Joi.object({ amount: this.Joi.number().required() }),
-            status: this.Joi.object({
-                status: this.Joi.valid(
+            amount: Joi.object({ amount: Joi.number().required() }),
+            status: Joi.object({
+                status: Joi.valid(
                     ...Object.values(InvoiceStatusType)
                 ).required(),
             }),
-            ref_file_id: this.Joi.object({
-                ref_file_id: this.Joi.number().required(),
+            ref_file_id: Joi.object({
+                ref_file_id: Joi.number().required(),
             }),
-            due_date: this.Joi.object({ due_date: this.Joi.date().required() }),
-            vdsbs_id: this.Joi.object({
-                vdsbs_id: this.Joi.number().required(),
+            due_date: Joi.object({ due_date: Joi.date().required() }),
+            vdsbs_id: Joi.object({
+                vdsbs_id: Joi.number().required(),
             }),
         });
     }
 
     private PSIValidatonSchema() {
-        return this.Joi.object<IPaymentSchedule>({
+        return Joi.object<
+            IPaymentSchedule & {
+                line_no: number;
+                due_date: Date;
+                amount: number;
+            }
+        >({
             currency: Joi.object({
-                currency: this.Joi.valid(...Object.values(Currency)).optional(),
-            }),
-            remained_amount: this.Joi.object({
-                remained_amount: this.Joi.number().required(),
-            }),
-            effective_date: this.Joi.object({
-                effective_date: this.Joi.date().required(),
-            }),
-            invoiced_status: this.Joi.object({
-                invoiced_status: this.Joi.valid(
-                    ...Object.values(InvoiceStatusType)
-                ).optional(),
-            }),
-            original_amount: this.Joi.object({
-                original_amount: this.Joi.number().required(),
-            }),
-            payment_type: this.Joi.object({
-                payment_type: this.Joi.valid(
-                    ...Object.values(PaymentType)
-                ).optional(),
-            }),
-            reference_id: this.Joi.object({
-                reference_id: this.Joi.number().required(),
+                currency: Joi.valid(...Object.values(Currency)).required(),
             }),
 
-            vdsbs_id: this.Joi.object({
-                vdsbs_id: this.Joi.number().required(),
+            vdsbs_id: Joi.object({
+                vdsbs_id: Joi.number().required(),
+            }),
+            line_no: Joi.object({
+                line_no: Joi.number().required(),
+            }),
+            invoiced_status: Joi.object({
+                invoiced_status: Joi.valid(
+                    ...Object.values(InvoiceStatusType)
+                ).required(),
+            }),
+            due_date: Joi.object({
+                due_date: Joi.date().required(),
+            }),
+            amount: Joi.object({
+                amount: Joi.number().required(),
             }),
         });
     }
 
-    private transform(data: Array<DataType>) {
-        const newDate: Array<DataType> = [];
-        for (let i = 0; i < data.length; i++) {
-            if (this.type === "vi") {
-                const cur = data[i] as NewType;
+    private transform() {
+        const newData: { psi: Array<PSIDataType>; vi: Array<VIDataType> } = {
+            psi: [],
+            vi: [],
+        };
+
+        if (this.type === "vi") {
+            for (let i = 0; i < this.data.vi.length; i++) {
+                const cur = this.data.vi[i] as VIDataType;
                 try {
-                    cur.amount = parseInt(cur.amount as string) as number;
+                    //@ts-ignore
+                    cur.amount = this.strToFloat(cur.amount);
                     cur.due_date = this.dateFormater(cur.due_date).format(
-                        "DD/MM/YYYY"
+                        this.dateFormat
                     );
                     cur.invoice_date = this.dateFormater(
                         cur.invoice_date
-                    ).format("DD/MM/YYYY");
-                    cur.vdsbs_id = parseInt(cur.vdsbs_id as string);
-
-                    newDate.push(cur as InvoiceInterface);
+                    ).format(this.dateFormat);
+                    //@ts-ignore
+                    cur.vdsbs_id = this.strToInt(cur.vdsbs_id);
+                    newData.vi.push(cur as InvoiceInterface);
                 } catch (err) {
                     console.log("err", err);
                 }
-            } else if (this.type === "psi") {
-                return data;
             }
-            return newDate;
+        } else if (this.type === "psi") {
+            for (let i = 0; i < this.data.psi.length; i++) {
+                try {
+                    //@ts-ignore
+                    this.data.psi[i].amount = this.strToFloat(
+                        this.data.psi[i].amount as string
+                    );
+
+                    //@ts-ignore
+                    this.data.psi[i].due_date = this.dateFormater(
+                        this.data.psi[i].due_date
+                    ).format(this.dateFormat);
+
+                    //@ts-ignore
+                    this.data.psi[i].vdsbs_id = this.strToInt(
+                        this.data.psi[i].vdsbs_id as string
+                    );
+
+                    //@ts-ignore
+                    this.data.psi[i].line_no = this.strToInt(
+                        this.data.psi[i].line_no as string
+                    );
+
+                    newData.psi.push(this.data.psi[i]);
+                } catch (err) {
+                    console.log("err", err);
+                }
+            }
         }
 
-        return data;
+        this.data = newData;
+        return newData;
     }
 
     public validate() {
-        const data = this.data;
-        if (this.type === "psi") {
-            for (let i = 0; i < data.length; i++) {
-                const keys = Object.keys(data[i]);
-                for (let j = 0; j < keys.length; j++) {
-                    try {
-                        const { error } = this.PSIValidatonSchema()
-                            .extract(keys[j])
-                            .validate(data[i][keys[j]]);
-                        error &&
-                            this.errorObj.set(
-                                keys[j],
-                                error?.message.replace(
-                                    this.erorrKeyGen(error?.message)!,
-                                    Object.keys(error._original)[0]
-                                )
-                            );
-                    } catch (err) {
-                        continue;
-                    }
-                }
-            }
-        } else if (this.type === "vi") {
-            const data = this.transform(this.data)[0] as InvoiceInterface;
-            const keys = Object.keys(data);
+        this.transform();
+        for (let i = 0; i < this.data[this.type].length; i++) {
+            const keys = Object.keys(this.data[this.type][i]);
+            const schema =
+                this.type === "psi"
+                    ? this.PSIValidatonSchema
+                    : this.invoiceIntefaceValidationSchema;
+
             for (let j = 0; j < keys.length; j++) {
                 try {
-                    const { error } = this.invoiceIntefaceValidationSchema()
+                    const { error } = schema()
                         .extract(keys[j])
-                        .validate({ [keys[j]]: data[keys[j]] });
+                        .validate({
+                            [keys[j]]: this.data[this.type][i][keys[j]],
+                        });
                     error &&
                         this.errorObj.set(
-                            keys[j],
-                            error?.message.replace(
+                            `${i}__${keys[j]}`,
+                            error.message.replace(
                                 this.erorrKeyGen(error?.message)!,
                                 Object.keys(error._original)[0]
                             )
@@ -246,7 +208,7 @@ class DataVerifier {
                     continue;
                 }
             }
-        } else throw new Error("not found");
+        }
     }
 }
 
