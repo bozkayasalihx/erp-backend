@@ -34,7 +34,7 @@ enum Types {
 }
 export async function makeSure(obj: { [x: string]: number }) {
     const key = Object.keys(obj)[0];
-
+    if (!key.includes("table")) return false;
     const type = key.split("_table")[0];
     switch (type) {
         case Types.VENDOR: {
@@ -69,14 +69,15 @@ export async function makeSure(obj: { [x: string]: number }) {
     }
 }
 
-export function hasAccess(obj: { [x: string]: number }, user_type: string) {
+export function hasAccess(obj: { [x: string]: number }, userType: string) {
+    if (!Object.keys(obj)[0].includes("table")) return false;
     const entity_type = Object.keys(obj)[0].split("_table")[0];
 
     switch (entity_type) {
         case Types.VENDOR: {
             if (
-                user_type === UserTypes.VENDOR ||
-                user_type === UserTypes.VENDOR_ADMIN
+                userType === UserTypes.VENDOR ||
+                userType === UserTypes.VENDOR_ADMIN
             ) {
                 return true;
             }
@@ -84,8 +85,8 @@ export function hasAccess(obj: { [x: string]: number }, user_type: string) {
         }
         case Types.DEALER_SITE: {
             if (
-                user_type === UserTypes.DEALER ||
-                user_type === UserTypes.DEALER_ADMIN
+                userType === UserTypes.DEALER ||
+                userType === UserTypes.DEALER_ADMIN
             ) {
                 return true;
             }
@@ -93,8 +94,8 @@ export function hasAccess(obj: { [x: string]: number }, user_type: string) {
         }
         case Types.BUYER_SITE: {
             if (
-                user_type === UserTypes.BUYER ||
-                user_type === UserTypes.BUYER_ADMIN
+                userType === UserTypes.BUYER ||
+                userType === UserTypes.BUYER_ADMIN
             ) {
                 return true;
             }
@@ -104,5 +105,4 @@ export function hasAccess(obj: { [x: string]: number }, user_type: string) {
             return false;
         }
     }
-    return false;
 }

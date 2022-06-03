@@ -2,7 +2,6 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { InvoiceStatusType } from "../types/types";
 import InvoiceInterface from "./InvoiceInterface";
 import InvoiceLine from "./InvoiceLine";
-import PaymentSchedule from "./PaymentSchedule";
 import SuperEntity from "./SuperEntity";
 import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
@@ -60,9 +59,6 @@ export default class Invoice extends SuperEntity {
     @ManyToOne(() => VendorToDealerSiteToBuyerSite, (vdsbs) => vdsbs.invoices)
     @JoinColumn({ name: "vdsbs_id" })
     public vdsbs: VendorToDealerSiteToBuyerSite;
-
-    @OneToMany(() => PaymentSchedule, (ps) => ps.invoices, { nullable: false })
-    public payment_schedules: Array<PaymentSchedule>;
 
     @OneToMany(() => InvoiceLine, (invoicesLine) => invoicesLine.invoice, {
         nullable: false,
