@@ -1,8 +1,5 @@
-import { unlink } from "fs/promises";
 import nodemailer from "nodemailer";
 import eventemitter from "../loaders/eventEmitter";
-import DataVerifier from "../scripts/parser/dataVerifier";
-import { invoiceOperation } from "../services";
 
 export const eventHandler = () => {
     eventemitter.on("send_email", async ({ toEmail, subject, html }) => {
@@ -28,33 +25,45 @@ export const eventHandler = () => {
         }
     });
 
-    eventemitter.on(
-        "process_invoiceInterface",
-        async ({ file_process_id, user }, filePath) => {
-            const dataverifier = new DataVerifier("vi");
-            await dataverifier.setter({ file_process_id });
-            dataverifier.validate();
-            dataverifier.getData;
+    // eventemitter.on(
+    //     "process_invoiceInterface",
+    //     async ({ file_process_id, user }, filePath) => {
+    //         const viDataVerifier = new DataVerifier("vi");
+    //         await viDataVerifier.setter({ file_process_id });
+    //         viDataVerifier.validate();
+    //         viDataVerifier.getData;
 
-            try {
-                if (!dataverifier.errors.size) {
-                    for (let i = 0; i < dataverifier.getData.length; i++) {
-                        await invoiceOperation.invoiceRepo.save({
-                            ...(dataverifier.getData[i] as any),
-                            created_by: user,
-                            updated_by: user,
-                        });
-                    }
-                } else {
-                    console.log(dataverifier.errors);
-                }
+    //         try {
+    //             if (!viDataVerifier.errors.size) {
+    //                 for (let i = 0; i < viDataVerifier.getData.length; i++) {
+    //                     await invoiceOperation.invoiceRepo.save({
+    //                         ...(viDataVerifier.getData[i] as any),
+    //                         created_by: user,
+    //                         updated_by: user,
+    //                     });
+    //                 }
+    //             } else {
+    //                 console.log(viDataVerifier.errors);
+    //             }
 
-                return true;
-            } catch (err) {
-                return false;
-            } finally {
-                filePath && (await unlink(filePath));
-            }
-        }
-    );
+    //             return true;
+    //         } catch (err) {
+    //             return false;
+    //         } finally {
+    //             filePath && (await unlink(filePath));
+    //         }
+    //     }
+    // );
+
+    // eventemitter.on(
+    //     "process_psi",
+    //     async ({ file_process_id, user }, filePath) => {
+    //         const maker = await paymentOperation.PSIRepo.find({
+    //             where: { file_process_id },
+    //         });
+    //         const psDataVerifier = new DataVerifier("psi");
+    //         await psDataVerifier.setter({ file_process_id });
+    //         psDataVerifier.validate();
+    //     }
+    // );
 };

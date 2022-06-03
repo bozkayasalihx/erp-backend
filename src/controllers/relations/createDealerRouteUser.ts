@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
+import getAll from "../../scripts/utils/getall";
 import {
     dealerRouteUserOperation,
     userOperation,
@@ -33,6 +34,9 @@ export default async function dealerRouteUser(
         const vdsbs = await vendorToDealerSiteToBuyerSiteOperation.repo.findOne(
             {
                 where: { id: vdsbs_id },
+                relations: {
+                    dealer_route_users: true,
+                },
             }
         );
 
@@ -40,6 +44,15 @@ export default async function dealerRouteUser(
             return res.status(httpStatus.NOT_FOUND).json({
                 message: "not found",
             });
+
+        getAll<typeof vdsbs.dealer_route_users[0]>(
+            vdsbs.dealer_route_users,
+            (routeUser) => {
+                // router users ile tum router userlarina erisebilirsin;
+                // buradan gerlikli validasyonlari yaparsin sen artik;
+                // routeUser.
+            }
+        );
 
         await dealerRouteUserOperation.insertUE({
             vdsbs,
@@ -53,6 +66,7 @@ export default async function dealerRouteUser(
             message: "operation successful",
         });
     } catch (err) {
+        console.log("err", err);
         if (err?.detail?.includes("already exists")) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "already exists",

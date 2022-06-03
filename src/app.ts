@@ -20,12 +20,13 @@ import {
     invoiceRoute,
     meRoute,
     paymentRoute,
-    processUpload,
+    PSIUploadProcess,
     relationRoute,
     testRoute,
     userRoute,
     VendorRegionRoute,
     vendorRoute,
+    VIUploadProcess,
 } from "./routes";
 
 export const main = async () => {
@@ -56,7 +57,8 @@ export const main = async () => {
     /** routes */
     app.use("/api", meRoute);
     app.use("/api", testRoute);
-    app.use("/api", processUpload);
+    app.use("/api", PSIUploadProcess);
+    app.use("/api", VIUploadProcess);
     app.use("/api/vendor", vendorRoute);
     app.use("/api/vendor-region", VendorRegionRoute);
     app.use("/api/buyer", buyerRoute);
