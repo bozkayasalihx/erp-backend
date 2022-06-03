@@ -1,8 +1,8 @@
-type Data = Set<Record<string, any>>;
+export type Data = Set<Record<string, any>>;
 class CsvParser {
     private data: string;
     private delimiter: string;
-    private newLineOrTabRemoveRegex = /(\r\n|\n|\r)/gm;
+    private newLineOrTabRemoveRegex = /(\r\n|\n|\r|\\r)/gim;
     private fullset: Data;
     private RELATED_USER = "related_users";
     private CURRENCY = "currency";
@@ -26,6 +26,9 @@ class CsvParser {
     private get dataArray() {
         return this.getData.split("\n");
     }
+    private senitizer(data: string) {
+        return data.replace(this.newLineOrTabRemoveRegex, "");
+    }
 
     public get header() {
         const header = this.dataArray[0];
@@ -46,10 +49,7 @@ class CsvParser {
         const headerItem = this.header.split(delimiter);
         let i = 0;
         while (i < headerItem.length) {
-            headerItem[i] = headerItem[i].replace(
-                this.newLineOrTabRemoveRegex,
-                ""
-            );
+            headerItem[i] = this.senitizer(headerItem[i]);
             i++;
         }
         return headerItem;
@@ -58,7 +58,7 @@ class CsvParser {
     public transformBody() {
         const body = this.body;
         const delimiter = this.delimiter;
-        const returnType: Map<number, Array<string>> = new Map();
+        const returnType: Record<number, Array<string>> = {};
         let i = 0;
         while (i < body.length) {
             if (body[i] === this.newLine) {
@@ -70,17 +70,19 @@ class CsvParser {
                 //@ts-ignore
                 if (!eachItem[j]) eachItem[j] = null;
                 else {
-                    eachItem[j] = eachItem[j].replace(
-                        this.newLineOrTabRemoveRegex,
-                        ""
-                    );
+                    eachItem[j] = this.senitizer(eachItem[j]);
                 }
             }
-            returnType.set(i, eachItem);
+            returnType[i] = eachItem;
             i++;
         }
 
         return returnType;
+    }
+
+    private sameLength(d1: any[], d2: any[]) {
+        if (d1.length === d2.length) return true;
+        return false;
     }
 
     public matcher(cb: (err: Error | null, data?: Data) => void) {
@@ -88,42 +90,36 @@ class CsvParser {
         const header = this.transformHeader();
         let headerCurrency: string;
         let headerHasPs: string;
-        const fullSet: Set<Record<string, any>> = new Set();
-        for (const [key, values] of body) {
-            console.log();
-            if (!values[0]) {
-                return cb(new Error("empty new line not allowed"));
-            }
-            // if (!body.size) cb(new Error("not found"));
-            // [{ record_type: h},...}];
-            // which means its header
-            const newObj = {};
-            values.reduce((acc, cur, idx) => {
-                // current object property name;
-                const curHeader = header[idx];
+        const fullSet: Data = new Set();
+        // for (const [key, values] of body) {
+        for (let j = 0; j < Object.keys(body).length; j++) {
+            const values = Object.values(body[j]);
+            if (!values[0]) return cb(new Error("empty new line not allowed"));
+            if (!this.sameLength(values, header))
+                return cb(new Error("header and body must be same length"));
+            let chunk: Record<string, any> = {};
+            for (let i = 0; i < values.length; i++) {
+                if (j === 0) {
+                    if (header[i] === this.CURRENCY) headerCurrency = values[i];
+                    if (header[i] === this.has_ps) headerHasPs = values[i];
+                }
 
-                if (key === 0) {
-                    if (curHeader === this.CURRENCY) headerCurrency = cur;
-                    if (curHeader === this.has_ps) headerHasPs = cur;
+                if (header[i] === this.CURRENCY) {
+                    //@ts-ignore
+                    if (!values[i]) values[i] = headerCurrency;
+                } else if (header[i] === this.has_ps) {
+                    //@ts-ignore
+                    if (!values[i]) values[i] = headerHasPs;
                 }
-                if (curHeader === this.CURRENCY) {
-                    if (!cur) cur = headerCurrency;
-                } else if (curHeader === this.has_ps) {
-                    if (!cur) cur = headerHasPs;
-                }
-                if (curHeader === this.RELATED_USER) cur = JSON.parse(cur);
-                const newOne = (newObj[curHeader] = cur);
-                return { ...acc, newOne };
-            }, {} as Record<string, any>);
-            fullSet.add(newObj);
+                if (header[i] === this.RELATED_USER)
+                    values[i] = JSON.parse(values[i]);
+                chunk[header[i]] = values[i];
+            }
+            fullSet.add(chunk);
+            chunk = {};
         }
         this.fullset = fullSet;
         cb(null, fullSet);
-    }
-
-    public log() {
-        // console.log(this.transformBody());
-        // console.log(this.transformHeader());
     }
 }
 

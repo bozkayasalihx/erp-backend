@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
-import CsvParser from "../../scripts/parser/csv-parser";
+import CsvParser from "../../scripts/parser/csvParser";
 
 const DELIMITER = ";";
 export default async function fileUpload(req: Request, res: Response) {
