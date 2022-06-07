@@ -41,9 +41,9 @@ export default async function vdsbsRelationsController(
         }
 
         await vendorToDealerSiteToBuyerSiteOperation.createVdsbs({
-            buyer_site_id: buyerSite.id,
+            buyerSite: buyerSite,
             description,
-            vds_rltn_id: vds.id,
+            vToDS: vds,
             ...dates,
             updated_by: req.user,
             created_by: req.user,

@@ -31,10 +31,9 @@ export default class VendorToDealerSite extends SuperEntity {
     public dealerSite: DealerSite;
 
     @OneToMany(() => VendorToDealerSiteToBuyerSite, (vToDsBs) => vToDsBs.vToDS)
-    public vToDsBs: VendorToDealerSiteToBuyerSite;
+    public vToDsBs: Array<VendorToDealerSiteToBuyerSite>;
 
     /** Referans */
-
     @RelationId((vToDS: VendorToDealerSite) => vToDS.vendor)
     @Column({ name: "vendor_id" })
     public vendor_id: number;

@@ -21,7 +21,7 @@ export default async function getVdsbsRelations(
                     where: { id: vdsbs_id },
                     relations: {
                         vToDS: true,
-                        buyerSites: {
+                        buyerSite: {
                             buyer: true,
                         },
                     },
@@ -36,7 +36,7 @@ export default async function getVdsbsRelations(
         const data = await vendorToDealerSiteToBuyerSiteOperation.repo.find({
             relations: {
                 vToDS: true,
-                buyerSites: true,
+                buyerSite: true,
             },
         });
 

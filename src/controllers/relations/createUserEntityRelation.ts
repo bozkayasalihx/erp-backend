@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
+import { getAllVdsbs } from "../../scripts/utils/getAllVsdbs";
 import { hasAccess, isContain, makeSure } from "../../scripts/utils/isContains";
 import userEntityRelationOperation from "../../services/userEntityRelationOperation";
 import userOperation from "../../services/userOperation";
@@ -45,14 +46,15 @@ export default async function createUserEntityRelation(
                 message: "not found",
             });
 
-        // data access check on user_type and entity_type
-        const accessRight: boolean = hasAccess(validOne, user.user_type);
+        const accessRight = hasAccess(validOne, user.user_type);
 
         if (!accessRight) {
             return res.status(httpStatus.FORBIDDEN).json({
                 message: "user_type has no access to create data",
             });
         }
+
+        await getAllVdsbs(user_id);
 
         const data = await userEntityRelationOperation.repo
             .createQueryBuilder("uer")

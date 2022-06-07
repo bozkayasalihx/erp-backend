@@ -18,10 +18,10 @@ class DataVerifier {
     private type: Tabletype;
     private data: { psi: Array<PSIDataType>; vi: Array<VIDataType> };
     private errorObj: Map<string, any> = new Map();
-    private dateFormater = dayjs;
+    // private dateFormater = dayjs;
     private dateFormat = "DD/MM/YYYY";
 
-    constructor(type: Tabletype) {
+    constructor(type: Tabletype, private dateFormater = dayjs) {
         this.type = type;
         this.data = {
             psi: [],

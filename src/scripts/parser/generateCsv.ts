@@ -62,7 +62,6 @@ export class GenerateCsv {
         let j = 0;
         for (let i = 0; i < data.length; i++) {
             for (const [key, value] of Object.entries(data[i])) {
-                console.log("value", value);
                 if (j == 0) willBeWrittenData += value;
                 else {
                     if (!value) willBeWrittenData += this.DELIMITER;

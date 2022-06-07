@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, RelationId } from "typeorm";
 import BuyerSite from "./BuyerSite";
 import DealerSite from "./DealerSite";
 import SuperEntity from "./SuperEntity";
@@ -16,8 +16,12 @@ export default class UserEntityRelation extends SuperEntity {
     public description: string;
 
     @ManyToOne(() => User)
-    @JoinColumn({ name: "user_id" })
+    // @JoinColumn({ name: "user_id" })
     public user: User;
+
+    @RelationId((UER: UserEntityRelation) => UER.user)
+    @Column({ name: "user_id" })
+    public user_id: number;
 
     @ManyToOne(() => Vendor)
     @JoinColumn({ name: "vendor_table_ref_id" })

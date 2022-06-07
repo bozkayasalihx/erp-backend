@@ -37,6 +37,6 @@ export default class BuyerSite extends SuperEntity {
     @JoinColumn({ name: "buyer_id" })
     public buyer: Buyer;
 
-    @OneToMany(() => VendorToDealerSiteToBuyerSite, (vToDS) => vToDS.buyerSites)
-    public vToDS: VendorToDealerSiteToBuyerSite;
+    @OneToMany(() => VendorToDealerSiteToBuyerSite, (vToDS) => vToDS.buyerSite)
+    public vToDSBS: VendorToDealerSiteToBuyerSite;
 }

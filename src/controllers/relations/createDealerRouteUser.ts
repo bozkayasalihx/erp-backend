@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import getAll from "../../scripts/utils/getall";
+import { appDataSource } from "../../loaders";
 import {
     dealerRouteUserOperation,
     userOperation,
@@ -45,13 +45,17 @@ export default async function dealerRouteUser(
                 message: "not found",
             });
 
-        getAll<typeof vdsbs.dealer_route_users[0]>(
-            vdsbs.dealer_route_users,
-            (routeUser) => {
-                // router users ile tum router userlarina erisebilirsin;
-                // buradan gerlikli validasyonlari yaparsin sen artik;
-                // routeUser.
-            }
+        // getAll<typeof vdsbs.dealer_route_users[0]>(
+        //     vdsbs.dealer_route_users,
+        //     (routeUser) => {
+        //         // router users ile tum router userlarina erisebilirsin;
+        //         // buradan gerlikli validasyonlari yaparsin sen artik;
+        //         // routeUser.
+        //     }
+        // );
+
+        const vdsbsIds = await appDataSource.query(
+            "select vdsbs_id, from user_entity_relations_v where user_id"
         );
 
         await dealerRouteUserOperation.insertUE({

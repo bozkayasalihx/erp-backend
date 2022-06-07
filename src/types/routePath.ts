@@ -31,7 +31,11 @@ export enum Routes {
 export const accesableRoute = new Map<string, Array<string>>();
 accesableRoute.set(UserTypes.BUYER_ADMIN, ["buyer", "buyer-site"]);
 accesableRoute.set(UserTypes.DEALER_ADMIN, ["dealer", "dealer-site"]);
-accesableRoute.set(UserTypes.VENDOR_ADMIN, ["vendor", "vendor-region"]);
+accesableRoute.set(UserTypes.VENDOR_ADMIN, [
+    "vendor",
+    "vendor-region",
+    "relations",
+]);
 accesableRoute.set(UserTypes.BUYER, ["buyer-site"]);
 accesableRoute.set(UserTypes.DEALER, ["dealer-site"]);
-accesableRoute.set(UserTypes.VENDOR, ["vendor", "vendor-region"]);
+accesableRoute.set(UserTypes.VENDOR, ["vendor", "vendor-region", "relations"]);

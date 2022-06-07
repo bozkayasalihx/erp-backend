@@ -1,5 +1,5 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
-import SuperEntity from "./SuperEntity";
+import SuperEntity from "../models/SuperEntity";
 import User from "./User";
 import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 

@@ -5,7 +5,6 @@ import {
     JoinColumn,
     ManyToOne,
     OneToMany,
-    RelationId,
 } from "typeorm";
 import Advance from "./Advance";
 import BuyerSite from "./BuyerSite";
@@ -17,7 +16,7 @@ import PaymentMatches from "./PaymentMatches";
 import SuperEntity from "./SuperEntity";
 import VendorToDealerSite from "./VendorToDealerSite";
 @Entity("vdsbs_relations")
-@Index(["buyer_site_id", "vds_rltn_id"], { unique: true })
+@Index(["buyerSite.id", "vToDS.id"], { unique: true })
 export default class VendorToDealerSiteToBuyerSite extends SuperEntity {
     /**Properties */
     @Column({
@@ -30,21 +29,13 @@ export default class VendorToDealerSiteToBuyerSite extends SuperEntity {
     public description: string;
 
     /** relations */
-    @ManyToOne(() => BuyerSite, (buyerSite) => buyerSite.vToDS)
+    @ManyToOne(() => BuyerSite, (buyerSite) => buyerSite.vToDSBS)
     @JoinColumn({ name: "buyer_site_id" })
-    public buyerSites: Array<BuyerSite>;
+    public buyerSite: BuyerSite;
 
     @ManyToOne(() => VendorToDealerSite, (vToDS) => vToDS.vToDsBs)
     @JoinColumn({ name: "vds_rltn_id" })
-    public vToDS: Array<VendorToDealerSite>;
-
-    @RelationId((vdsbs: VendorToDealerSiteToBuyerSite) => vdsbs.buyerSites)
-    @Column({ name: "vds_rltn_id" })
-    public buyer_site_id: number;
-
-    @RelationId((vdsbs: VendorToDealerSiteToBuyerSite) => vdsbs.vToDS)
-    @Column({ name: "buyer_site_id" })
-    public vds_rltn_id: number;
+    public vToDS: VendorToDealerSite;
 
     @OneToMany(() => Invoices, (invoices) => invoices.vdsbs)
     public invoices: Array<Invoices>;
