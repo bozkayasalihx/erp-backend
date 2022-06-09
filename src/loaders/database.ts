@@ -22,6 +22,7 @@ export const appDataSource = new DataSource({
     subscribers: !__prod__ ? [UserCreateSubs] : undefined,
     migrations: !__prod__ ? [migrationDir] : undefined,
     logger: "advanced-console",
-    seeds: ["../models/seed_generator/seeds/**/*.[jt]s"],
-    factories: ["../models/seed_generator/factories/**/*.[jt]s"],
+    seeds: ["../seeders/*.ts"],
+    factories: ["../factories/*.ts"],
 });
+export default appDataSource;

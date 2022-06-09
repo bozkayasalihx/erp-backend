@@ -1,4 +1,8 @@
-import { userEntityRelationOperation } from "../../services";
+import {
+    userEntityRelationOperation,
+    vendorToDealerSiteToBuyerSiteOperation,
+} from "../../services";
+import VendorTDealerSiteOperation from "../../services/VendorTDealerSiteOperation";
 export async function getAllVdsbs(user_id: number, vdsbs_id?: number) {
     const data = await userEntityRelationOperation.repo
         .createQueryBuilder("uer")
@@ -7,8 +11,46 @@ export async function getAllVdsbs(user_id: number, vdsbs_id?: number) {
         .leftJoin("uer.buyer_site_table_ref", "bs")
         .leftJoin("uer.dealer_site_table_ref", "ds")
         .where("uer.user_id = :id", { id: user_id })
-        .select(["uer", "user", "vendor", "bs", "ds"])
+        .select(["user.user_type", "vendor.id", "bs.id", "ds.id"])
         .execute();
 
-    console.log("data", data);
+    if (!data) return false;
+
+    const [first] = data;
+    const keys = Object.keys(first);
+    const obj = {};
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        if (key.includes("_id") && first[key]) {
+            obj[key] = first[key];
+            break;
+        }
+    }
+
+    const vds = await VendorTDealerSiteOperation.repo
+        .createQueryBuilder("vds")
+        .where(`${Object.keys(obj)[0]} = ${Object.values(obj)[0]}`)
+        .select("vds.id")
+        .execute();
+
+    if (!vds) return false;
+
+    const vds_id = vds[0].vds_id;
+
+    const vdsbs: Array<Record<string, any>> =
+        await vendorToDealerSiteToBuyerSiteOperation.repo
+            .createQueryBuilder("vdsbs")
+            .leftJoin("vdsbs.dealer_route_users", "dru")
+            .where(`vds_rltn_id = :id`, { id: vds_id })
+            .select(["vdsbs.id"])
+            .execute();
+
+    if (!vdsbs) return false;
+
+    const vdsbsIds = vdsbs.reduce((acc, cur) => {
+        acc.push(cur.vdsbs_id);
+        return acc;
+    }, [] as Array<number>) as Array<number>;
+
+    return vdsbsIds;
 }

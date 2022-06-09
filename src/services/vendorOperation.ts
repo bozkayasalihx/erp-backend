@@ -12,13 +12,11 @@ export class VendorOperation extends BaseService {
     }
 
     public createVendorRegion(params: Partial<VendorRegion>) {
-        return VendorRegion.create({
-            ...params,
-        });
+        return VendorRegion.create<VendorRegion>(params);
     }
 
     public createVendor(params: Partial<Vendor>) {
-        return Vendor.create({
+        return Vendor.create<Vendor>({
             ...params,
         });
     }

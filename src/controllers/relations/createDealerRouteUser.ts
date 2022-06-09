@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import { appDataSource } from "../../loaders";
+import { getAllVdsbs } from "../../scripts/utils/getAllVsdbs";
 import {
     dealerRouteUserOperation,
     userOperation,
@@ -45,18 +45,18 @@ export default async function dealerRouteUser(
                 message: "not found",
             });
 
-        // getAll<typeof vdsbs.dealer_route_users[0]>(
-        //     vdsbs.dealer_route_users,
-        //     (routeUser) => {
-        //         // router users ile tum router userlarina erisebilirsin;
-        //         // buradan gerlikli validasyonlari yaparsin sen artik;
-        //         // routeUser.
-        //     }
-        // );
+        const vdsbsIds = await getAllVdsbs(user_id);
+        if (!vdsbsIds)
+            return res.status(httpStatus.BAD_REQUEST).json({
+                message: "already exists",
+            });
 
-        const vdsbsIds = await appDataSource.query(
-            "select vdsbs_id, from user_entity_relations_v where user_id"
-        );
+        const valid = vdsbsIds.indexOf(vdsbs_id) !== -1 ? true : false;
+
+        if (!valid)
+            return res.status(httpStatus.BAD_REQUEST).json({
+                message: "not in dealer user",
+            });
 
         await dealerRouteUserOperation.insertUE({
             vdsbs,
@@ -70,7 +70,6 @@ export default async function dealerRouteUser(
             message: "operation successful",
         });
     } catch (err) {
-        console.log("err", err);
         if (err?.detail?.includes("already exists")) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "already exists",

@@ -8,8 +8,7 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 import User from "./User";
-
-export default class SuperEntity extends BaseEntity {
+class SuperEntity extends BaseEntity {
     /** Base Entity */
     @PrimaryGeneratedColumn({ name: "id" })
     public id: number;
@@ -34,3 +33,4 @@ export default class SuperEntity extends BaseEntity {
     @JoinColumn({ name: "updated_by" })
     public updated_by: User;
 }
+export default SuperEntity;
