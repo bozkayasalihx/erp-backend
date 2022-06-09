@@ -34,7 +34,8 @@ export const main = async () => {
     eventHandler();
     const app = express();
 
-    // !__prod__ && (await appDataSource.runMigrations());
+    // await appDataSource.dropDatabase();
+    // new migrations1654676053160().up(appDataSource.createQueryRunner());
 
     app.use(express.json());
     app.use(

@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es2020",
+        "target": "es6",
         "module": "commonjs",
         "lib": ["es6", "es5", "esnext.asynciterable"],
         "skipLibCheck": true,
@@ -25,8 +25,8 @@
         "noImplicitOverride": true,
         "experimentalDecorators": true,
         "resolveJsonModule": true,
-        "baseUrl": "src"
+        "baseUrl": "."
     },
     "exclude": ["node_modules"],
-    "include": ["./src/**/*.ts", "./src/**/*.d.ts"]
+    "include": ["./src/**/*.ts", "./src/**/*.d.ts", "goog.e.ts"]
 }

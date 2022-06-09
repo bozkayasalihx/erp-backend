@@ -21,7 +21,7 @@
         "nodemailer": "^6.7.3",
         "pg": "^8.7.3",
         "reflect-metadata": "^0.1.13",
-        "typeorm": "^0.3.4",
+        "typeorm": "^0.3.6",
         "zeromq": "^6.0.0-beta.6"
     },
     "devDependencies": {
@@ -61,8 +61,7 @@
         "prepare": "husky install",
         "lint": "eslint . --ext .ts --fix",
         "test": "jest",
-        "seed:run": "ts-node --transpileOnly ./node_modules/typeorm-seeding/dist/cli.js seed",
-        "seed:config": "ts-node --transpileOnly ./node_modules/typeorm-seeding/dist/cli.js config"
+        "seed:run": "ts-node --transpileOnly ./node_modules/typeorm-seeding/dist/cli.js seed -n ormconfig.ts"
     },
     "lint-staged": {
         "*.ts": [

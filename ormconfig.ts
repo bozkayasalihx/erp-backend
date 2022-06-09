@@ -1,16 +1,19 @@
-import SnakeNamingStrategy from "./src/configs/typeormNamingStrategy";
-export default {
+/* eslint-disable @typescript-eslint/no-var-requires */
+require("dotenv").config();
+
+module.exports = {
     type: "postgres",
-    database: "test",
-    host: "localhost",
-    port: 5432,
-    username: "postgres",
-    password: "postgres",
-    namingStrategy: new SnakeNamingStrategy(),
+    database: process.env.DB_NAME,
+    host: process.env.HOST,
+    port: +process.env.DB_PORT,
+    username: process.env.DB_USER as string,
+    password: process.env.DB_PASSWORD,
+    // namingStrategy: new SnakeNamingStrategy(),
     synchronize: true,
-    entities: ["./src/models/*.ts"],
+    entities: ["dist/models/*.js"],
     // subscribers: !__prod__ ? [UserCreateSubs] : undefined,
+    // migrations: !__prod__ ? [migrationDir] : undefined,
     logger: "advanced-console",
-    seeds: ["./src/models/seed_generator/seeds/*.ts"],
-    factories: ["./src/models/seed_generator/factories/*.ts"],
+    seeds: ["./src/seeders/*.ts"],
+    // factories: ["./src/factories/*.ts"],
 };
