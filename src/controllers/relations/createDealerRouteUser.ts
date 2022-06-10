@@ -46,6 +46,7 @@ export default async function dealerRouteUser(
             });
 
         const vdsbsIds = await getAllVdsbs(user_id);
+        console.log("vdsbs ids", vdsbsIds);
         if (!vdsbsIds)
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "already exists",

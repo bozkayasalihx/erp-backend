@@ -6,6 +6,11 @@ import { UserTypes } from "../types/types";
 
 type ReturnType = { obj: Record<string, any>; tableName: string };
 
+function* countGen() {
+    let count = 0;
+    while (true) yield ++count;
+}
+
 export class migrations1654676053160 implements MigrationInterface {
     private randomIndex() {
         const values = Object.values(UserTypes);
@@ -37,9 +42,21 @@ export class migrations1654676053160 implements MigrationInterface {
             if (j == values.length - 1) str += `'${values[j]}'`;
             else str += `'${values[j]}',`;
         }
-
         str += ")";
         return str;
+    }
+
+    public randomise(min: number, max: number, length: number) {
+        const randomValue = () =>
+            Math.floor(Math.random() * (max - min + 1) + min);
+        // eslint-disable-next-line no-constant-condition
+        // while (true) {
+        //     hashSet.add(randomValue());
+        //     if (hashSet.size >= length) break;
+        // }
+        // const [firstOne] = Array.from(hashSet).splice(0, 1);
+        // hashSet.delete(firstOne);
+        // return firstOne;
     }
 
     private async runner(
@@ -51,7 +68,6 @@ export class migrations1654676053160 implements MigrationInterface {
                 const { obj, tableName } = await callback();
                 const obj1 = this.genKeys(obj);
                 const obj2 = this.genValues(obj);
-
                 await queryRunner.query(
                     `INSERT INTO ${tableName} ${obj1} VALUES ${obj2}`
                 );
@@ -81,10 +97,9 @@ export class migrations1654676053160 implements MigrationInterface {
     }
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        // await this.specificUserInsert(queryRunner);
         this.runner(queryRunner, async () => {
             const randomUserType = this.randomIndex();
-
-            // await this.specificUserInsert(queryRunner);
             const userObj = {
                 username: faker.name.firstName(),
                 email: faker.internet.email(),
@@ -95,13 +110,11 @@ export class migrations1654676053160 implements MigrationInterface {
                 start_date: dayjs(faker.date.recent()).format("MM/DD/YYYY"),
                 end_date: dayjs(faker.date.future()).format("MM/DD/YYYY"),
             };
-
             return {
                 obj: userObj,
                 tableName: "users",
             };
         });
-
         this.runner(queryRunner, async () => {
             const vendorObj = {
                 name: faker.company.companyName(),
@@ -112,31 +125,25 @@ export class migrations1654676053160 implements MigrationInterface {
                 updated_by: 1,
                 created_by: 1,
             };
-
             return {
                 obj: vendorObj,
                 tableName: "vendors",
             };
         });
-
-        let i = 1;
-        this.runner(queryRunner, () => {
+        const vendorId = countGen();
+        this.runner(queryRunner, async () => {
             const vendorRegionObj = {
                 name: faker.company.companyName(),
                 attribute1: faker.lorem.slug(),
-                vendor_id: i++,
+                vendor_id: +vendorId.next().value,
                 created_by: 1,
                 updated_by: 1,
             };
-
             return {
                 obj: vendorRegionObj,
                 tableName: "vendor_regions",
             };
         });
-
-        i = 1;
-
         this.runner(queryRunner, () => {
             const dealerObj = {
                 name: faker.company.companyName(),
@@ -146,31 +153,27 @@ export class migrations1654676053160 implements MigrationInterface {
                 created_by: 1,
                 updated_by: 1,
             };
-
             return {
                 obj: dealerObj,
                 tableName: "dealers",
             };
         });
 
-        let h = 1;
-        this.runner(queryRunner, () => {
+        const dealerId = countGen();
+        this.runner(queryRunner, async () => {
             const dalerSiteObj = {
                 name: faker.company.companyName(),
                 start_date: dayjs(faker.date.recent()).format("MM/DD/YYYY"),
                 end_date: dayjs(faker.date.future()).format("MM/DD/YYYY"),
                 created_by: 1,
                 updated_by: 1,
-                // dealer_id: Math.floor(Math.random() * 30),
-                dealer_id: h++,
+                dealer_id: +dealerId.next().value,
             };
             return {
                 obj: dalerSiteObj,
                 tableName: "dealer_sites",
             };
         });
-        h = 1;
-
         this.runner(queryRunner, () => {
             const buyerObj = {
                 name: faker.name.firstName(),
@@ -185,38 +188,117 @@ export class migrations1654676053160 implements MigrationInterface {
                 tableName: "buyers",
             };
         });
-        let m = 1;
-        this.runner(queryRunner, () => {
+        const buyerId = countGen();
+        this.runner(queryRunner, async () => {
             const buyerSiteObj = {
                 name: faker.name.firstName(),
                 start_date: dayjs(faker.date.recent()).format("MM/DD/YYYY"),
                 end_date: dayjs(faker.date.future()).format("MM/DD/YYYY"),
                 created_by: 1,
                 updated_by: 1,
-                buyer_id: m++,
+                buyer_id: +buyerId.next().value,
             };
             return {
                 obj: buyerSiteObj,
                 tableName: "buyer_sites",
             };
         });
-        m = 1;
 
-        this.runner(queryRunner, () => {
+        // const randomFields = this.randomField()
+        const id = countGen();
+        const int = countGen();
+        this.runner(queryRunner, async () => {
             const userEntity = {
-                user_id: Math.floor(Math.random() * 30),
+                user_id: id.next().value,
                 description: faker.lorem.sentence(4),
                 start_date: dayjs(faker.date.recent()).format("MM/DD/YYYY"),
                 end_date: dayjs(faker.date.future()).format("MM/DD/YYYY"),
                 created_by: 1,
                 updated_by: 1,
+                ...this.randomField(int.next().value as number),
             };
-
             return {
                 obj: userEntity,
                 tableName: "user_entity_relations",
             };
         });
+        const vdsId = countGen();
+        this.runner(queryRunner, () => {
+            const ids = this.randomIds(
+                ["vendor_id", "dealer_site_id"],
+                +vdsId.next().value
+            );
+            const vdsObj = {
+                description: faker.lorem.sentence(4),
+                start_date: dayjs(faker.date.recent()).format("MM/DD/YYYY"),
+                end_date: dayjs(faker.date.future()).format("MM/DD/YYYY"),
+                created_by: 1,
+                updated_by: 1,
+                ...ids,
+            };
+
+            return {
+                obj: vdsObj,
+                tableName: "vds_relations",
+            };
+        });
+        const vdsbsId = countGen();
+        this.runner(queryRunner, () => {
+            const ids = this.randomIds(
+                ["buyer_site_id", "vds_rltn_id"],
+                +vdsbsId.next().value
+            );
+            const vdsbs = {
+                description: faker.lorem.sentence(4),
+                start_date: dayjs(faker.date.recent()).format("MM/DD/YYYY"),
+                end_date: dayjs(faker.date.future()).format("MM/DD/YYYY"),
+                created_by: 1,
+                updated_by: 1,
+                ...ids,
+            };
+
+            return {
+                obj: vdsbs,
+                tableName: "vdsbs_relations",
+            };
+        });
+        const userId = countGen();
+        this.runner(queryRunner, () => {
+            const ids = this.randomIds(
+                ["vdsbs_id", "user_id"],
+                +userId.next().value
+            );
+            const dealerRouteUsers = {
+                description: faker.lorem.sentence(4),
+                start_date: dayjs(faker.date.recent()).format("MM/DD/YYYY"),
+                end_date: dayjs(faker.date.future()).format("MM/DD/YYYY"),
+                created_by: 1,
+                updated_by: 1,
+                ...ids,
+            };
+
+            return {
+                obj: dealerRouteUsers,
+                tableName: "dealer_route_users",
+            };
+        });
+    }
+
+    private randomIds(ids: string[], int: number) {
+        const obj = {};
+        for (let i = 0; i < ids.length; i++) obj[ids[i]] = int; //Math.floor(Math.random() * 30);
+        return obj;
+    }
+
+    private randomField(int: number) {
+        const fields = [
+            "vendor_table_ref_id",
+            "buyer_site_table_ref_id",
+            "dealer_site_table_ref_id",
+        ];
+        const index = Math.floor(Math.random() * fields.length);
+        console.log("id", int);
+        return { [fields[index]]: int };
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

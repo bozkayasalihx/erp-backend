@@ -8,8 +8,9 @@ import morgan from "morgan";
 import path from "path";
 import "reflect-metadata";
 import { eventHandler } from "./configs";
-import { config } from "./loaders";
+import { appDataSource, config } from "./loaders";
 import { authenticate, permission } from "./middlewares";
+import { migrations1654676053160 } from "./migrations/1654676053160-migrations";
 import {
     advanceRoute,
     buyerRoute,
@@ -33,9 +34,11 @@ export const main = async () => {
     await config();
     eventHandler();
     const app = express();
-
-    // await appDataSource.dropDatabase();
-    // new migrations1654676053160().up(appDataSource.createQueryRunner());
+    const runner = async () => {
+        const migration = new migrations1654676053160();
+        await migration.up(appDataSource.createQueryRunner());
+    };
+    // await runner();
 
     app.use(express.json());
     app.use(
@@ -52,7 +55,7 @@ export const main = async () => {
     app.use("/static", express.static(path.join(__dirname, "../src/public")));
 
     app.use("/api", userRoute);
-    //after thsi middeleware all route protected;
+    //after this middeleware all route protected;
     app.use(authenticate);
     app.use(permission);
     /** routes */

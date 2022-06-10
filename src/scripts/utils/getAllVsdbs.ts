@@ -14,7 +14,9 @@ export async function getAllVdsbs(user_id: number, vdsbs_id?: number) {
         .select(["user.user_type", "vendor.id", "bs.id", "ds.id"])
         .execute();
 
-    if (!data) return false;
+    console.log("data", data);
+
+    if (!data.length) return false;
 
     const [first] = data;
     const keys = Object.keys(first);
@@ -26,6 +28,8 @@ export async function getAllVdsbs(user_id: number, vdsbs_id?: number) {
             break;
         }
     }
+
+    console.log("obj", obj);
 
     const vds = await VendorTDealerSiteOperation.repo
         .createQueryBuilder("vds")
