@@ -58,7 +58,6 @@ router.post(
 
         parser.readData(data);
         parser.matcher(async (err, parsedData) => {
-            console.log("err", err);
             if (err || !parsedData)
                 return res.status(httpStatus.BAD_REQUEST).json({
                     message: "bad request",
@@ -95,7 +94,6 @@ router.post(
             const viDataVerifier = new DataVerifier("vi");
             viDataVerifier.setVIData(results);
             viDataVerifier.validate();
-            console.log(viDataVerifier.errors);
 
             if (viDataVerifier.errors.size) {
                 const generateCsv = new GenerateCsv(
