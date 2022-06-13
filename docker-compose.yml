@@ -1,7 +1,9 @@
 version: '3.8'
 services:
   db:
-    image: postgres:14.1-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: postgres
     restart: always
     environment:
@@ -10,7 +12,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - db:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
   redis:
     image: redis:6.2.6-alpine
     container_name: redis
@@ -20,5 +22,5 @@ services:
     volumes:
       - redis:/var/lib/redis/data
 volumes:
-  db:
+  pgdata:
   redis:

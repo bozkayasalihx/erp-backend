@@ -1,3 +1,4 @@
+//@ts-ignore
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcryptjs";
 import dayjs from "dayjs";
@@ -59,11 +60,13 @@ export class migrations1654676053160 implements MigrationInterface {
         // return firstOne;
     }
 
+    private;
+
     private async runner(
         queryRunner: QueryRunner,
         callback: () => ReturnType | Promise<ReturnType>
     ) {
-        for (let i = 1; i < 31; i++) {
+        for (let i = 1; i < 101; i++) {
             try {
                 const { obj, tableName } = await callback();
                 const obj1 = this.genKeys(obj);
@@ -94,6 +97,10 @@ export class migrations1654676053160 implements MigrationInterface {
         await queryRunner.query(
             `INSERT INTO users ${userColumns} VALUES ${userValues}`
         );
+    }
+
+    private async randomInt() {
+        const randInt = faker.datatype.number({ min: 1, max: 100 });
     }
 
     public async up(queryRunner: QueryRunner): Promise<void> {
@@ -130,12 +137,11 @@ export class migrations1654676053160 implements MigrationInterface {
                 tableName: "vendors",
             };
         });
-        const vendorId = countGen();
         this.runner(queryRunner, async () => {
             const vendorRegionObj = {
                 name: faker.company.companyName(),
                 attribute1: faker.lorem.slug(),
-                vendor_id: +vendorId.next().value,
+                vendor_id: faker.datatype.number({ min: 1, max: 100 }),
                 created_by: 1,
                 updated_by: 1,
             };
@@ -159,7 +165,6 @@ export class migrations1654676053160 implements MigrationInterface {
             };
         });
 
-        const dealerId = countGen();
         this.runner(queryRunner, async () => {
             const dalerSiteObj = {
                 name: faker.company.companyName(),
@@ -167,7 +172,7 @@ export class migrations1654676053160 implements MigrationInterface {
                 end_date: dayjs(faker.date.future()).format("MM/DD/YYYY"),
                 created_by: 1,
                 updated_by: 1,
-                dealer_id: +dealerId.next().value,
+                dealer_id: faker.datatype.number({ min: 1, max: 100 }),
             };
             return {
                 obj: dalerSiteObj,
@@ -188,7 +193,6 @@ export class migrations1654676053160 implements MigrationInterface {
                 tableName: "buyers",
             };
         });
-        const buyerId = countGen();
         this.runner(queryRunner, async () => {
             const buyerSiteObj = {
                 name: faker.name.firstName(),
@@ -196,7 +200,7 @@ export class migrations1654676053160 implements MigrationInterface {
                 end_date: dayjs(faker.date.future()).format("MM/DD/YYYY"),
                 created_by: 1,
                 updated_by: 1,
-                buyer_id: +buyerId.next().value,
+                buyer_id: faker.datatype.number({ min: 1, max: 100 }),
             };
             return {
                 obj: buyerSiteObj,
@@ -204,30 +208,23 @@ export class migrations1654676053160 implements MigrationInterface {
             };
         });
 
-        // const randomFields = this.randomField()
-        const id = countGen();
-        const int = countGen();
         this.runner(queryRunner, async () => {
             const userEntity = {
-                user_id: id.next().value,
+                user_id: faker.datatype.number({ min: 1, max: 100 }),
                 description: faker.lorem.sentence(4),
                 start_date: dayjs(faker.date.recent()).format("MM/DD/YYYY"),
                 end_date: dayjs(faker.date.future()).format("MM/DD/YYYY"),
                 created_by: 1,
                 updated_by: 1,
-                ...this.randomField(int.next().value as number),
+                ...this.randomField(),
             };
             return {
                 obj: userEntity,
                 tableName: "user_entity_relations",
             };
         });
-        const vdsId = countGen();
         this.runner(queryRunner, () => {
-            const ids = this.randomIds(
-                ["vendor_id", "dealer_site_id"],
-                +vdsId.next().value
-            );
+            const ids = this.randomIds(["vendor_id", "dealer_site_id"]);
             const vdsObj = {
                 description: faker.lorem.sentence(4),
                 start_date: dayjs(faker.date.recent()).format("MM/DD/YYYY"),
@@ -242,12 +239,8 @@ export class migrations1654676053160 implements MigrationInterface {
                 tableName: "vds_relations",
             };
         });
-        const vdsbsId = countGen();
         this.runner(queryRunner, () => {
-            const ids = this.randomIds(
-                ["buyer_site_id", "vds_rltn_id"],
-                +vdsbsId.next().value
-            );
+            const ids = this.randomIds(["buyer_site_id", "vds_rltn_id"]);
             const vdsbs = {
                 description: faker.lorem.sentence(4),
                 start_date: dayjs(faker.date.recent()).format("MM/DD/YYYY"),
@@ -262,12 +255,8 @@ export class migrations1654676053160 implements MigrationInterface {
                 tableName: "vdsbs_relations",
             };
         });
-        const userId = countGen();
         this.runner(queryRunner, () => {
-            const ids = this.randomIds(
-                ["vdsbs_id", "user_id"],
-                +userId.next().value
-            );
+            const ids = this.randomIds(["vdsbs_id", "user_id"]);
             const dealerRouteUsers = {
                 description: faker.lorem.sentence(4),
                 start_date: dayjs(faker.date.recent()).format("MM/DD/YYYY"),
@@ -284,21 +273,21 @@ export class migrations1654676053160 implements MigrationInterface {
         });
     }
 
-    private randomIds(ids: string[], int: number) {
+    private randomIds(ids: string[]) {
         const obj = {};
-        for (let i = 0; i < ids.length; i++) obj[ids[i]] = int; //Math.floor(Math.random() * 30);
+        for (let i = 0; i < ids.length; i++)
+            obj[ids[i]] = faker.datatype.number({ min: 1, max: 100 });
         return obj;
     }
 
-    private randomField(int: number) {
+    private randomField() {
         const fields = [
             "vendor_table_ref_id",
             "buyer_site_table_ref_id",
             "dealer_site_table_ref_id",
         ];
         const index = Math.floor(Math.random() * fields.length);
-        console.log("id", int);
-        return { [fields[index]]: int };
+        return { [fields[index]]: faker.datatype.number({ min: 1, max: 100 }) };
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
