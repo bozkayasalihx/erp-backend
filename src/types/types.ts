@@ -1,4 +1,20 @@
+import { Request, Response } from "express";
 import * as models from "../models";
+
+type Interval = undefined | string | string[] | qs.ParsedQs | qs.ParsedQs[];
+
+type NewQS<Q> = qs.ParsedQs & Record<keyof Q, Interval>;
+
+export type TypedResponse<
+    T extends { message: string; data?: Record<string, any> } = {
+        message: string;
+        data?: Record<string, any>;
+    }
+> = Response<T>;
+export type TypedRequest<
+    T extends Record<string, any>,
+    Q extends NewQS<Q> = NewQS<Record<string, never>>
+> = Request<any, any, T, Q>;
 
 export interface IBaseParams {
     created_at: Date;

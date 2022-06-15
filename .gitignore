@@ -3,3 +3,4 @@ node_modules
 dist
 src/public/**
 ormconfig.js
+src/results.csv

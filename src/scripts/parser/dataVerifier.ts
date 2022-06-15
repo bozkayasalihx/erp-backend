@@ -20,6 +20,8 @@ class DataVerifier {
     private errorObj: Map<string, any> = new Map();
     // private dateFormater = dayjs;
     private dateFormat = "DD/MM/YYYY";
+    private H = "H";
+    private L = "L";
 
     constructor(type: Tabletype, private dateFormater = dayjs) {
         this.type = type;
@@ -121,6 +123,21 @@ class DataVerifier {
         });
     }
 
+    private viTransformer(data: VIDataType) {
+        //@ts-ignore
+        data.amount = this.strToFloat(data.amount);
+        data.due_date = this.dateFormater(data.due_date).format(
+            this.dateFormat
+        );
+        data.invoice_date = this.dateFormater(data.invoice_date).format(
+            this.dateFormat
+        );
+        //@ts-ignore
+        data.vdsbs_id = this.strToInt(data.vdsbs_id);
+
+        return data;
+    }
+
     private transform() {
         const newData: { psi: Array<PSIDataType>; vi: Array<VIDataType> } = {
             psi: [],
@@ -128,22 +145,20 @@ class DataVerifier {
         };
 
         if (this.type === "vi") {
-            for (let i = 0; i < this.data.vi.length; i++) {
-                const cur = this.data.vi[i] as VIDataType;
+            const cur = this.data.vi[0] as VIDataType;
+            try {
+                const newCur = this.viTransformer(cur);
+                newData.vi.push(newCur as InvoiceInterface);
+            } catch (err) {
+                console.log("err", err);
+            }
+
+            for (let i = 1; i < this.data.vi.length; i++) {
                 try {
-                    //@ts-ignore
-                    cur.amount = this.strToFloat(cur.amount);
-                    cur.due_date = this.dateFormater(cur.due_date).format(
-                        this.dateFormat
-                    );
-                    cur.invoice_date = this.dateFormater(
-                        cur.invoice_date
-                    ).format(this.dateFormat);
-                    //@ts-ignore
-                    cur.vdsbs_id = this.strToInt(cur.vdsbs_id);
-                    newData.vi.push(cur as InvoiceInterface);
-                } catch (err) {
-                    console.log("err", err);
+                    const newCur = this.viTransformer(this.data.vi[i]);
+                    newData.vi.push(newCur as InvoiceInterface);
+                } catch (er) {
+                    continue;
                 }
             }
         } else if (this.type === "psi") {
@@ -151,7 +166,7 @@ class DataVerifier {
                 try {
                     //@ts-ignore
                     this.data.psi[i].amount = this.strToFloat(
-                        this.data.psi[i].amount as string
+                        this.data.psi[i].due_amount as string
                     );
 
                     //@ts-ignore
@@ -180,8 +195,18 @@ class DataVerifier {
         return newData;
     }
 
+    private recordFilter(data: Array<Partial<InvoiceInterface>>) {
+        const list: Array<Partial<InvoiceInterface>> = [];
+        for (let i = 0; i < data.length; i++) {
+            const cur = data[i];
+            if (cur.record_type == this.H) list.push(cur);
+        }
+        return list;
+    }
+
     public validate() {
         this.transform();
+        this.data.vi = this.recordFilter(this.data.vi);
         for (let i = 0; i < this.data[this.type].length; i++) {
             const keys = Object.keys(this.data[this.type][i]);
             const schema =

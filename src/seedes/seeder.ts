@@ -1,3 +1,4 @@
+import { hashSync } from "bcryptjs";
 import {
     createReadStream,
     createWriteStream,
@@ -20,10 +21,12 @@ class Inserter extends Pool {
     private errorCounter: number;
     private successCounter: number;
     private path = path;
+    private USER_ENTITY = "user_entity_relations";
     public head: string;
+
     constructor(private table: string) {
         super(config);
-        const csvPath = this.path.resolve("../csv", table) + ".csv";
+        const csvPath = this.path.resolve("./csv", table) + ".csv";
         this.readStream = createReadStream(this.curDir(csvPath), {
             highWaterMark: 8192,
         });
@@ -35,6 +38,7 @@ class Inserter extends Pool {
         this.errorCounter = 0;
         this.successCounter = 0;
     }
+
     private curDir(...path: Array<string>) {
         return this.path.resolve(__dirname, ...path);
     }
@@ -53,8 +57,10 @@ class Inserter extends Pool {
 
     private strigifier(dataSet: string) {
         const columValues = dataSet.split(",");
+        const passIndex = this.handleIndex(this.head);
         let str = "";
         for (let i = 0; i < columValues.length; i++) {
+            if (i == passIndex) columValues[i] = hashSync(columValues[i], 10);
             if (i == columValues.length - 1) str += `'${columValues[i]}'`;
             else str += `'${columValues[i]}',`;
         }
@@ -67,6 +73,11 @@ class Inserter extends Pool {
 
     private header(data: string) {
         this.head = data;
+    }
+
+    private handleIndex(data: string) {
+        const headers = data.split(",");
+        return headers.indexOf("password");
     }
 
     private counter = 0;
@@ -92,7 +103,7 @@ class Inserter extends Pool {
                     const line = chunkString.slice(startIndex, ch);
                     if (this.counter == 1) {
                         this.header(line);
-                        if (this.table === "user_entity_relations") {
+                        if (this.table == this.USER_ENTITY) {
                             const header = this.head;
                             const willRemovedColumns = header
                                 .split(",")
@@ -108,7 +119,7 @@ class Inserter extends Pool {
                         continue;
                     }
 
-                    if (this.table == "user_entity_relations") {
+                    if (this.table == this.USER_ENTITY) {
                         const header = this.head;
                         const willRemovedColumns = header
                             .split(",")
@@ -156,6 +167,8 @@ class Inserter extends Pool {
         const sql = `INSERT INTO ${this.table} ${this.headerWrapper(
             header
         )} VALUES (${columnValues})`;
+
+        console.log("\n", sql, "\n");
         this.query(sql, (err, data) => {
             if (err) {
                 this.errorCounter += 1;

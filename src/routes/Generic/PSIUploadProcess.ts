@@ -9,8 +9,9 @@ import CsvParser from "../../scripts/parser/csvParser";
 import DataVerifier from "../../scripts/parser/dataVerifier";
 import { GenerateCsv } from "../../scripts/parser/generateCsv";
 import { increment } from "../../scripts/utils/revokeRefreshToken";
-import { paymentOperation } from "../../services";
+import { invoiceOperation, paymentOperation } from "../../services";
 import { Routes } from "../../types/routePath";
+import { TypedResponse } from "../../types/types";
 
 const router = Router();
 const file = () => {
@@ -32,7 +33,7 @@ router.post(
     Routes.PROCESS_PS_UPLOAD,
     file(),
     checkFileType,
-    async (req, res) => {
+    async (req, res: TypedResponse) => {
         const file = req.files?.file as UploadedFile;
         const stream = createReadStream(file.tempFilePath, {
             encoding: "utf-8",
@@ -53,6 +54,7 @@ router.post(
         const user = req.user;
 
         const fileProcessid = await increment("ps_file_process_id");
+        console.log("file process id", fileProcessid);
         const parser = new CsvParser(DELIMITER);
 
         parser.readData(data);
@@ -65,7 +67,6 @@ router.post(
 
             const results: Record<string, any>[] = [];
             for (const record of parsedData) {
-                const invoiceNoValue = Object.values(record)[0];
                 try {
                     const {
                         created_by,
@@ -78,7 +79,6 @@ router.post(
                             ...record,
                             file_name: fileName,
                             file_process_id: fileProcessid,
-                            invoice_no: invoiceNoValue,
                             created_by: user,
                             updated_by: user,
                         },
@@ -109,14 +109,27 @@ router.post(
                 });
             }
 
+            const psi = psiDataVerifier.getPSIData[0];
+
+            const vdsbsId = parseInt(psi.vdsbs_id as string);
+            const invoiceNo = psi.invoice_no as string;
+
+            const invoice = await invoiceOperation.invoiceRepo.findOne({
+                where: { vdsbs_id: vdsbsId, invoice_no: invoiceNo },
+            });
+            if (!invoice)
+                return res.status(httpStatus.BAD_REQUEST).json({
+                    message: "bad request",
+                });
+
             for (let i = 0; i < psiDataVerifier.getPSIData.length; i++) {
                 const currentPSI = psiDataVerifier.getPSIData[i];
                 try {
                     await paymentOperation.psRepo.insert({
                         currency: currentPSI.currency,
-                        invoice_id: parseInt(currentPSI.vdsbs_id as string),
+                        invoice: invoice,
                         due_date: currentPSI.due_date,
-                        due_amount: parseFloat(currentPSI.amount as string),
+                        due_amount: parseFloat(currentPSI.due_amount as string),
                         line_no: parseInt(currentPSI.line_no as string),
                         start_date: currentPSI.start_date,
                         end_date: currentPSI.end_date,
@@ -124,7 +137,7 @@ router.post(
                         updated_by: user,
                     });
                 } catch (err) {
-                    console.log(err);
+                    console.log("err", err);
                     parseError.setError(err?.detail);
                     const data = parseError.parser();
                     if (!data)
@@ -134,7 +147,6 @@ router.post(
                                 message: "an error accured try again later",
                             });
 
-                    const [key, value] = data;
                     return res.status(httpStatus.BAD_REQUEST).json({
                         message: "some of yours inputs is invalid",
                         data: { message: err?.detail },

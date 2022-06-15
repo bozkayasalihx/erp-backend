@@ -8,9 +8,8 @@ import morgan from "morgan";
 import path from "path";
 import "reflect-metadata";
 import { eventHandler } from "./configs";
-import { appDataSource, config } from "./loaders";
+import { config } from "./loaders";
 import { authenticate, permission } from "./middlewares";
-import { migrations1654676053160 } from "./migrations/1654676053160-migrations";
 import {
     advanceRoute,
     buyerRoute,
@@ -34,10 +33,10 @@ export const main = async () => {
     await config();
     eventHandler();
     const app = express();
-    const runner = async () => {
-        const migration = new migrations1654676053160();
-        await migration.up(appDataSource.createQueryRunner());
-    };
+    // const runner = async () => {
+    //     const migration = new migrations1654676053160();
+    //     await migration.up(appDataSource.createQueryRunner());
+    // };
     // await runner();
 
     app.use(express.json());

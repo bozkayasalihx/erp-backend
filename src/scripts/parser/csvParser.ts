@@ -2,7 +2,7 @@ export type Data = Set<Record<string, any>>;
 class CsvParser {
     private data: string;
     private delimiter: string;
-    private newLineOrTabRemoveRegex = /(\r\n|\n|\r|\\r)/gim;
+    private newLineOrTabRemoveRegex = /(\r\n|\n|\r|\\r|\s)/gim;
     private fullset: Data;
     private RELATED_USER = "related_users";
     private CURRENCY = "currency";
@@ -91,7 +91,6 @@ class CsvParser {
         let headerCurrency: string;
         let headerHasPs: string;
         const fullSet: Data = new Set();
-        // for (const [key, values] of body) {
         for (let j = 0; j < Object.keys(body).length; j++) {
             const values = Object.values(body[j]);
             if (!values[0]) return cb(new Error("empty new line not allowed"));
@@ -124,3 +123,4 @@ class CsvParser {
 }
 
 export default CsvParser;
+export const csvParserInstance = new CsvParser();
