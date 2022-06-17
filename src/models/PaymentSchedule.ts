@@ -1,4 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    RelationId,
+} from "typeorm";
 import {
     Invoice,
     PaymentScheduleInterface,
@@ -14,7 +21,7 @@ export default class PaymentSchedule extends SuperEntity {
     @JoinColumn({ name: "invoice_id" })
     public invoice: Invoice;
 
-    @Column({ name: "line_no" })
+    @Column({ name: "line_no", nullable: true })
     public line_no: number;
 
     @Column({ type: "date", name: "due_date" })
@@ -52,4 +59,8 @@ export default class PaymentSchedule extends SuperEntity {
     )
     @JoinColumn({ name: "vdsbs_id" })
     public vdsbs: VendorToDealerSiteToBuyerSite;
+
+    @RelationId((ps: PaymentSchedule) => ps.vdsbs)
+    @Column({ name: "vdsbs_id" })
+    public vdsbs_id: number;
 }

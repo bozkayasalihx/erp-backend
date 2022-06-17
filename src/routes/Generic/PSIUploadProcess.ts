@@ -60,6 +60,7 @@ router.post(
         const user = req.user;
 
         const fileProcessid = await increment("ps_file_process_id");
+
         const parser = new CsvParser<PaymentScheduleInterface>(DELIMITER);
 
         parser.readData(data);
@@ -134,6 +135,7 @@ router.post(
                     await paymentOperation.psRepo.insert({
                         currency: currentPSI.currency,
                         invoice: invoice,
+                        vdsbs_id: vdsbsId,
                         due_date: currentPSI.due_date,
                         due_amount: parseFloat(currentPSI.due_amount as string),
                         line_no: parseInt(currentPSI.line_no as string),

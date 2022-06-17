@@ -1,4 +1,4 @@
 #!/bin/bash
 
 docker-compose down --volumes
-docker-compose up -d
+docker-compose up -d db

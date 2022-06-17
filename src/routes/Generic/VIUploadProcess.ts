@@ -111,7 +111,7 @@ router.post(
                     );
 
                     if (record["record_type"] == HEAD)
-                        invoiceInsertResp.header.push(args);
+                        invoiceInsertResp.header[0] = args;
                     else if (record["record_type"] == LINE)
                         invoiceInsertResp.line.push(args);
                 } catch (err) {
@@ -194,29 +194,24 @@ router.post(
                         }
                     }
 
+                    const lineNo = invoiceInsertResp.header[0].line_no;
+                    const dueDate = invoiceInsertResp.header[0].due_date;
+
                     if (!hasInstallment)
                         return await paymentOperation.createPS({
                             ...invoiceInsertResp.header[0],
-                            line_no: +invoiceInsertResp.header[0].line_no!,
-                            due_date: new Date(
-                                invoiceInsertResp.header[0].due_date!
-                            ),
+                            line_no: lineNo ? +lineNo : undefined,
+                            due_date: dueDate ? new Date(dueDate) : undefined,
                             invoice,
-                            vdsbs: currentVdsbs,
                             updated_by: user,
                             created_by: user,
+                            vdsbs: currentVdsbs,
+                            vdsbs_id: currentVdsbs.id,
                         });
 
-                    const validInvoice = await invoiceOperation.hasInvoice({
-                        invoice_no: invoiceInsertResp.header[0].invoice_no!,
-                        vdsbs_id: +invoiceInsertResp.header[0].vdsbs_id!,
+                    return res.status(httpStatus.CREATED).json({
+                        message: "operation succesfull",
                     });
-
-                    if (!validInvoice)
-                        return res.status(httpStatus.NOT_FOUND).json({
-                            message: "invoice not found",
-                        });
-                    const invoiceId = validInvoice;
                 } catch (err) {
                     if (err?.detail?.includes("already exists")) {
                         // already exits error;

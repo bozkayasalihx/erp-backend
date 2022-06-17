@@ -32,7 +32,7 @@ export class InvoiceOperation extends BaseService {
     public async hasInvoice(params: { invoice_no: string; vdsbs_id: number }) {
         // "invoice_no", "vdsbs_id"
         try {
-            const resp: [{ in_vdsbs_id: number; in_invoice_id: number }] =
+            const resp: [{ in_vdsbs_id: number; in_invoice_no: string }] =
                 await this.invoiceRepo
                     .createQueryBuilder("in")
                     .where(
@@ -42,7 +42,7 @@ export class InvoiceOperation extends BaseService {
                             vdsbs_id: params.vdsbs_id,
                         }
                     )
-                    .select(["in.vdsbs_id", "in.invoice_id"])
+                    .select(["in.vdsbs_id", "in.invoice_no"])
                     .execute();
 
             return resp[0];
