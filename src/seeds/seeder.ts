@@ -157,7 +157,7 @@ class Inserter extends Pool {
         });
 
         this.readStream.on("end", () => {
-            console.log("done...");
+            // console.log("done...");
             // this.writerStream.end();
         });
     }
@@ -168,17 +168,52 @@ class Inserter extends Pool {
             header
         )} VALUES (${columnValues})`;
 
-        console.log("\n", sql, "\n");
-        this.query(sql, (err, data) => {
-            if (err) {
-                this.errorCounter += 1;
-                this.writerStream.write(sql);
-            } else {
-                this.successCounter += 1;
-            }
+        this.connect((err, client, done) => {
+            if (err) throw new Error(err.message);
+            client.query(sql, (err, data) => {
+                done();
+                if (err) {
+                    this.errorCounter += 1;
+                    this.writerStream.write(sql);
+                } else {
+                    this.successCounter += 1;
+                }
+            });
         });
     }
 }
 
-const inserter = new Inserter(process.argv[2]);
-inserter.streamData();
+const main = async () => {
+    const arrDir: Set<string> = new Set([
+        "users",
+        "vendors",
+        "vendor_regions",
+        "buyers",
+        "buyer_sites",
+        "dealers",
+        "dealer_sites",
+        "vds_relations",
+        "vdsbs_relations",
+        "user_entity_relations",
+        "dealer_route_users",
+    ]);
+    const counter = 0;
+    for (const item of arrDir) {
+        const insert = new Inserter(item);
+        try {
+            insert.streamData();
+            insert.on("connect", (client) => {
+                // eslint-disable-next-line no-console
+                console.log("client connected");
+            });
+        } catch (err) {
+            // eslint-disable-next-line no-console
+            console.log("err", err);
+        } finally {
+            await insert.end();
+        }
+    }
+};
+
+const insert = new Inserter(process.argv[2]);
+insert.streamData();

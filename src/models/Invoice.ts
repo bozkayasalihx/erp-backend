@@ -1,11 +1,21 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import {
+    Column,
+    Entity,
+    Index,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    RelationId,
+} from "typeorm";
 import { InvoiceStatusType } from "../types/types";
 import InvoiceInterface from "./InvoiceInterface";
 import InvoiceLine from "./InvoiceLine";
+import PaymentSchedule from "./PaymentSchedule";
 import SuperEntity from "./SuperEntity";
 import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
 @Entity("invoices")
+@Index(["invoice_no", "vdsbs_id"], { unique: true })
 export default class Invoice extends SuperEntity {
     /**Properties */
     @Column({ type: "varchar", length: 30 })
@@ -33,13 +43,6 @@ export default class Invoice extends SuperEntity {
     })
     public status: InvoiceStatusType;
 
-    @OneToMany(
-        () => InvoiceInterface,
-        (InvoiceInterface) => InvoiceInterface.invoice
-    )
-    @JoinColumn({ name: "ref_file_id" })
-    public invoiceInterfaces: Array<InvoiceInterface>;
-
     @Column({ type: "varchar", length: 150, nullable: true })
     public attribute1: string;
 
@@ -57,11 +60,27 @@ export default class Invoice extends SuperEntity {
 
     /** RElations */
     @ManyToOne(() => VendorToDealerSiteToBuyerSite, (vdsbs) => vdsbs.invoices)
-    @JoinColumn({ name: "vdsbs_id" })
     public vdsbs: VendorToDealerSiteToBuyerSite;
+
+    @OneToMany(
+        () => InvoiceInterface,
+        (InvoiceInterface) => InvoiceInterface.invoice
+    )
+    @JoinColumn({ name: "ref_intf_id" })
+    public invoiceInterfaces: Array<InvoiceInterface>;
+
+    @RelationId((invoice: Invoice) => invoice.vdsbs)
+    @Column({ name: "vdsbs_id" })
+    public vdsbs_id: number;
 
     @OneToMany(() => InvoiceLine, (invoicesLine) => invoicesLine.invoice, {
         nullable: false,
     })
     public invoices_lines: Array<InvoiceLine>;
+
+    @OneToMany(
+        () => PaymentSchedule,
+        (paymentSchedule) => paymentSchedule.invoice
+    )
+    public payment_schedules: Array<PaymentSchedule>;
 }

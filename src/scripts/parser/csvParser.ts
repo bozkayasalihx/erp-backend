@@ -1,9 +1,8 @@
-export type Data = Set<Record<string, any>>;
-class CsvParser {
+class CsvParser<T> {
     private data: string;
     private delimiter: string;
     private newLineOrTabRemoveRegex = /(\r\n|\n|\r|\\r|\s)/gim;
-    private fullset: Data;
+    private fullset: Set<T>;
     private RELATED_USER = "related_users";
     private CURRENCY = "currency";
     private has_ps = "has_ps";
@@ -62,7 +61,6 @@ class CsvParser {
         let i = 0;
         while (i < body.length) {
             if (body[i] === this.newLine) {
-                console.log("empty new line not allwed");
                 break;
             }
             const eachItem = body[i].trim().split(delimiter);
@@ -85,18 +83,18 @@ class CsvParser {
         return false;
     }
 
-    public matcher(cb: (err: Error | null, data?: Data) => void) {
+    public matcher(cb: (err: Error | null, data?: Set<T>) => void) {
         const body = this.transformBody();
         const header = this.transformHeader();
         let headerCurrency: string;
         let headerHasPs: string;
-        const fullSet: Data = new Set();
+        const fullSet: Set<T> = new Set();
         for (let j = 0; j < Object.keys(body).length; j++) {
             const values = Object.values(body[j]);
             if (!values[0]) return cb(new Error("empty new line not allowed"));
             if (!this.sameLength(values, header))
                 return cb(new Error("header and body must be same length"));
-            let chunk: Record<string, any> = {};
+            let chunk: T = {} as T;
             for (let i = 0; i < values.length; i++) {
                 if (j === 0) {
                     if (header[i] === this.CURRENCY) headerCurrency = values[i];
@@ -115,7 +113,7 @@ class CsvParser {
                 chunk[header[i]] = values[i];
             }
             fullSet.add(chunk);
-            chunk = {};
+            chunk = {} as T;
         }
         this.fullset = fullSet;
         cb(null, fullSet);

@@ -27,7 +27,7 @@ export class Main {
         for await (const [msg] of subs) {
             if (!msg.length) subs.close();
             else {
-                console.log("received", msg);
+                // console.log("received", msg);
             }
         }
     }

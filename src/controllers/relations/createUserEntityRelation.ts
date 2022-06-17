@@ -82,7 +82,6 @@ export default async function createUserEntityRelation(
             message: "operation succesful",
         });
     } catch (err) {
-        console.log("err", err);
         if (err?.detail?.includes("already exists")) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "already exists",

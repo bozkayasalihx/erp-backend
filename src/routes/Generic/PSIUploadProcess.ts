@@ -3,6 +3,7 @@ import fileUpload, { UploadedFile } from "express-fileupload";
 import { createReadStream } from "fs";
 import httpStatus from "http-status";
 import { checkFileType } from "../../middlewares";
+import { PaymentScheduleInterface } from "../../models";
 import { __prod__ } from "../../scripts/dev";
 import parseError from "../../scripts/errors/parseError";
 import CsvParser from "../../scripts/parser/csvParser";
@@ -12,6 +13,7 @@ import { increment } from "../../scripts/utils/revokeRefreshToken";
 import { invoiceOperation, paymentOperation } from "../../services";
 import { Routes } from "../../types/routePath";
 import { TypedResponse } from "../../types/types";
+import { Args } from "./VIUploadProcess";
 
 const router = Router();
 const file = () => {
@@ -29,6 +31,11 @@ const DELIMITER = ";";
 const LIMIT = 20;
 const HIGHWATERMARK = 150 * 1024;
 
+type OmmitedPaymentSchedule = Omit<
+    PaymentScheduleInterface,
+    "updated_at" | "created_at" | "updated_by" | "created_by"
+>;
+
 router.post(
     Routes.PROCESS_PS_UPLOAD,
     file(),
@@ -44,7 +51,6 @@ router.post(
             data += chunk;
         });
         stream.on("error", (err) => {
-            console.log("err", err.message);
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
                 message: "an error accured try again later",
             });
@@ -54,18 +60,16 @@ router.post(
         const user = req.user;
 
         const fileProcessid = await increment("ps_file_process_id");
-        console.log("file process id", fileProcessid);
-        const parser = new CsvParser(DELIMITER);
+        const parser = new CsvParser<PaymentScheduleInterface>(DELIMITER);
 
         parser.readData(data);
         parser.matcher(async (err, parsedData) => {
-            console.log("err", err);
             if (err || !parsedData)
                 return res.status(httpStatus.BAD_REQUEST).json({
                     message: "bad request",
                 });
 
-            const results: Record<string, any>[] = [];
+            const insertedPSIResp: Array<Args<OmmitedPaymentSchedule>> = [];
             for (const record of parsedData) {
                 try {
                     const {
@@ -85,15 +89,17 @@ router.post(
                         { chunk: 5 }
                     );
 
-                    results.push(args);
+                    insertedPSIResp.push(args);
                 } catch (err) {
-                    console.log("err", err);
+                    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                        message: "an error accured try again later",
+                    });
                 }
             }
 
             const psiDataVerifier = new DataVerifier("psi");
 
-            psiDataVerifier.setPSIData(results);
+            psiDataVerifier.setPSIData(insertedPSIResp);
             psiDataVerifier.validate();
 
             if (psiDataVerifier.errors.size) {
@@ -137,7 +143,6 @@ router.post(
                         updated_by: user,
                     });
                 } catch (err) {
-                    console.log("err", err);
                     parseError.setError(err?.detail);
                     const data = parseError.parser();
                     if (!data)

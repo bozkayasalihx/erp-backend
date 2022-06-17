@@ -1,13 +1,18 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import {
+    Invoice,
+    PaymentScheduleInterface,
+    VendorToDealerSiteToBuyerSite,
+} from "../models";
 import { PaymentStatusType } from "../types/types";
-import Invoices from "./Invoice";
 import PaymentMatches from "./PaymentMatches";
 import SuperEntity from "./SuperEntity";
 
 @Entity("payment_schedules")
 export default class PaymentSchedule extends SuperEntity {
-    @Column({ name: "invoice_id" })
-    public invoice_id: number;
+    @ManyToOne(() => Invoice, (invoice) => invoice.payment_schedules)
+    @JoinColumn({ name: "invoice_id" })
+    public invoice: Invoice;
 
     @Column({ name: "line_no" })
     public line_no: number;
@@ -35,7 +40,16 @@ export default class PaymentSchedule extends SuperEntity {
     @OneToMany(() => PaymentMatches, (pm) => pm.payment_schedule)
     public payment_matches: Array<PaymentMatches>;
 
-    @ManyToOne(() => Invoices)
-    @JoinColumn({ name: "invoice_id" })
-    public invoice: Invoices;
+    @ManyToOne(() => PaymentScheduleInterface, (psi) => psi.paymentSchedules)
+    @JoinColumn({
+        name: "ref_intf_id",
+    })
+    public paymentScheduleInterface: PaymentScheduleInterface;
+
+    @ManyToOne(
+        () => VendorToDealerSiteToBuyerSite,
+        (vdsbs) => vdsbs.paymentSchedules
+    )
+    @JoinColumn({ name: "vdsbs_id" })
+    public vdsbs: VendorToDealerSiteToBuyerSite;
 }

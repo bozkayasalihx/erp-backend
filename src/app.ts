@@ -79,13 +79,16 @@ export const main = async () => {
     });
 
     app.listen(process.env.PORT, () => {
+        // eslint-disable-next-line no-console
         console.log("server started at port: " + process.env.PORT);
     });
 };
 process.on("unhandledRejection", (reason, promise) => {
+    // eslint-disable-next-line no-console
     console.log("rejections reason", reason, promise);
 });
 main().catch((err) => {
+    // eslint-disable-next-line no-console
     console.log("server down =>", err);
     process.exit(1);
 });

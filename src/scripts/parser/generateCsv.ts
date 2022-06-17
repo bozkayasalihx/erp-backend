@@ -1,25 +1,22 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { Data } from "./csvParser";
 
-type DataType = Array<Record<string, any>>;
-
-export class GenerateCsv {
-    private data: DataType;
+export class GenerateCsv<T extends object> {
+    private data: Array<T>;
     private fs = fs;
     private path = path;
     private DELIMITER: string;
     private NEW_LINE = "\n";
     constructor(
         private errors: Map<string, any>,
-        private parsedData: Data,
+        private parsedData: Set<T>,
         delimiter = ";"
     ) {
         this.data = [...this.parsedData];
         this.DELIMITER = delimiter;
     }
 
-    private longestPropIndex(data: DataType) {
+    private longestPropIndex(data: Array<T>) {
         let i = 0;
         let longest = 0;
         let index = 0;

@@ -150,6 +150,7 @@ class DataVerifier {
                 const newCur = this.viTransformer(cur);
                 newData.vi.push(newCur as InvoiceInterface);
             } catch (err) {
+                // eslint-disable-next-line no-console
                 console.log("err", err);
             }
 
@@ -186,6 +187,7 @@ class DataVerifier {
 
                     newData.psi.push(this.data.psi[i]);
                 } catch (err) {
+                    // eslint-disable-next-line no-console
                     console.log("err", err);
                 }
             }

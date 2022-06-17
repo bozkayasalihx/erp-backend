@@ -44,5 +44,21 @@ export class PaymentOperation extends BaseService {
     public createPM(params: Partial<PaymentMatches>) {
         return this.pmRepo.insert({ ...params });
     }
+
+    public async removeNullable() {
+        try {
+            const resp: [{ ps_id: number }] = await this.psRepo
+                .createQueryBuilder("ps")
+                .where("ps.due_amount = :zero AND ps.vdsbs_id IS NOT NULL", {
+                    zero: 0,
+                })
+                .select("ps.id")
+                .execute();
+
+            return resp[0].ps_id;
+        } catch (err) {
+            return null;
+        }
+    }
 }
 export default new PaymentOperation();

@@ -1,4 +1,10 @@
 import { captureRejectionSymbol, EventEmitter } from "events";
+import type User from "../models/User";
+
+interface Inner {
+    file_process_id: number;
+    user: User;
+}
 
 interface IEvents {
     send_email: (params: {
@@ -6,14 +12,8 @@ interface IEvents {
         subject: string;
         html: string;
     }) => void;
-    process_invoiceInterface: (
-        { file_process_id: number, user: User },
-        filePath?: string
-    ) => void;
-    process_psi: (
-        { file_process_id: number, user: User },
-        filePath?: string
-    ) => void;
+    process_invoiceInterface: (params: Inner, filePath?: string) => void;
+    process_psi: (params: Inner, filePath?: string) => void;
 }
 
 declare interface EmitterClass {
@@ -30,11 +30,13 @@ class EmitterClass extends EventEmitter {
     }
 
     [captureRejectionSymbol](err: Error, event: any, ...args: any[]) {
+        // eslint-disable-next-line no-console
         console.log("rejection happened", event, "with", err, ...args);
         this.destroy(err);
     }
 
     private destroy(err: Error) {
+        // eslint-disable-next-line no-console
         console.log("err", err);
     }
 }

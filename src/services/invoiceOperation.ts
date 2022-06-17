@@ -28,6 +28,28 @@ export class InvoiceOperation extends BaseService {
     public createInvoiceInterface(params: Partial<InvoiceInterface>) {
         return this.invoiceInterfaceRepo.insert({ ...params });
     }
+
+    public async hasInvoice(params: { invoice_no: string; vdsbs_id: number }) {
+        // "invoice_no", "vdsbs_id"
+        try {
+            const resp: [{ in_vdsbs_id: number; in_invoice_id: number }] =
+                await this.invoiceRepo
+                    .createQueryBuilder("in")
+                    .where(
+                        "in.invoice_no :invoice_no AND in.vdsbs_id = :vdsbs_id",
+                        {
+                            invoice_no: params.invoice_no,
+                            vdsbs_id: params.vdsbs_id,
+                        }
+                    )
+                    .select(["in.vdsbs_id", "in.invoice_id"])
+                    .execute();
+
+            return resp[0];
+        } catch (err) {
+            return null;
+        }
+    }
 }
 
 export default new InvoiceOperation();

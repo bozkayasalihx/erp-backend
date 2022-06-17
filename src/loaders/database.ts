@@ -21,8 +21,7 @@ export const appDataSource = new DataSource({
     entities: [entityDir],
     subscribers: !__prod__ ? [UserCreateSubs] : undefined,
     migrations: !__prod__ ? [migrationDir] : undefined,
-    logger: "advanced-console",
-    seeds: ["../seeders/*.ts"],
-    factories: ["../factories/*.ts"],
+    logger: !__prod__ ? "advanced-console" : undefined,
+    logging: !__prod__ ? ["query", "error"] : false,
 });
 export default appDataSource;

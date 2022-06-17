@@ -1,5 +1,6 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 import { FileStatusType, LineStatusType } from "../types/types";
+import PaymentSchedule from "./PaymentSchedule";
 import SuperEntity from "./SuperEntity";
 
 @Entity("ps_interface")
@@ -26,7 +27,7 @@ export default class PaymentScheduleInteface extends SuperEntity {
     public due_date: string;
 
     @Column({ name: "amount", type: "varchar", length: 20 })
-    public amount: string;
+    public due_amount: string;
 
     @Column({ name: "currency", length: 3, type: "varchar" })
     public currency: string;
@@ -36,4 +37,7 @@ export default class PaymentScheduleInteface extends SuperEntity {
 
     @Column({ name: "error_desc", length: 500, default: null })
     public error_desc: string;
+
+    @OneToMany(() => PaymentSchedule, (ps) => ps.paymentScheduleInterface)
+    public paymentSchedules: Array<PaymentSchedule>;
 }
