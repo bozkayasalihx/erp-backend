@@ -123,3 +123,9 @@ export enum HAS_PS {
     YES = "Y",
     NO = "N",
 }
+
+// export type SqlConditions = {
+//     [k:string]: string | number;
+// }
+
+export type SqlConditions = Record<string, string | number>;

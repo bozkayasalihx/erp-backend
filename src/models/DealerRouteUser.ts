@@ -4,7 +4,7 @@ import User from "./User";
 import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
 @Entity("dealer_route_users")
-@Index(["user.id"], { unique: true })
+@Index(["user.id", "vdsbs.id"], { unique: true })
 export default class DealerRouteUser extends SuperEntity {
     @Column({ length: 240, nullable: true })
     public description: string;

@@ -21,6 +21,7 @@ export { default as logoutController } from "./user/logoutController";
 export { default as meController } from "./user/meController";
 export { default as refreshTokenController } from "./user/refreshTokenController";
 export { default as resetPasswordController } from "./user/resetPasswordController";
+export { default as getUserEntityAccessController } from "./userEntityAccess/getUserEntityAccess";
 export { default as createVendorController } from "./vendor/createVendor";
 export { default as createVendorRegionController } from "./vendor/createVendorRegion";
 export { default as getVendorController } from "./vendor/getVendor";

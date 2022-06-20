@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import { getAllVdsbs } from "../../scripts/utils/getAllVsdbs";
+import { execUserEntityAccess } from "../../scripts/utils/viewFunctions";
 import {
     dealerRouteUserOperation,
     userOperation,
     vendorToDealerSiteToBuyerSiteOperation,
 } from "../../services";
+import { SqlConditions } from "../../types/types";
 
 export interface IDealerRouteUser {
     vdsbs_id: number;
@@ -27,7 +28,7 @@ export default async function dealerRouteUser(
 
         if (!findedUser) {
             return res.status(httpStatus.NOT_FOUND).json({
-                message: "not found",
+                message: "user not found",
             });
         }
 
@@ -42,21 +43,44 @@ export default async function dealerRouteUser(
 
         if (!vdsbs)
             return res.status(httpStatus.NOT_FOUND).json({
-                message: "not found",
+                message: "vdsbs not found",
             });
 
-        const vdsbsIds = await getAllVdsbs(user_id);
-        if (!vdsbsIds)
-            return res.status(httpStatus.BAD_REQUEST).json({
-                message: "already exists",
-            });
+        // getAll<typeof vdsbs.dealer_route_users[0]>(
+        //     vdsbs.dealer_route_users,
+        //     (routeUser) => {
+        //         // router users ile tum router userlarina erisebilirsin;
+        //         // buradan gerlikli validasyonlari yaparsin sen artik;
+        //         // routeUser.
+        //     }
+        // );
 
-        const valid = vdsbsIds.indexOf(vdsbs_id) !== -1 ? true : false;
+        //const vConditions:SqlConditions = {};
+        // date fields should be string type if passed in vConditions
+        const vConditions: SqlConditions = {
+            user_id: user_id,
+        };
+        const vdsbsIds = await execUserEntityAccess(vConditions, false);
 
-        if (!valid)
-            return res.status(httpStatus.BAD_REQUEST).json({
-                message: "not in dealer user",
+        if (!vdsbsIds) {
+            return res.status(httpStatus.NOT_FOUND).json({
+                message: "user_id data has no relation",
             });
+        } else {
+            // check whether user_id-vdsbs_id relation exists on system
+            let relationFound = false;
+            for (let i = 0; i < vdsbsIds.length; i++) {
+                if (vdsbsIds[i].vdsbs_id === vdsbs_id) {
+                    relationFound = true;
+                    break;
+                }
+            }
+            if (!relationFound) {
+                return res.status(httpStatus.NOT_FOUND).json({
+                    message: "user_id data entity relation must setup first",
+                });
+            }
+        }
 
         await dealerRouteUserOperation.insertUE({
             vdsbs,

@@ -15,8 +15,9 @@ export default function config() {
                 `CREATE SEQUENCE IF NOT EXISTS ps_file_process_id INCREMENT 1 START 1;`
             );
 
+        /*
         await appDataSource.query(`
-        create or replace view user_entity_relations_v as
+    create or replace view user_entity_relations_v as
     select uer.id uer_id,
            uer.description description_uer,
            uer.user_id,
@@ -32,9 +33,10 @@ export default function config() {
       join users u
         on u.id = uer.user_id
      where 1=1;`);
-
+        */
+        /*
         await appDataSource.query(`
- create or replace view vendor_dealer_buyer_rltns_v as
+    create or replace view vendor_dealer_buyer_rltns_v as
     select vdbrl.id as vdsbs_id, vdbrl.description as description_vdsbs,
            vdbrl.start_date as start_date_vdsbs, vdbrl.end_date as end_date_vdsbs,
            vdrl.vds_id, vdrl.start_date_vds, vdrl.end_date_vds,
@@ -84,10 +86,27 @@ export default function config() {
         on bsv.bs_id = vdbrl.buyer_site_id
      where 1=1;
      `);
-
+        */
+        /*
         await appDataSource.query(`
-create or replace view user_entity_access_v as
-    select usr_rltns.*, entity_rltns.*
+    create or replace view user_entity_access_v as
+    select usr_rltns.uer_id, usr_rltns.description_uer,
+           usr_rltns.start_date_uer, usr_rltns.end_date_uer,
+           usr_rltns.user_id, usr_rltns.username, usr_rltns.user_type,
+           usr_rltns.start_date_user, usr_rltns.end_date_user,
+           entity_rltns.vdsbs_id, entity_rltns.description_vdsbs, 
+           entity_rltns.start_date_vdsbs, entity_rltns.end_date_vdsbs,
+           entity_rltns.vds_id, entity_rltns.start_date_vds, entity_rltns.end_date_vds,
+           entity_rltns.vendor_id, entity_rltns.vendor_name,
+           entity_rltns.start_date_vendor, entity_rltns.end_date_vendor,
+           entity_rltns.dealer_site_id, entity_rltns.dealer_site_name,
+           entity_rltns.start_date_ds, entity_rltns.end_date_ds,
+           entity_rltns.dealer_id, entity_rltns.dealer_name,
+           entity_rltns.start_date_dealer, entity_rltns.end_date_dealer,
+           entity_rltns.buyer_site_id, entity_rltns.buyer_site_name,
+           entity_rltns.start_date_bs, entity_rltns.end_date_bs,
+           entity_rltns.buyer_id, entity_rltns.buyer_name,
+           entity_rltns.start_date_buyer, entity_rltns.end_date_buyer
       from user_entity_relations_v usr_rltns
       join vendor_dealer_buyer_rltns_v entity_rltns
         on (case when usr_rltns.user_type in ('V','VA')
@@ -101,6 +120,7 @@ create or replace view user_entity_access_v as
             end = usr_rltns.buyer_site_table_ref_id)
      where 1=1;
     `);
+    */
     };
 
     return Promise.all([connectDb()]);
