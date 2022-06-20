@@ -7,6 +7,7 @@ export { default as dealerSiteOperation } from "./dealerSiteOperation";
 export { default as depositOperation } from "./depositOperation";
 export { default as invoiceOperation } from "./invoiceOperation";
 export { default as paymentOperation } from "./paymentOperation";
+export { default as userEntityAccessOperation } from "./userEntityAccessOperation";
 export { default as userEntityRelationOperation } from "./userEntityRelationOperation";
 export { default as userOperation } from "./userOperation";
 export { default as vendorOperation } from "./vendorOperation";

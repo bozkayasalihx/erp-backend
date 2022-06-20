@@ -26,16 +26,31 @@ export enum Routes {
     CREATE_INVOICE_LINE = "/create-invoice_line",
     CREATE_PAYMENT_SCHEDULE = "/create-payment-schedule",
     CREATE_PAYMENT = "/create-payment",
+    GET_USER_ACCESS = "/get-user-access",
 }
 
 export const accesableRoute = new Map<string, Array<string>>();
-accesableRoute.set(UserTypes.BUYER_ADMIN, ["buyer", "buyer-site"]);
-accesableRoute.set(UserTypes.DEALER_ADMIN, ["dealer", "dealer-site"]);
+accesableRoute.set(UserTypes.BUYER_ADMIN, [
+    "access-control",
+    "buyer",
+    "buyer-site",
+]);
+accesableRoute.set(UserTypes.DEALER_ADMIN, [
+    "access-control",
+    "dealer",
+    "dealer-site",
+]);
 accesableRoute.set(UserTypes.VENDOR_ADMIN, [
+    "access-control",
     "vendor",
     "vendor-region",
     "relations",
 ]);
-accesableRoute.set(UserTypes.BUYER, ["buyer-site"]);
-accesableRoute.set(UserTypes.DEALER, ["dealer-site"]);
-accesableRoute.set(UserTypes.VENDOR, ["vendor", "vendor-region", "relations"]);
+accesableRoute.set(UserTypes.BUYER, ["access-control", "buyer-site"]);
+accesableRoute.set(UserTypes.DEALER, ["access-control", "dealer-site"]);
+accesableRoute.set(UserTypes.VENDOR, [
+    "access-control",
+    "vendor",
+    "vendor-region",
+    "relations",
+]);
