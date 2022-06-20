@@ -1,0 +1,82 @@
+version: "3.8"
+services:
+  db_dev:
+
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+
+    container_name: postgres_dev
+
+    command:
+      [
+        "postgres",
+        "-c",
+        "log_statement=all",
+        "-c",
+        "log_destination=stderr"
+      ]
+
+    restart: always
+
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_DB=test
+
+    ports:
+      - "5460:5432"
+
+    volumes:
+      - pgdata:/var/lib/postgresql/data/pgdata
+
+  redis_dev:
+    image: redis:6.2.6-alpine
+    container_name: redis_dev
+    restart: always
+    ports:
+      - "6380:6379"
+    volumes:
+      - redisdata:/var/lib/redis/data
+
+  server_watch:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: nodebase
+
+    container_name: server_watch
+
+    volumes:
+      - /usr/devapi/node_modules
+      - .:/usr/devapi/
+
+    command: yarn watch
+
+  server_dev:
+
+    depends_on:
+      - server_watch
+
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: devbuild
+
+    container_name: server_dev
+
+    volumes:
+      - /usr/devapi/node_modules
+      - .:/usr/devapi/
+
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+
+    command: yarn dev
+
+volumes:
+  pgdata:
+  redisdata:
