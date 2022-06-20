@@ -4,7 +4,7 @@ services:
 
     build:
       context: .
-      dockerfile: Dockerfile.postgres
+      dockerfile: Dockerfile.dev.postgres
 
     container_name: postgres_dev
 
@@ -19,24 +19,23 @@ services:
 
     restart: always
 
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - PGDATA=/var/lib/postgresql/data/pgdata
-      - POSTGRES_DB=test
+    env_file:
+      - ./dev.env
 
     ports:
-      - "5460:5432"
+      - "${PG_PORT}:5432"
 
     volumes:
-      - pgdata:/var/lib/postgresql/data/pgdata
+      - pgdata:${PGDATA}
 
   redis_dev:
     image: redis:6.2.6-alpine
     container_name: redis_dev
     restart: always
+    env_file:
+      - ./dev.env
     ports:
-      - "6380:6379"
+      - "${REDIS_PORT}:6379"
     volumes:
       - redisdata:/var/lib/redis/data
 
@@ -44,7 +43,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-      target: nodebase
+      target: devbase
 
     container_name: server_watch
 
@@ -66,14 +65,16 @@ services:
 
     container_name: server_dev
 
+    env_file:
+      - ./dev.env
     volumes:
       - /usr/devapi/node_modules
       - .:/usr/devapi/
 
     expose:
-      - "8080"
+      - "${SERVER_PORT}"
     ports:
-      - "8080:8080"
+      - "${SERVER_PORT}:${SERVER_PORT}"
 
     command: yarn dev
 

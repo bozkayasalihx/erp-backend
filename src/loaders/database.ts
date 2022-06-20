@@ -11,11 +11,10 @@ const migrationDir = path.join(__dirname, "../../dist/migrations/*.js");
 
 export const appDataSource = new DataSource({
     type: "postgres",
-    database: process.env.DB_NAME,
-    host: process.env.HOST,
-    port: +process.env.DB_PORT,
-    username: process.env.DB_USER as string,
-    password: process.env.DB_PASSWORD,
+    database: process.env.POSTGRES_DB,
+    host: process.env.DB_HOST,
+    username: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
     namingStrategy: new SnakeNamingStrategy(),
     synchronize: true,
     entities: [entityDir],

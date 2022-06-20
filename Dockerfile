@@ -1,15 +1,24 @@
-FROM postgres:14-alpine
+FROM node:16-alpine AS prodbase 
 
-WORKDIR /
+WORKDIR /usr/compileapi
 
-RUN apk add --update vim
+RUN npm install --location=global typescript
 
-COPY ./postgresql.conf /postgresql.conf
+COPY ./package.json /usr/compileapi/
+COPY ./yarn.lock /usr/compileapi/
 
-COPY ./set-config.sh /docker-entrypoint-initdb.d/
+RUN yarn install 
 
-COPY ./src/seeds/restore_db.sh /docker-entrypoint-initdb.d/
+COPY ./ /usr/compileapi/
 
-COPY ./src/seeds/database.sql /docker-entrypoint-initdb.d/
+RUN tsc
 
-WORKDIR /var/lib/postgresql/data/pgdata
+FROM prodbase AS newprodbase
+
+RUN npm install --location=global pm2
+
+COPY --from=prodbase /usr/compileapi/dist /usr/prodapi/dist
+COPY --from=prodbase /usr/compileapi/node_modules /usr/prodapi/node_modules
+COPY --from=prodbase /usr/compileapi/package.json /usr/prodapi/package.json
+
+WORKDIR /usr/prodapi

@@ -7,13 +7,14 @@ import { User } from "./models";
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
-            DB_PORT: number;
-            PORT: number;
-            DB_NAME: string;
-            HOST: string;
-            DB_USER: string;
-            DB_PASSWORD: string;
-            NODE_ENV: string;
+            NODE_ENV: "development" | "production";
+            PG_PORT: number;
+            POSTGRES_USER: string;
+            POSTGRES_PASSWORD: string;
+            POSTGRES_DB: string;
+            PGDATA: string;
+            SERVER_PORT: number;
+            DB_HOST: string;
             REDIS_URL: string;
             ACCESS_TOKEN_SECRET_KEY: string;
             REFRESH_TOKEN_SECRET_KEY: string;
@@ -27,7 +28,7 @@ declare global {
             ORIGIN: string;
             FORGOT_PASSWORD_SECRET_KEY: string;
             SENDER_EMAIL_PASSWORD: string;
-            TCP_CONNECTION_URL: string;
+            TZ: string;
         }
     }
     namespace Express {

@@ -1,6 +1,6 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import "dotenv/config";
+import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
 import httpStatus from "http-status";
@@ -29,6 +29,8 @@ import {
     vendorRoute,
     VIUploadProcess,
 } from "./routes";
+import { __prod__ } from "./scripts/dev";
+dotenv.config({ path: !__prod__ ? "../dev.env" : "../prod.env" });
 
 export const main = async () => {
     await config();
@@ -80,9 +82,9 @@ export const main = async () => {
         return res.status(httpStatus.FORBIDDEN).send("<h1>NOT FOUND</h1>");
     });
 
-    app.listen(process.env.PORT, () => {
+    app.listen(process.env.SERVER_PORT, () => {
         // eslint-disable-next-line no-console
-        console.log("server started at port: " + process.env.PORT);
+        console.log("server started at port: " + process.env.SERVER_PORT);
     });
 };
 process.on("unhandledRejection", (reason, promise) => {

@@ -60,7 +60,7 @@
         "prepare": "husky install",
         "lint": "eslint . --ext .ts --fix",
         "test": "jest",
-        "seed:run": "ts-node --transpileOnly ./node_modules/typeorm-seeding/dist/cli.js seed -n ormconfig.ts"
+        "start": "pm2-runtime ./dist/app.js"
     },
     "lint-staged": {
         "*.ts": [
