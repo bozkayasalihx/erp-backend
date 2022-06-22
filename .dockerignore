@@ -1,4 +1,4 @@
 dist/
-.git
+.git/
 .gitignore
 node_modules/

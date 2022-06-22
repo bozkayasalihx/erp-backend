@@ -1,6 +1,5 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
 import httpStatus from "http-status";
@@ -29,18 +28,12 @@ import {
     vendorRoute,
     VIUploadProcess,
 } from "./routes";
-import { __prod__ } from "./scripts/dev";
-dotenv.config({ path: !__prod__ ? "../dev.env" : "../prod.env" });
+import "./loaders/envLoader";
 
 export const main = async () => {
     await config();
     eventHandler();
     const app = express();
-    // const runner = async () => {
-    //     const migration = new migrations1654676053160();
-    //     await migration.up(appDataSource.createQueryRunner());
-    // };
-    // await runner();
 
     app.use(express.json());
     app.use(
@@ -93,6 +86,6 @@ process.on("unhandledRejection", (reason, promise) => {
 });
 main().catch((err) => {
     // eslint-disable-next-line no-console
-    console.log("server down =>", err);
+    console.log("server down => \n", err);
     process.exit(1);
 });

@@ -1,13 +1,11 @@
 version: "3.8"
 services:
   db_dev:
-
     build:
       context: .
       dockerfile: Dockerfile.dev.postgres
 
     container_name: postgres_dev
-
     command:
       [
         "postgres",
@@ -18,13 +16,10 @@ services:
       ]
 
     restart: always
-
     env_file:
-      - ./dev.env
-
+      - ./.env.test
     ports:
       - "${PG_PORT}:5432"
-
     volumes:
       - pgdata:${PGDATA}
 
@@ -33,50 +28,31 @@ services:
     container_name: redis_dev
     restart: always
     env_file:
-      - ./dev.env
+      - ./.env.test
     ports:
       - "${REDIS_PORT}:6379"
     volumes:
       - redisdata:/var/lib/redis/data
 
-  server_watch:
+  dev_server:
     build:
       context: .
-      dockerfile: Dockerfile.dev
       target: devbase
 
-    container_name: server_watch
-
-    volumes:
-      - /usr/devapi/node_modules
-      - .:/usr/devapi/
-
-    command: yarn watch
-
-  server_dev:
-
-    depends_on:
-      - server_watch
-
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-      target: devbuild
-
-    container_name: server_dev
+    container_name: dev_server
 
     env_file:
-      - ./dev.env
+      - ./.env.test
     volumes:
-      - /usr/devapi/node_modules
-      - .:/usr/devapi/
+      - /usr/api/node_modules
+      - .:/usr/api
 
     expose:
       - "${SERVER_PORT}"
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
 
-    command: yarn dev
+    command: yarn devrunner
 
 volumes:
   pgdata:

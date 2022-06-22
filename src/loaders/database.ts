@@ -1,4 +1,3 @@
-//@ts-nocheck
 import path from "path";
 import { DataSource } from "typeorm";
 import SnakeNamingStrategy from "../configs/typeormNamingStrategy";

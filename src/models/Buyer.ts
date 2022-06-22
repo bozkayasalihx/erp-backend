@@ -30,3 +30,5 @@ export default class Buyer extends SuperEntity {
     @OneToMany(() => BuyerSite, (buyerSite) => buyerSite.buyer)
     public buyer_sites: Array<BuyerSite>;
 }
+
+// "dev": "ts-node-dev --dir src/ --files --respawn --transpile-only -r dotenv/config  -- src/app.ts dotenv_config_path=.env.test ",

@@ -1,6 +1,5 @@
 import nodemailer from "nodemailer";
 import eventemitter from "../loaders/eventEmitter";
-
 export const eventHandler = () => {
     eventemitter.on("send_email", async ({ toEmail, subject, html }) => {
         const pass = process.env.SENDER_EMAIL_PASSWORD as string;

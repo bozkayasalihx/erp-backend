@@ -1,24 +1,35 @@
-FROM node:16-alpine AS prodbase 
+FROM node:16-alpine AS devbase
 
-WORKDIR /usr/compileapi
+WORKDIR /usr/api
 
-RUN npm install --location=global typescript
+RUN yarn global add typescript
 
-COPY ./package.json /usr/compileapi/
-COPY ./yarn.lock /usr/compileapi/
+COPY ./package.json ./
+
+COPY ./yarn.lock ./
 
 RUN yarn install 
 
-COPY ./ /usr/compileapi/
+COPY ./ ./
 
-RUN tsc
+RUN yarn build
 
-FROM prodbase AS newprodbase
+FROM node:16-alpine AS prodbase
 
-RUN npm install --location=global pm2
+RUN yarn global install pm2
 
-COPY --from=prodbase /usr/compileapi/dist /usr/prodapi/dist
-COPY --from=prodbase /usr/compileapi/node_modules /usr/prodapi/node_modules
-COPY --from=prodbase /usr/compileapi/package.json /usr/prodapi/package.json
+ARG NODE_ENV=production
 
-WORKDIR /usr/prodapi
+ENV NODE_ENV=${NODE_ENV}
+
+WORKDIR /usr/api
+
+COPY package.json ./
+
+COPY yarn.lock ./
+
+RUN yarn install --production --frozen-lockfile
+
+COPY --from=devbase /usr/api/dist ./dist
+
+CMD ["pm2-runtime", "dist/app.js"]
