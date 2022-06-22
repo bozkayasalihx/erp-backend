@@ -8,6 +8,7 @@ import path from "path";
 import "reflect-metadata";
 import { eventHandler } from "./configs";
 import { config } from "./loaders";
+import "./loaders/envLoader";
 import { authenticate, permission } from "./middlewares";
 import {
     advanceRoute,
@@ -28,7 +29,6 @@ import {
     vendorRoute,
     VIUploadProcess,
 } from "./routes";
-import "./loaders/envLoader";
 
 export const main = async () => {
     await config();

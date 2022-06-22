@@ -8,7 +8,7 @@ services:
     container_name: db_prod
     restart: always
     env_file:
-      - ./prod.env
+      - ./.env
     ports:
       - "${PG_PORT}:5432"
     volumes:
@@ -18,7 +18,7 @@ services:
     image: redis:6.2.6-alpine
     container_name: redis_prod
     env_file:
-      - ./prod.env
+      - ./.env
 
     restart: always
     ports:
@@ -26,36 +26,19 @@ services:
     volumes:
       - redisdata:/var/lib/redis/data
 
-  server_compile:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: prodbase
-
-    container_name: server_compile
-    env_file:
-      - ./prod.env
-
   prod_server:
     build:
       context: .
-      dockerfile: Dockerfile
-      target: newprodbase
+      target: prodbase
     container_name: prod_server
 
     env_file:
-      - ./prod.env
-    depends_on:
-      - server-compile
-      - db_prod
-      - redis_prod
-    hostname: "192.463.21.1"
+      - ./.env
+
     expose:
       - "8080"
     ports:
       - "8080:8080"
-
-    command: yarn start
 volumes:
   pgdata:
   redisdata:

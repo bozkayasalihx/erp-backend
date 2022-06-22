@@ -2,7 +2,7 @@ FROM node:16-alpine AS devbase
 
 WORKDIR /usr/api
 
-RUN yarn global add typescript
+RUN npm i --location=global typescript
 
 COPY ./package.json ./
 
@@ -16,7 +16,7 @@ RUN yarn build
 
 FROM node:16-alpine AS prodbase
 
-RUN yarn global install pm2
+RUN npm i --location=global pm2
 
 ARG NODE_ENV=production
 
