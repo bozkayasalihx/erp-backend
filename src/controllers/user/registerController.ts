@@ -42,7 +42,6 @@ async function registerControler(
         });
     } catch (err) {
         if (err?.detail?.includes("already exists")) {
-            //FIXME: some other stuff goes here
             return res.status(httpStatus.BAD_REQUEST).send({
                 message: "this user already in exists",
             });

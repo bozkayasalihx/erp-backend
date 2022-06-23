@@ -39,7 +39,6 @@ export default async function dealerSite(
         });
     } catch (err) {
         if (err?.detail?.includes("already exists")) {
-            //FIXME: make already exists error specific class;
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "this record already exits",
             });

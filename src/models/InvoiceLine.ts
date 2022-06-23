@@ -8,7 +8,6 @@ export default class InvoiceLine extends SuperEntity {
     public line_no: number;
 
     @Column({ type: "real" })
-    //TODO: convert real data type to typescript type
     public amount: number;
 
     @Column({ length: 3 })
