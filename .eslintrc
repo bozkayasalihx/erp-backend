@@ -10,6 +10,7 @@
     "rules": {
         "no-unused-labels": 1,
         "@typescript-eslint/ban-ts-comment": 1,
-        "no-console": 1
+        "no-console": 2, 
+        "no-warning-comments": 2
     }
 }
