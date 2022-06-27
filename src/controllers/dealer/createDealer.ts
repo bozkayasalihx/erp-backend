@@ -1,7 +1,11 @@
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import dealerOperation from "../../services/dealerOperation";
-import { AttributeFields, OptionalDates } from "../../types";
+import {
+    AttributeFields,
+    OptionalDates,
+    TypedRequest,
+    TypedResponse,
+} from "../../types";
 
 export interface IDealer extends AttributeFields, OptionalDates {
     name: string;
@@ -9,8 +13,8 @@ export interface IDealer extends AttributeFields, OptionalDates {
 }
 
 export default async function dealer(
-    req: Request<any, any, IDealer>,
-    res: Response
+    req: TypedRequest<IDealer>,
+    res: TypedResponse
 ) {
     const { name, taxNo, ...attributes } = req.body;
     const { user } = req;

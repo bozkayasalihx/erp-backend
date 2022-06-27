@@ -1,12 +1,13 @@
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { vendorOperation } from "../../services";
+import { TypedRequest, TypedResponse } from "../../types";
 import { IVendor } from "./createVendor";
 
 export type UpdateVendor = Partial<IVendor> & { id: number };
+
 export default async function updateVendor(
-    req: Request<any, any, UpdateVendor>,
-    res: Response<{ message: string; data?: string }>
+    req: TypedRequest<UpdateVendor>,
+    res: TypedResponse
 ) {
     const { id, name, taxNo, ...attributes } = req.body;
     const { user } = req;

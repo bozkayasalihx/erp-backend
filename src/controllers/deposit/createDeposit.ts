@@ -1,10 +1,14 @@
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import {
     depositOperation,
     vendorToDealerSiteToBuyerSiteOperation,
 } from "../../services";
-import { Currency, DepositStatusType } from "../../types";
+import {
+    Currency,
+    DepositStatusType,
+    TypedRequest,
+    TypedResponse,
+} from "../../types";
 
 export interface IDeposit {
     amount: number;
@@ -15,8 +19,8 @@ export interface IDeposit {
 }
 
 export default async function createDeposit(
-    req: Request<any, any, IDeposit>,
-    res: Response
+    req: TypedRequest<IDeposit>,
+    res: TypedResponse
 ) {
     //
     const { user } = req;

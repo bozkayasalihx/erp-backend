@@ -1,10 +1,16 @@
-import { Request, Response } from "express";
+import { Request } from "express";
 import httpStatus from "http-status";
+import { Vendor } from "../../models";
 import { vendorOperation } from "../../services";
+import { TypedResponse } from "../../types";
+
+interface IGetVendor {
+    vendorId?: number;
+}
 
 export default async function getVendor(
-    req: Request<{ vendorId?: number }>,
-    res: Response
+    req: Request<IGetVendor>,
+    res: TypedResponse
 ) {
     const { vendorId } = req.params;
 
@@ -16,7 +22,7 @@ export default async function getVendor(
 
             return res.status(httpStatus.OK).json({
                 message: "successful operation",
-                data: vendor,
+                data: vendor as Vendor,
             });
         } catch (err) {
             return res.status(httpStatus.BAD_REQUEST).json({

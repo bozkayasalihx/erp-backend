@@ -1,4 +1,5 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction } from "express";
+import { TypedRequest, TypedResponse } from "../types";
 
 export interface IBody {
     username: string;
@@ -6,8 +7,8 @@ export interface IBody {
     password: string;
 }
 export default function isLoggedIn(
-    req: Request<any, any, IBody>,
-    res: Response,
+    req: TypedRequest<IBody>,
+    res: TypedResponse,
     next: NextFunction
 ) {
     if (!req.user) {

@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { IBody } from "../../middlewares/isLoggedIn";
 import { __prod__ } from "../../scripts/dev";
@@ -7,11 +6,11 @@ import {
     generateRefreshToken,
 } from "../../scripts/utils/generateToken";
 import userOperation from "../../services/userOperation";
-import { OptionalDates } from "../../types";
+import { OptionalDates, TypedRequest, TypedResponse } from "../../types";
 
 async function registerControler(
-    req: Request<any, any, IBody & OptionalDates>,
-    res: Response
+    req: TypedRequest<IBody & OptionalDates>,
+    res: TypedResponse
 ) {
     try {
         const user = await userOperation.insert(req.body);

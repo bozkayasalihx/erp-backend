@@ -1,9 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction } from "express";
 import httpStatus from "http-status";
+import { TypedRequest, TypedResponse } from "../types";
 
 export default function isSetCookie(
-    req: Request,
-    res: Response,
+    req: TypedRequest,
+    res: TypedResponse,
     next: NextFunction
 ) {
     const cookie = req.cookies;

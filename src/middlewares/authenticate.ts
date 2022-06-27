@@ -1,12 +1,13 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction } from "express";
 import httpStatus from "http-status";
 import jwt, { TokenExpiredError } from "jsonwebtoken";
 import { StringValidator } from "../scripts/utils/stringValidator";
 import { userOperation } from "../services";
+import { TypedRequest, TypedResponse } from "../types";
 
 export default async function authenticate(
-    req: Request,
-    res: Response,
+    req: TypedRequest,
+    res: TypedResponse,
     next: NextFunction
 ) {
     const authHeader = req.headers.authorization;

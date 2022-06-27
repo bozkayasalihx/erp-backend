@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import {
     advanceOperation,
@@ -9,6 +8,8 @@ import {
     AdvanceType,
     Currency,
     OptionalDates,
+    TypedRequest,
+    TypedResponse,
 } from "../../types";
 
 export interface IAdvance extends OptionalDates {
@@ -21,8 +22,8 @@ export interface IAdvance extends OptionalDates {
 }
 
 export default async function createAdvance(
-    req: Request<any, any, IAdvance>,
-    res: Response
+    req: TypedRequest<IAdvance>,
+    res: TypedResponse
 ) {
     const {
         advanceType,

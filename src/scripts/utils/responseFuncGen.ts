@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { BuyerOperation } from "../../services/buyerOperation";
 import { BuyerSiteOperation } from "../../services/buyerSiteOperation";
@@ -6,6 +5,7 @@ import { DealerOperation } from "../../services/dealerOperation";
 import { DealerSiteOperation } from "../../services/dealerSiteOperation";
 import { UserOperation } from "../../services/userOperation";
 import { VendorOperation } from "../../services/vendorOperation";
+import { TypedRequest, TypedResponse } from "../../types";
 
 type Maker =
     | UserOperation
@@ -20,8 +20,8 @@ type Callback<T> = (body: T) => any;
 export const responseFuncGen =
     <T>(operator: Maker, cb: Callback<Partial<T> & { id: number }>) =>
     async (
-        req: Request<any, any, Partial<T> & { id: number }>,
-        res: Response<{ message: string; data?: string }>
+        req: TypedRequest<Partial<T> & { id: number }>,
+        res: TypedResponse
     ) => {
         try {
             const { user } = req;

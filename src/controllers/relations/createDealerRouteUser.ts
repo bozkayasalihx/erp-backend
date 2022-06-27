@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { execUserEntityAccess } from "../../scripts/utils/viewFunctions";
 import {
@@ -6,7 +5,7 @@ import {
     userOperation,
     vendorToDealerSiteToBuyerSiteOperation,
 } from "../../services";
-import { SqlConditions } from "../../types";
+import { SqlConditions, TypedRequest, TypedResponse } from "../../types";
 
 export interface IDealerRouteUser {
     vdsbsId: number;
@@ -15,8 +14,8 @@ export interface IDealerRouteUser {
 }
 
 export default async function dealerRouteUser(
-    req: Request<any, any, IDealerRouteUser>,
-    res: Response
+    req: TypedRequest<IDealerRouteUser>,
+    res: TypedResponse
 ) {
     const { user } = req;
     const { userId, vdsbsId, description } = req.body;

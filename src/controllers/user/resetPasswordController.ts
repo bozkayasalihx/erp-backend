@@ -1,17 +1,17 @@
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import genHash from "../../scripts/utils/generateHash";
 import { userOperation } from "../../services";
+import { TypedRequest, TypedResponse } from "../../types";
 
-interface Iparams {
+interface IParams {
     token: string;
     newPassword: string;
 }
 
 export default async function resetPasswordController(
-    req: Request<any, any, Iparams>,
-    res: Response
+    req: TypedRequest<IParams>,
+    res: TypedResponse
 ) {
     const { newPassword, token } = req.body;
 

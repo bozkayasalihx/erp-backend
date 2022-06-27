@@ -1,11 +1,10 @@
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import {
     dealerSiteOperation,
     vendorOperation,
     vendorToDealerSiteOperation,
 } from "../../services";
-import { OptionalDates } from "../../types";
+import { OptionalDates, TypedRequest, TypedResponse } from "../../types";
 
 export interface IVdsRelations extends OptionalDates {
     vendorId: number;
@@ -14,8 +13,8 @@ export interface IVdsRelations extends OptionalDates {
 }
 
 export default async function vdsRelations(
-    req: Request<any, any, IVdsRelations>,
-    res: Response
+    req: TypedRequest<IVdsRelations>,
+    res: TypedResponse
 ) {
     const { dealerSiteId, vendorId, description, ...dates } = req.body;
     const { user } = req;

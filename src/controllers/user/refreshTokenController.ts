@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import jwt from "jsonwebtoken";
 import { generateRefreshToken } from "../../scripts/utils/generateToken";
 import revokeRefreshToken from "../../scripts/utils/revokeRefreshToken";
 import { userOperation } from "../../services";
+import { TypedRequest, TypedResponse } from "../../types";
 
-async function refreshController(req: Request, res: Response) {
+async function refreshController(req: TypedRequest, res: TypedResponse) {
     const { refreshToken } = req;
     res.clearCookie("jwt", { httpOnly: true, sameSite: "lax", secure: true });
 

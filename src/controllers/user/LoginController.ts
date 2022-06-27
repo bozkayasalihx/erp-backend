@@ -1,5 +1,4 @@
 import { compare } from "bcryptjs";
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { IBody } from "../../middlewares/isLoggedIn";
 import { __prod__ } from "../../scripts/dev";
@@ -8,8 +7,9 @@ import {
     generateRefreshToken,
 } from "../../scripts/utils/generateToken";
 import userOperation from "../../services/userOperation";
+import { TypedRequest, TypedResponse } from "../../types";
 
-async function loginController(req: Request<any, any, IBody>, res: Response) {
+async function loginController(req: TypedRequest<IBody>, res: TypedResponse) {
     const { email, username, password } = req.body;
     try {
         const user = await userOperation.login(email, username);

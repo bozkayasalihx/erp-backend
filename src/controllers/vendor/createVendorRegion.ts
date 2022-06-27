@@ -1,7 +1,11 @@
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { vendorOperation } from "../../services";
-import { AttributeFields, OptionalDates } from "../../types";
+import {
+    AttributeFields,
+    OptionalDates,
+    TypedRequest,
+    TypedResponse,
+} from "../../types";
 
 export interface IVendorRegion extends AttributeFields, OptionalDates {
     name: string;
@@ -10,8 +14,8 @@ export interface IVendorRegion extends AttributeFields, OptionalDates {
 }
 
 export default async function createVendorRegion(
-    req: Request<any, any, IVendorRegion>,
-    res: Response
+    req: TypedRequest<IVendorRegion>,
+    res: TypedResponse
 ) {
     const { name, vendorId, ...attributes } = req.body;
     const vendorRegion = vendorOperation.createVendorRegion({

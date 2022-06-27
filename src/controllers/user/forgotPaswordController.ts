@@ -1,13 +1,17 @@
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { sign } from "jsonwebtoken";
 import eventclass from "../../loaders/eventEmitter";
 import { generateForgotPasswordHTML } from "../../scripts/utils/generateForgotPasswordHtml";
 import userOperation from "../../services/userOperation";
+import { TypedRequest, TypedResponse } from "../../types";
+
+interface IResetPassword {
+    email: string;
+}
 
 export const resetPasswordController = async (
-    req: Request<any, any, { email: string }>,
-    res: Response
+    req: TypedRequest<IResetPassword>,
+    res: TypedResponse
 ) => {
     const { email } = req.body;
     try {
@@ -39,7 +43,7 @@ export const resetPasswordController = async (
     } catch (err) {
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             message: "an error accured try again later",
-            data: JSON.stringify(err),
+            data: err,
         });
     }
 };

@@ -1,14 +1,14 @@
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { Vendor } from "../../models";
 import { vendorOperation } from "../../services";
+import { TypedRequest, TypedResponse } from "../../types";
 import { IVendorRegion } from "./createVendorRegion";
 
 export type UpdateVendorRegion = Partial<IVendorRegion> & { id: number };
 
 export default async function updateVendorRegion(
-    req: Request<any, any, UpdateVendorRegion>,
-    res: Response<{ message: string; data?: string }>
+    req: TypedRequest<UpdateVendorRegion>,
+    res: TypedResponse
 ) {
     const { id, name, vendorId, ...attributes } = req.body;
     const { user } = req;

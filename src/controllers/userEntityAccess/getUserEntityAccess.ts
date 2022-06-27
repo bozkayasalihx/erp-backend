@@ -1,8 +1,11 @@
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { userEntityAccessOperation } from "../../services";
+import { TypedRequest, TypedResponse } from "../../types";
 
-export default async function getUserEntityAccess(req: Request, res: Response) {
+export default async function getUserEntityAccess(
+    req: TypedRequest,
+    res: TypedResponse
+) {
     try {
         const accessList = await userEntityAccessOperation.getByUser(
             req.user.id,

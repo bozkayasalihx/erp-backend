@@ -1,15 +1,16 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction } from "express";
 import { UploadedFile } from "express-fileupload";
 import httpStatus from "http-status";
 import { __prod__ } from "../scripts/dev";
+import { TypedRequest, TypedResponse } from "../types";
 
 const ALLOWEDTYPES = ["csv", "xlsx"];
 
 if (!__prod__) ALLOWEDTYPES.push("jpeg");
 
 export default async function checkFileType(
-    req: Request,
-    res: Response,
+    req: TypedRequest,
+    res: TypedResponse,
     next: NextFunction
 ) {
     if (!req.files?.file) {

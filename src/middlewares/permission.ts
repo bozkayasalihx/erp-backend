@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction } from "express";
 import httpStatus from "http-status";
-import { UserTypes } from "../types";
+import { TypedRequest, TypedResponse, UserTypes } from "../types";
 import { accesableRoute } from "../types/routePath";
 
 export default function permission(
-    req: Request,
-    res: Response,
+    req: TypedRequest,
+    res: TypedResponse,
     next: NextFunction
 ) {
     // const fullUrl = `${req.protocol}://${req.headers.host}${req.url}`;

@@ -11,8 +11,10 @@ export type TypedResponse<
         data?: Record<string, any>;
     }
 > = Response<T>;
+
 export type TypedRequest<
-    T extends Record<string, any>,
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    T extends Record<string, any> = {},
     Q extends NewQS<Q> = NewQS<Record<string, never>>
 > = Request<any, any, T, Q>;
 

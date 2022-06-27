@@ -1,7 +1,11 @@
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { buyerOperation, buyerSiteOperation } from "../../services";
-import { AttributeFields, OptionalDates } from "../../types";
+import {
+    AttributeFields,
+    OptionalDates,
+    TypedRequest,
+    TypedResponse,
+} from "../../types";
 
 export interface IBuyerSite extends AttributeFields, OptionalDates {
     name: string;
@@ -9,8 +13,8 @@ export interface IBuyerSite extends AttributeFields, OptionalDates {
 }
 
 export default async function buyerSite(
-    req: Request<any, any, IBuyerSite>,
-    res: Response
+    req: TypedRequest<IBuyerSite>,
+    res: TypedResponse
 ) {
     const { buyerId, name, ...attributes } = req.body;
     const { user } = req;

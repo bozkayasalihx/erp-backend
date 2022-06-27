@@ -1,10 +1,9 @@
 /* eslint-disable camelcase */
-import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { hasAccess, isContain, makeSure } from "../../scripts/utils/isContains";
 import userEntityRelationOperation from "../../services/userEntityRelationOperation";
 import userOperation from "../../services/userOperation";
-import { OptionalDates } from "../../types";
+import { OptionalDates, TypedRequest, TypedResponse } from "../../types";
 
 export interface IUserEntityRelation extends OptionalDates {
     userId: number;
@@ -15,8 +14,8 @@ export interface IUserEntityRelation extends OptionalDates {
 }
 
 export default async function createUserEntityRelation(
-    req: Request<any, any, IUserEntityRelation>,
-    res: Response
+    req: TypedRequest<IUserEntityRelation>,
+    res: TypedResponse
 ) {
     try {
         const { description, userId, endDate, startDate, ...ids } = req.body;
