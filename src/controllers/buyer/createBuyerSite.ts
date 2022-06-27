@@ -1,37 +1,37 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { buyerOperation, buyerSiteOperation } from "../../services";
-import { AttributeFields, OptionalDates } from "../../types/types";
+import { AttributeFields, OptionalDates } from "../../types";
 
 export interface IBuyerSite extends AttributeFields, OptionalDates {
     name: string;
-    buyer_id: number;
+    buyerId: number;
 }
 
 export default async function buyerSite(
     req: Request<any, any, IBuyerSite>,
     res: Response
 ) {
-    const { buyer_id, name, ...attributes } = req.body;
-    const user = req.user;
+    const { buyerId, name, ...attributes } = req.body;
+    const { user } = req;
     try {
-        const buyerSite = await buyerSiteOperation.repo.findOne({
+        const buyerSiteUser = await buyerSiteOperation.repo.findOne({
             where: { name },
         });
 
         const buyer = await buyerOperation.repo.findOne({
-            where: { id: buyer_id },
+            where: { id: buyerId },
         });
 
         if (buyer) {
-            if (buyerSite) {
-                buyerSite.buyer = buyer;
-                buyerSite.created_by = user;
-                buyerSite.updated_by = user;
-                await buyerSite.save();
+            if (buyerSiteUser) {
+                buyerSiteUser.buyer = buyer;
+                buyerSiteUser.created_by = user;
+                buyerSiteUser.updated_by = user;
+                await buyerSiteUser.save();
                 return res.status(httpStatus.OK).json({
                     message: "succesfully updated",
-                    data: buyerSite,
+                    data: buyerSiteUser,
                 });
             }
 

@@ -1,5 +1,4 @@
-import { ViewColumn, ViewEntity } from "typeorm";
-import { User, UserEntityRelation } from "./";
+import { ViewColumn } from "typeorm";
 
 // @ViewEntity("user_entity_relations_v", {
 //     expression: `

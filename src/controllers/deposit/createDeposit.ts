@@ -4,14 +4,14 @@ import {
     depositOperation,
     vendorToDealerSiteToBuyerSiteOperation,
 } from "../../services";
-import { Currency, DepositStatusType } from "../../types/types";
+import { Currency, DepositStatusType } from "../../types";
 
 export interface IDeposit {
     amount: number;
     currency: Currency;
     status: DepositStatusType;
-    approval_date: Date;
-    vdsbs_id: number;
+    approvalDate: Date;
+    vdsbsId: number;
 }
 
 export default async function createDeposit(
@@ -19,24 +19,25 @@ export default async function createDeposit(
     res: Response
 ) {
     //
-    const user = req.user;
-    const { amount, approval_date, currency, status, vdsbs_id } = req.body;
+    const { user } = req;
+    const { amount, approvalDate, currency, status, vdsbsId } = req.body;
 
     try {
         const vdsbs = await vendorToDealerSiteToBuyerSiteOperation.repo.findOne(
             {
-                where: { id: vdsbs_id },
+                where: { id: vdsbsId },
             }
         );
 
-        if (!vdsbs)
+        if (!vdsbs) {
             return res.status(httpStatus.NOT_FOUND).json({
                 message: "not found",
             });
+        }
 
         await depositOperation.insert({
             amount,
-            approval_date,
+            approvalDate,
             currency,
             status,
             created_by: user,

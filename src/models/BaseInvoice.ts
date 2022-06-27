@@ -1,22 +1,22 @@
 import { Column } from "typeorm";
-import { FileRecordType } from "../types/types";
+import { FileRecordType } from "../types";
 import SuperEntity from "./SuperEntity";
 
 export default abstract class BaseInvoice extends SuperEntity {
     @Column({ name: "record_type", enum: FileRecordType })
-    public record_type: FileRecordType;
+    public recordType: FileRecordType;
 
     @Column({ name: "invoice_no", length: 30 })
-    public invoice_no: string;
+    public invoiceNo: string;
 
     @Column({ name: "vdsbs_id" })
-    public vdsbs_id: number;
+    public vdsbsId: number;
 
     @Column({ name: "invoice_date", type: "timestamp", default: null })
-    public invoice_date: Date;
+    public invoiceDate: Date;
 
     @Column({ name: "due_date", type: "timestamp", default: null })
-    public due_date: Date;
+    public dueDate: Date;
 
     @Column({ name: "amount", type: "varchar", length: 20 })
     public amount: string;
@@ -25,8 +25,8 @@ export default abstract class BaseInvoice extends SuperEntity {
     public currency: string;
 
     @Column({ name: "line_no", length: 3, type: "varchar" })
-    public line_no: string;
+    public lineNo: string;
 
     @Column({ name: "erro_desc", length: 500 })
-    public error_desc: string;
+    public errorDesc: string;
 }

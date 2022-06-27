@@ -5,7 +5,7 @@ import { __prod__ } from "../scripts/dev";
 import { UserCreateSubs } from "../subscribers/userSubs";
 
 const entityDir = path.join(__dirname, "../../dist/models/*.js");
-const subsDir = path.join(__dirname, "../../dist/subscribers/*.js");
+// const subsDir = path.join(__dirname, "../../dist/subscribers/*.js");
 const migrationDir = path.join(__dirname, "../../dist/migrations/*.js");
 
 export const appDataSource = new DataSource({

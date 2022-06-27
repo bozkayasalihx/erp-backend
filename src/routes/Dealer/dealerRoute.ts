@@ -9,10 +9,10 @@ import validationSchema from "../../validations/validationSchema";
 
 const router = Router();
 
-const updateDealer = responseFuncGen<{ name: string; tax_no: number }>(
+const updateDealer = responseFuncGen<{ name: string; taxNo: number }>(
     dealerOperation,
     async (body) => {
-        const { name, tax_no, id } = body;
+        const { name, taxNo, id } = body;
 
         const dealer = await dealerOperation.repo.findOne({
             where: { id },
@@ -20,7 +20,7 @@ const updateDealer = responseFuncGen<{ name: string; tax_no: number }>(
 
         if (!dealer) return dealer;
 
-        if (tax_no) dealer.tax_no = String(tax_no);
+        if (taxNo) dealer.taxNo = String(taxNo);
         if (name) dealer.name = name;
 
         return dealer;

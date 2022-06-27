@@ -9,42 +9,42 @@ export class UserEntityAccessOperation extends BaseService {
 
     // function will return all user-enitity access records regardless of user_id
     public async getAll(onlyActives = true) {
-        let access_list: UserEntityAccessV[] = [];
+        let accessList: UserEntityAccessV[] = [];
 
         if (!onlyActives) {
-            access_list = await this.repo.find();
+            accessList = await this.repo.find();
         } else {
             let qBuilder = this.repo.createQueryBuilder("uea").where("1=1");
 
             // set active conditions
             qBuilder = setActiveConditions(qBuilder);
 
-            access_list = await qBuilder.getMany();
+            accessList = await qBuilder.getMany();
         }
 
-        return access_list;
+        return accessList;
     }
 
     // function will return all user-enitity access records filtered by given user_id
-    public async getByUser(user_id: number, onlyActives = true) {
-        let access_list: UserEntityAccessV[] = [];
+    public async getByUser(userId: number, onlyActives = true) {
+        let accessList: UserEntityAccessV[] = [];
 
         if (!onlyActives) {
-            access_list = await this.repo.find({
-                where: { user_id: user_id },
+            accessList = await this.repo.find({
+                where: { user_id: userId },
             });
         } else {
             let qBuilder = this.repo.createQueryBuilder("uea").where("1=1");
 
-            qBuilder = qBuilder.andWhere(`"uea"."user_id" = ${user_id}`);
+            qBuilder = qBuilder.andWhere(`"uea"."user_id" = ${userId}`);
 
             // set active conditions
             qBuilder = setActiveConditions(qBuilder);
 
-            access_list = await qBuilder.getMany();
+            accessList = await qBuilder.getMany();
         }
 
-        return access_list;
+        return accessList;
     }
 }
 

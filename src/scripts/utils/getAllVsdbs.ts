@@ -3,14 +3,15 @@ import {
     vendorToDealerSiteToBuyerSiteOperation,
 } from "../../services";
 import VendorTDealerSiteOperation from "../../services/VendorTDealerSiteOperation";
-export async function getAllVdsbs(user_id: number, vdsbs_id?: number) {
+
+export async function getAllVdsbs(userId: number) {
     const data = await userEntityRelationOperation.repo
         .createQueryBuilder("uer")
         .leftJoin("uer.user", "user")
         .leftJoin("uer.vendor_table_ref", "vendor")
         .leftJoin("uer.buyer_site_table_ref", "bs")
         .leftJoin("uer.dealer_site_table_ref", "ds")
-        .where("uer.user_id = :id", { id: user_id })
+        .where("uer.user_id = :id", { id: userId })
         .select(["user.user_type", "vendor.id", "bs.id", "ds.id"])
         .execute();
 
@@ -35,13 +36,13 @@ export async function getAllVdsbs(user_id: number, vdsbs_id?: number) {
 
     if (!vds) return false;
 
-    const vds_id = vds[0].vds_id;
+    const { vds_id: vdsId } = vds[0];
 
     const vdsbs: Array<Record<string, any>> =
         await vendorToDealerSiteToBuyerSiteOperation.repo
             .createQueryBuilder("vdsbs")
             .leftJoin("vdsbs.dealer_route_users", "dru")
-            .where(`vds_rltn_id = :id`, { id: vds_id })
+            .where("vds_rltn_id = :id", { id: vdsId })
             .select(["vdsbs.id"])
             .execute();
 

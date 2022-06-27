@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
-import { __prod__ } from "../scripts/dev";
 import path from "path";
+import { __prod__ } from "../scripts/dev";
 
 (function () {
     dotenv.config({

@@ -24,12 +24,13 @@ export const responseFuncGen =
         res: Response<{ message: string; data?: string }>
     ) => {
         try {
-            const user = req.user;
+            const { user } = req;
             const results = await cb(req.body);
-            if (!results)
+            if (!results) {
                 return res.status(httpStatus.BAD_REQUEST).json({
                     message: "bad request",
                 });
+            }
 
             results.updated_by = user;
             await results.save();

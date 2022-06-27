@@ -7,22 +7,24 @@ import {
     OneToMany,
     RelationId,
 } from "typeorm";
-import { InvoiceStatusType } from "../types/types";
-import InvoiceInterface from "./InvoiceInterface";
+import { InvoiceStatusType } from "../types";
+import {
+    InvoiceInterface,
+    PaymentSchedule,
+    VendorToDealerSiteToBuyerSite,
+} from "./index";
 import InvoiceLine from "./InvoiceLine";
-import PaymentSchedule from "./PaymentSchedule";
 import SuperEntity from "./SuperEntity";
-import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
 @Entity("invoices")
-@Index(["invoice_no", "vdsbs_id"], { unique: true })
+@Index(["invoiceNo", "vdsbsId"], { unique: true })
 export default class Invoice extends SuperEntity {
-    /**Properties */
+    /** Properties */
     @Column({ type: "varchar", length: 30 })
-    public invoice_no: string;
+    public invoiceNo: string;
 
     @Column({ type: "date" })
-    public invoice_date: Date;
+    public invoiceDate: Date;
 
     @Column({ type: "real" })
     public amount: number;
@@ -31,10 +33,10 @@ export default class Invoice extends SuperEntity {
     public currency: string;
 
     @Column({ type: "date" })
-    public due_date: Date;
+    public dueDate: Date;
 
     @Column("int", { array: true, default: [] })
-    public ref_user_list: Array<number>;
+    public refUserList: Array<number>;
 
     @Column({
         type: "enum",
@@ -62,25 +64,22 @@ export default class Invoice extends SuperEntity {
     @ManyToOne(() => VendorToDealerSiteToBuyerSite, (vdsbs) => vdsbs.invoices)
     public vdsbs: VendorToDealerSiteToBuyerSite;
 
-    @OneToMany(
-        () => InvoiceInterface,
-        (InvoiceInterface) => InvoiceInterface.invoice
-    )
+    @OneToMany(() => InvoiceInterface, (invoiceIn) => invoiceIn.invoice)
     @JoinColumn({ name: "ref_intf_id" })
     public invoiceInterfaces: Array<InvoiceInterface>;
 
     @RelationId((invoice: Invoice) => invoice.vdsbs)
     @Column({ name: "vdsbs_id" })
-    public vdsbs_id: number;
+    public vdsbsId: number;
 
     @OneToMany(() => InvoiceLine, (invoicesLine) => invoicesLine.invoice, {
         nullable: false,
     })
-    public invoices_lines: Array<InvoiceLine>;
+    public invoicesLines: Array<InvoiceLine>;
 
     @OneToMany(
         () => PaymentSchedule,
         (paymentSchedule) => paymentSchedule.invoice
     )
-    public payment_schedules: Array<PaymentSchedule>;
+    public paymentSchedules: Array<PaymentSchedule>;
 }

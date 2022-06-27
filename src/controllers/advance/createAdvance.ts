@@ -9,13 +9,13 @@ import {
     AdvanceType,
     Currency,
     OptionalDates,
-} from "../../types/types";
+} from "../../types";
 
 export interface IAdvance extends OptionalDates {
-    advance_type: AdvanceType;
+    advanceType: AdvanceType;
     amount: number;
     currency: Currency;
-    vdsbs_id: number;
+    vdsbsId: number;
     status: AdvanceStatusType;
     approvalDate?: Date;
 }
@@ -25,31 +25,32 @@ export default async function createAdvance(
     res: Response
 ) {
     const {
-        advance_type,
+        advanceType,
         amount,
         approvalDate,
         currency,
         status,
-        vdsbs_id,
+        vdsbsId,
         ...optionalDates
     } = req.body;
-    const user = req.user;
+    const { user } = req;
     try {
         const vdsbs = await vendorToDealerSiteToBuyerSiteOperation.repo.findOne(
             {
-                where: { id: vdsbs_id },
+                where: { id: vdsbsId },
             }
         );
 
-        if (!vdsbs)
+        if (!vdsbs) {
             return res.status(httpStatus.NOT_FOUND).json({
                 message: "no found",
             });
+        }
 
         await advanceOperation.createAdvance({
-            advance_type,
+            advanceType,
             amount,
-            approval_date: approvalDate,
+            approvalDate,
             currency,
             status,
             vdsbs,

@@ -3,22 +3,24 @@ import httpStatus from "http-status";
 import { vendorOperation } from "../../services";
 import { IVendor } from "./createVendor";
 
+export type UpdateVendor = Partial<IVendor> & { id: number };
 export default async function updateVendor(
-    req: Request<any, any, Partial<IVendor> & { id: number }>,
+    req: Request<any, any, UpdateVendor>,
     res: Response<{ message: string; data?: string }>
 ) {
-    const { id, name, tax_no, ...attributes } = req.body;
-    const user = req.user;
+    const { id, name, taxNo, ...attributes } = req.body;
+    const { user } = req;
 
     try {
         const vendor = await vendorOperation.repo.findOne({
             where: { id },
         });
 
-        if (!vendor)
+        if (!vendor) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "not such as vendor",
             });
+        }
 
         const keys = Object.keys(attributes);
         for (let i = 0; i < keys.length; i++) {

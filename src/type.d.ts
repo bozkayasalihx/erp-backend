@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 /* eslint-disable @typescript-eslint/triple-slash-reference */
 /// <reference types="express-serve-static-core" />
 
@@ -54,6 +55,7 @@ declare global {
         namespace fileUpload {
             class FileArray {
                 file: UploadedFile | Array<UploadedFile>;
+
                 [index: string]: UploadedFile | UploadedFile[];
             }
 

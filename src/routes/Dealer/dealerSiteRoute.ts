@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable no-unused-expressions */
 import { Router } from "express";
 import { dealerSiteController } from "../../controllers";
 import { IDealerSite } from "../../controllers/dealer/createDealerSite";
@@ -9,10 +11,10 @@ import validationSchema from "../../validations/validationSchema";
 
 const router = Router();
 
-const updateDealerSite = responseFuncGen<{ name: string; dealer_id: number }>(
+const updateDealerSite = responseFuncGen<{ name: string; dealerId: number }>(
     dealerSiteOperation,
     async (body) => {
-        const { name, dealer_id, id } = body;
+        const { name, dealerId, id } = body;
 
         const dealer = await dealerSiteOperation.repo.findOne({
             where: { id },
@@ -21,12 +23,12 @@ const updateDealerSite = responseFuncGen<{ name: string; dealer_id: number }>(
         if (!dealer) return dealer;
 
         const dealerSite = await dealerOperation.repo.findOne({
-            where: { id: dealer_id },
+            where: { id: dealerId },
         });
 
         if (!dealerSite) return dealerSite;
 
-        dealer_id && (dealer.dealer_id = dealer_id);
+        dealerId && (dealer.dealerId = dealerId);
         name && (dealerSite.name = name);
 
         return dealerSite;

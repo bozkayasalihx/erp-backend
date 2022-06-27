@@ -7,7 +7,7 @@ import {
     generateRefreshToken,
 } from "../../scripts/utils/generateToken";
 import userOperation from "../../services/userOperation";
-import { OptionalDates } from "../../types/types";
+import { OptionalDates } from "../../types";
 
 async function registerControler(
     req: Request<any, any, IBody & OptionalDates>,
@@ -15,17 +15,17 @@ async function registerControler(
 ) {
     try {
         const user = await userOperation.insert(req.body);
-        const access_token = generateAccessToken(
+        const accessToken = generateAccessToken(
             { userId: user.id, tokenVersion: user.tokenVersion },
             process.env.ACCESS_TOKEN_SECRET_KEY as string
         );
 
-        const refresh_token = generateRefreshToken(
+        const refreshToken = generateRefreshToken(
             { userId: user.id, tokenVersion: user.tokenVersion },
             process.env.REFRESH_TOKEN_SECRET_KEY as string
         );
 
-        res.cookie("qid", refresh_token, {
+        res.cookie("qid", refreshToken, {
             httpOnly: true,
             sameSite: "lax",
             secure: __prod__,
@@ -37,7 +37,7 @@ async function registerControler(
             data: {
                 username: user.username,
                 email: user.email,
-                access_token,
+                accessToken,
             },
         });
     } catch (err) {

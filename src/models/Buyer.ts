@@ -1,15 +1,25 @@
 import { Column, Entity, OneToMany } from "typeorm";
-import BuyerSite from "./BuyerSite";
+import { BuyerSite } from "./index";
 import SuperEntity from "./SuperEntity";
 
 @Entity("buyers")
 export default class Buyer extends SuperEntity {
     /** Properties */
-    @Column({ type: "varchar", length: 240, name: "name", unique: true })
+    @Column({
+        type: "varchar",
+        length: 240,
+        name: "name",
+        unique: true,
+    })
     public name: string;
 
-    @Column({ type: "varchar", length: 20, name: "tax_no", unique: true })
-    public tax_no: string;
+    @Column({
+        type: "varchar",
+        length: 20,
+        name: "tax_no",
+        unique: true,
+    })
+    public taxNo: string;
 
     @Column({ default: null, name: "attribute1" })
     public attribute1: string;
@@ -28,7 +38,5 @@ export default class Buyer extends SuperEntity {
 
     /** Relations */
     @OneToMany(() => BuyerSite, (buyerSite) => buyerSite.buyer)
-    public buyer_sites: Array<BuyerSite>;
+    public buyerSites: Array<BuyerSite>;
 }
-
-// "dev": "ts-node-dev --dir src/ --files --respawn --transpile-only -r dotenv/config  -- src/app.ts dotenv_config_path=.env.test ",

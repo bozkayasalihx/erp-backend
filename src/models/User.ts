@@ -9,7 +9,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { UserTypes } from "../types/types";
+import { UserTypes } from "../types";
 
 @Entity("users")
 export default class User extends BaseEntity {
@@ -18,16 +18,16 @@ export default class User extends BaseEntity {
     public id: number;
 
     @UpdateDateColumn({ name: "updated_at", type: "timestamp" })
-    public updated_at: Date;
+    public updatedAt: Date;
 
     @CreateDateColumn({ name: "created_at", type: "timestamp" })
-    public created_at: Date;
+    public createdAt: Date;
 
     @Column({ default: null, name: "start_date", type: "date" })
-    public start_date: Date;
+    public startDate: Date;
 
     @Column({ default: null, name: "end_date", type: "date" })
-    public end_date: Date;
+    public endDate: Date;
 
     @Column({ unique: true, nullable: true, name: "username" })
     public username: string;
@@ -45,12 +45,17 @@ export default class User extends BaseEntity {
         name: "user_type",
     })
     @Index("user_type")
-    public user_type: UserTypes;
+    public userType: UserTypes;
 
     @Column({ unique: true, type: "bigint", name: "tckn" })
-    public tckn: BigInt;
+    public tckn: bigint;
 
-    @Column({ unique: true, type: "varchar", length: 20, name: "mobile" })
+    @Column({
+        unique: true,
+        type: "varchar",
+        length: 20,
+        name: "mobile",
+    })
     public mobile: string;
 
     @Column("int", { default: 0 })

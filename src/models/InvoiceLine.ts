@@ -1,11 +1,11 @@
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import Invoices from "./Invoice";
+import { Invoice } from "./index";
 import SuperEntity from "./SuperEntity";
 
 @Entity("invoice_lines")
 export default class InvoiceLine extends SuperEntity {
     @Column({ type: "int", nullable: true })
-    public line_no: number;
+    public lineNo: number;
 
     @Column({ type: "real" })
     public amount: number;
@@ -14,16 +14,16 @@ export default class InvoiceLine extends SuperEntity {
     public currency: string;
 
     @Column({ name: "item_quantity", nullable: true })
-    public item_quantity: number;
+    public itemQuantity: number;
 
     @Column({ length: 20, name: "item_uom", nullable: true })
-    public item_uom: string;
+    public itemUom: string;
 
     @Column({ length: 100, nullable: true, name: "item_description" })
-    public item_description: string;
+    public itemDescription: string;
 
     // relations
-    @ManyToOne(() => Invoices, (invoices) => invoices.invoices_lines)
+    @ManyToOne(() => Invoice, (invoices) => invoices.invoicesLines)
     @JoinColumn({ name: "invoice_id" })
-    public invoice: Invoices;
+    public invoice: Invoice;
 }

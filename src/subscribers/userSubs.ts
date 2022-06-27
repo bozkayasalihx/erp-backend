@@ -5,7 +5,7 @@ import {
 } from "typeorm";
 import { User } from "../models";
 import { userOperation } from "../services";
-import { UserTypes } from "../types/types";
+import { UserTypes } from "../types";
 
 @EventSubscriber()
 export class UserCreateSubs implements EntitySubscriberInterface<any> {
@@ -21,7 +21,7 @@ export class UserCreateSubs implements EntitySubscriberInterface<any> {
                     mobile: "5376852365",
                     password: "uncle_bob@gmail.com",
                     tckn: BigInt("38492384289"),
-                    user_type: UserTypes.VENDOR_ADMIN,
+                    userType: UserTypes.VENDOR_ADMIN,
                 });
 
                 user = await u.save();
@@ -35,6 +35,7 @@ export class UserCreateSubs implements EntitySubscriberInterface<any> {
     async beforeUpdate() {
         //
     }
+
     async beforeRemove() {
         //
     }

@@ -1,6 +1,8 @@
 class ParseError {
     private regex: RegExp;
+
     private error: string;
+
     constructor() {
         this.regex = /\(.*?\)/gi;
     }
@@ -8,6 +10,7 @@ class ParseError {
     public setError(error: string) {
         this.error = error;
     }
+
     public get getError() {
         return this.error;
     }

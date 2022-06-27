@@ -1,8 +1,12 @@
 import { Publisher } from "zeromq";
+
 export class Queue {
     private queue: any[] = [];
+
     private socket: Publisher;
+
     private max: number;
+
     private sending = false;
 
     constructor(socket: Publisher, max = 100) {
@@ -22,10 +26,12 @@ export class Queue {
         if (this.sending) return;
 
         this.sending = true;
-
+        const queue: Array<Promise<any>> = [];
         while (this.queue.length) {
-            await this.socket.send(this.queue.shift());
+            queue.push(this.socket.send(this.queue.shift()));
         }
+
+        await Promise.all(queue);
 
         this.sending = false;
     }

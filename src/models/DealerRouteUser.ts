@@ -1,7 +1,7 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
-import SuperEntity from "../models/SuperEntity";
+import { VendorToDealerSiteToBuyerSite } from "./index";
+import SuperEntity from "./SuperEntity";
 import User from "./User";
-import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
 @Entity("dealer_route_users")
 @Index(["user.id", "vdsbs.id"], { unique: true })
@@ -11,7 +11,7 @@ export default class DealerRouteUser extends SuperEntity {
 
     @ManyToOne(
         () => VendorToDealerSiteToBuyerSite,
-        (vdsbs) => vdsbs.dealer_route_users
+        (vdsbs) => vdsbs.dealerRouteUsers
     )
     @JoinColumn({ name: "vdsbs_id" })
     vdsbs: VendorToDealerSiteToBuyerSite;

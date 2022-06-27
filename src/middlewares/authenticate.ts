@@ -9,18 +9,20 @@ export default async function authenticate(
     res: Response,
     next: NextFunction
 ) {
-    const authHeader = req.headers["authorization"];
-    if (!authHeader)
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
         return res.status(httpStatus.UNAUTHORIZED).json({
             message: "unauthorized request",
         });
+    }
     const strValidator = new StringValidator(authHeader);
     const { head, body } = strValidator.parse(res);
     const valid = strValidator.validateHeader(head);
-    if (!valid)
+    if (!valid) {
         return res.status(httpStatus.BAD_REQUEST).json({
             message: "invalid request",
         });
+    }
 
     const token = body;
 
@@ -37,7 +39,7 @@ export default async function authenticate(
         );
 
         if (typeof payload === "string") {
-            return;
+            return undefined;
         }
 
         req.payload = {
@@ -48,10 +50,11 @@ export default async function authenticate(
             where: { id: payload.userId },
         });
 
-        if (!user)
+        if (!user) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "unauthorized",
             });
+        }
 
         req.user = user;
         return next();

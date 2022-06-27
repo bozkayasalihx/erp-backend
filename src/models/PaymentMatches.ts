@@ -1,8 +1,10 @@
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import Payments from "./Payment";
-import PaymentSchedule from "./PaymentSchedule";
+import {
+    Payment,
+    PaymentSchedule,
+    VendorToDealerSiteToBuyerSite,
+} from "./index";
 import SuperEntity from "./SuperEntity";
-import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
 @Entity("payment_matches")
 export default class PaymentMatches extends SuperEntity {
@@ -10,21 +12,21 @@ export default class PaymentMatches extends SuperEntity {
     public currency: string;
 
     @Column({ type: "real" })
-    public matches_amount: number;
+    public matchesAmount: number;
 
-    /** Relations*/
+    /** Relations */
 
-    @ManyToOne(() => PaymentSchedule, (ps) => ps.payment_matches)
+    @ManyToOne(() => PaymentSchedule, (ps) => ps.paymentMatches)
     @JoinColumn({ name: "payment_schedule_id" })
-    public payment_schedule: PaymentSchedule;
+    public paymentSchedule: PaymentSchedule;
 
-    @ManyToOne(() => Payments, (payments) => payments.payment_matches)
+    @ManyToOne(() => Payment, (payments) => payments.paymentMatches)
     @JoinColumn({ name: "payment_id" })
-    public payments: Payments;
+    public payments: Payment;
 
     @ManyToOne(
         () => VendorToDealerSiteToBuyerSite,
-        (vdsbs) => vdsbs.payment_matches
+        (vdsbs) => vdsbs.paymentMatches
     )
     @JoinColumn({ name: "vdsbs_id" })
     public vdsbs: VendorToDealerSiteToBuyerSite;

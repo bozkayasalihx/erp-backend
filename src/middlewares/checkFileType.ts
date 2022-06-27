@@ -12,19 +12,22 @@ export default async function checkFileType(
     res: Response,
     next: NextFunction
 ) {
-    if (!req.files?.file)
+    if (!req.files?.file) {
         return res.status(httpStatus.NOT_FOUND).json({
             message: "no file uploaded",
         });
+    }
 
+    // eslint-disable-next-line prefer-regex-literals
     const regex = new RegExp(".([a-z]{3,})$", "gi");
     const file = req.files?.file as UploadedFile;
     const results = regex.exec(file.name);
 
-    if (!results)
+    if (!results) {
         return res.status(httpStatus.BAD_REQUEST).json({
             message: "invalid file type",
         });
+    }
     if (ALLOWEDTYPES.includes(results[1])) {
         return next();
     }

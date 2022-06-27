@@ -3,8 +3,11 @@ import { Queue } from "./queue";
 
 export class Main {
     private address: string;
+
     private publisher = new Publisher();
+
     private worker = new Subscriber();
+
     constructor(address: string) {
         this.address = address;
     }

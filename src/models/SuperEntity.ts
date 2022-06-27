@@ -8,6 +8,7 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 import User from "./User";
+
 class SuperEntity extends BaseEntity {
     /** Base Entity */
     @PrimaryGeneratedColumn({ name: "id" })

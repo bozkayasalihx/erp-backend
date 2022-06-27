@@ -1,12 +1,19 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-export class GenerateCsv<T extends object> {
+export class GenerateCsv<
+    T extends { [P in keyof T]: T[P] } & Partial<{ errors: any }>
+> {
     private data: Array<T>;
+
     private fs = fs;
+
     private path = path;
+
     private DELIMITER: string;
+
     private NEW_LINE = "\n";
+
     constructor(
         private errors: Map<string, any>,
         private parsedData: Set<T>,
@@ -34,14 +41,16 @@ export class GenerateCsv<T extends object> {
 
     private parseErrors() {
         for (const [key, value] of this.errors) {
-            const [lineNO, name] = key.split("__");
-            if (!this.data[+lineNO]["errors"])
-                this.data[+lineNO]["errors"] = [value];
-            else
-                this.data[+lineNO]["errors"] = [
-                    ...this.data[+lineNO]["errors"],
+            const [lineNO] = key.split("__");
+            // eslint-disable-next-line spaced-comment
+            // ts-ignore
+            if (!this.data[+lineNO].errors) this.data[+lineNO].errors = [value];
+            else {
+                this.data[+lineNO].errors = [
+                    ...this.data[+lineNO].errors,
                     value,
                 ];
+            }
         }
         return { data: this.data };
     }
@@ -58,14 +67,13 @@ export class GenerateCsv<T extends object> {
         willBeWrittenData += csvHeader + this.NEW_LINE;
         let j = 0;
         for (let i = 0; i < data.length; i++) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             for (const [key, value] of Object.entries(data[i])) {
-                if (j == 0) willBeWrittenData += value;
-                else {
-                    if (!value) willBeWrittenData += this.DELIMITER;
-                    else if (value instanceof Array)
-                        willBeWrittenData += this.DELIMITER + "[" + value + "]";
-                    else willBeWrittenData += this.DELIMITER + value;
-                }
+                if (j === 0) willBeWrittenData += value;
+                else if (!value) willBeWrittenData += this.DELIMITER;
+                else if (value instanceof Array)
+                    willBeWrittenData += `${this.DELIMITER}[${value}]`;
+                else willBeWrittenData += this.DELIMITER + value;
                 j++;
             }
             j = 0;

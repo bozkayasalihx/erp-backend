@@ -6,14 +6,13 @@ import {
     OneToMany,
     RelationId,
 } from "typeorm";
-import Dealer from "./Dealer";
+import { Dealer, VendorToDealerSite } from "./index";
 import SuperEntity from "./SuperEntity";
-import VendorToDealerSite from "./VendorToDealerSite";
 
 @Entity("dealer_sites")
-@Index(["dealer_id"])
+@Index(["dealerId"])
 export default class DealerSite extends SuperEntity {
-    /** Properites*/
+    /** Properites */
     @Column({ name: "name" })
     public name: string;
 
@@ -33,12 +32,12 @@ export default class DealerSite extends SuperEntity {
     public attribute5: string;
 
     /** Releations */
-    @ManyToOne(() => Dealer, (dealer) => dealer.dealer_sites)
+    @ManyToOne(() => Dealer, (dealer) => dealer.dealerSites)
     public dealer: Dealer;
 
     @RelationId((dealerSite: DealerSite) => dealerSite.dealer)
     @Column({ name: "dealer_id" })
-    public dealer_id: number;
+    public dealerId: number;
 
     /** Referantions */
     @OneToMany(

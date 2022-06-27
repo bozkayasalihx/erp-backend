@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { Currency, DepositStatusType } from "../types/types";
+import { Currency, DepositStatusType } from "../types";
+import { VendorToDealerSiteToBuyerSite } from "./index";
 import SuperEntity from "./SuperEntity";
-import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
 @Entity("deposits")
 export default class Deposit extends SuperEntity {
@@ -19,7 +19,7 @@ export default class Deposit extends SuperEntity {
     public status: DepositStatusType;
 
     @Column({ type: "timestamp", default: null })
-    public approval_date: Date;
+    public approvalDate: Date;
 
     /** relations */
 

@@ -6,9 +6,8 @@ import {
     ManyToOne,
     OneToMany,
 } from "typeorm";
-import Buyer from "./Buyer";
+import { Buyer, VendorToDealerSiteToBuyerSite } from "./index";
 import SuperEntity from "./SuperEntity";
-import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
 @Entity("buyer_sites")
 export default class BuyerSite extends SuperEntity {
@@ -32,7 +31,7 @@ export default class BuyerSite extends SuperEntity {
     public attribute5: string;
 
     /** Relations */
-    @ManyToOne(() => Buyer, (buyer) => buyer.buyer_sites)
+    @ManyToOne(() => Buyer, (buyer) => buyer.buyerSites)
     @Index("buyer_id")
     @JoinColumn({ name: "buyer_id" })
     public buyer: Buyer;

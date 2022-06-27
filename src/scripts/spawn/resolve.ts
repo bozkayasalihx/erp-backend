@@ -1,8 +1,8 @@
 import { SpawnOptions } from "child_process";
 import path from "path";
 import which from "which";
-import { Parsed } from "./parse";
 import pathKey from "./pathKey";
+import { Parsed } from "./type";
 
 function resolveCommandAtttempt(parsed: Parsed, withoutPathExt?: boolean) {
     const env = (parsed.options as SpawnOptions).env || process.env;
@@ -32,18 +32,19 @@ function resolveCommandAtttempt(parsed: Parsed, withoutPathExt?: boolean) {
         if (shouldSwitchCwd) process.chdir(cwd);
     }
 
-    if (resolved)
+    if (resolved) {
         resolved = path.resolve(
             hasCustomCwd
                 ? ((parsed.options as SpawnOptions).cwd as string)
                 : "",
             resolved
         );
+    }
 
     return resolved;
 }
 
-export function resolveCommand(parsed: Parsed) {
+export default function resolveCommand(parsed: Parsed) {
     return (
         resolveCommandAtttempt(parsed) || resolveCommandAtttempt(parsed, true)
     );

@@ -1,16 +1,25 @@
 import { Column, Entity, OneToMany } from "typeorm";
+import { VendorRegion, VendorToDealerSite } from "./index";
 import SuperEntity from "./SuperEntity";
-import VendorRegion from "./VendorRegion";
-import VendorToDealerSite from "./VendorToDealerSite";
 
 @Entity("vendors")
 export default class Vendor extends SuperEntity {
-    //** Properties */
-    @Column({ type: "varchar", length: 240, name: "name", unique: true })
+    //* * Properties */
+    @Column({
+        type: "varchar",
+        length: 240,
+        name: "name",
+        unique: true,
+    })
     public name: string;
 
-    @Column({ type: "varchar", length: 20, name: "tax_no", unique: true })
-    public tax_no: string;
+    @Column({
+        type: "varchar",
+        length: 20,
+        name: "tax_no",
+        unique: true,
+    })
+    public taxNo: string;
 
     @Column({ nullable: true, name: "attribute1" })
     public attribute1: string;
@@ -35,5 +44,5 @@ export default class Vendor extends SuperEntity {
     public vendorToDealerSite: Array<VendorToDealerSite>;
 
     @OneToMany(() => VendorRegion, (vendorRegion) => vendorRegion.vendor)
-    public vendor_regions: Array<VendorRegion>;
+    public vendorRegions: Array<VendorRegion>;
 }

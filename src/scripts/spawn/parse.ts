@@ -1,32 +1,23 @@
+/* eslint-disable no-param-reassign */
 import { SpawnOptions } from "child_process";
 import path from "path";
 import * as escape from "./escape";
-import { resolveCommand } from "./resolve";
+import resolveCmd from "./resolve";
 import { readShebang } from "./shebang";
+import { Parsed } from "./type";
 
 const isWin = process.platform === "win32";
 const isExecutableRegExp = /\.(?:com|exe)$/i;
 const isCmdShimRegExp = /node_modules[\\/].bin[\\/][^\\/]+\.cmd$/i;
 
-export type Parsed = {
-    command: string;
-    args?: string[] | null;
-    options?: SpawnOptions | string[];
-    file?: string;
-    original?: {
-        command?: string;
-        args?: string[];
-    };
-};
-
 function detectShebang(parsed: Parsed) {
-    parsed.file = resolveCommand(parsed);
+    parsed.file = resolveCmd(parsed);
 
     const shebang = parsed.file && readShebang(parsed.file);
     if (shebang) {
         parsed.args?.unshift(parsed.file as string);
         parsed.command = shebang;
-        return resolveCommand(parsed);
+        return resolveCmd(parsed);
     }
     return parsed.file;
 }
@@ -60,6 +51,7 @@ function parseNonShell(parsed: Parsed) {
     return parsed;
 }
 
+// eslint-disable-next-line import/prefer-default-export
 export function parse(
     command: string,
     args?: string[] | null,

@@ -3,7 +3,7 @@ import {
     dealerSiteOperation,
     vendorOperation,
 } from "../../services";
-import { UserTypes } from "../../types/types";
+import { UserTypes } from "../../types";
 
 export function isContain(params: Record<string, any>) {
     const hashMap = {};
@@ -18,7 +18,7 @@ export function isContain(params: Record<string, any>) {
         }
         if (!(key in hashMap)) hashMap[key] = value;
     }
-    if (i > 1 || i === 0) error["valid"] = false;
+    if (i > 1 || i === 0) error.valid = false;
     i = 0;
     return {
         hashMap,
@@ -71,9 +71,9 @@ export async function makeSure(obj: { [x: string]: number }) {
 
 export function hasAccess(obj: { [x: string]: number }, userType: string) {
     if (!Object.keys(obj)[0].includes("table")) return false;
-    const entity_type = Object.keys(obj)[0].split("_table")[0];
+    const entityType = Object.keys(obj)[0].split("_table")[0];
 
-    switch (entity_type) {
+    switch (entityType) {
         case Types.VENDOR: {
             if (
                 userType === UserTypes.VENDOR ||

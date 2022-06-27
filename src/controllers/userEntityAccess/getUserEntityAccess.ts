@@ -1,20 +1,20 @@
 import { Request, Response } from "express";
-import http_status from "http-status";
+import httpStatus from "http-status";
 import { userEntityAccessOperation } from "../../services";
 
 export default async function getUserEntityAccess(req: Request, res: Response) {
     try {
-        const access_list = await userEntityAccessOperation.getByUser(
+        const accessList = await userEntityAccessOperation.getByUser(
             req.user.id,
             true
         );
 
-        return res.status(http_status.OK).json({
+        return res.status(httpStatus.OK).json({
             message: "successfull operation",
-            data: access_list,
+            data: accessList,
         });
     } catch (err) {
-        return res.status(http_status.BAD_REQUEST).json({
+        return res.status(httpStatus.BAD_REQUEST).json({
             message: "bad request",
         });
     }

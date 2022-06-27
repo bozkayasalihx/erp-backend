@@ -1,12 +1,12 @@
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { AdvanceStatusType, AdvanceType, Currency } from "../types/types";
+import { AdvanceStatusType, AdvanceType, Currency } from "../types";
+import { VendorToDealerSiteToBuyerSite } from "./index";
 import SuperEntity from "./SuperEntity";
-import VendorToDealerSiteToBuyerSite from "./VendorToDealerSiteToBuyerSite";
 
 @Entity("advances")
 export default class Advance extends SuperEntity {
     @Column({ type: "enum", enum: AdvanceType, default: AdvanceType.CASH })
-    public advance_type: AdvanceType;
+    public advanceType: AdvanceType;
 
     @Column({ type: "real" })
     public amount: number;
@@ -22,7 +22,7 @@ export default class Advance extends SuperEntity {
     public status: AdvanceStatusType;
 
     @Column({ type: "timestamp" })
-    public approval_date: Date;
+    public approvalDate: Date;
 
     /** relations */
     @ManyToOne(() => VendorToDealerSiteToBuyerSite, (vdsbs) => vdsbs.advances)

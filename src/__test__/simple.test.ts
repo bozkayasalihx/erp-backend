@@ -2,7 +2,7 @@ import request from "supertest";
 import { main } from "../app";
 
 describe("Post Endpoints", () => {
-    //@ts-ignore
+    // @ts-ignore
     test("should register a new user", async (done) => {
         const res = await request(main()).post("/api/register").send({
             username: "uncle bob",

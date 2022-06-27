@@ -6,20 +6,23 @@ import {
     ManyToOne,
     OneToMany,
 } from "typeorm";
-import Advance from "./Advance";
-import BuyerSite from "./BuyerSite";
-import DealerRouteUser from "./DealerRouteUser";
-import Deposit from "./Deposit";
-import Invoices from "./Invoice";
-import Payments from "./Payment";
-import PaymentMatches from "./PaymentMatches";
-import PaymentSchedule from "./PaymentSchedule";
+import {
+    Advance,
+    BuyerSite,
+    DealerRouteUser,
+    Deposit,
+    Invoice,
+    Payment,
+    PaymentMatches,
+    PaymentSchedule,
+    VendorToDealerSite,
+} from "./index";
 import SuperEntity from "./SuperEntity";
-import VendorToDealerSite from "./VendorToDealerSite";
+
 @Entity("vdsbs_relations")
 @Index(["buyerSite.id", "vToDS.id"], { unique: true })
 export default class VendorToDealerSiteToBuyerSite extends SuperEntity {
-    /**Properties */
+    /** Properties */
     @Column({
         type: "varchar",
         length: 240,
@@ -38,14 +41,14 @@ export default class VendorToDealerSiteToBuyerSite extends SuperEntity {
     @JoinColumn({ name: "vds_rltn_id" })
     public vToDS: VendorToDealerSite;
 
-    @OneToMany(() => Invoices, (invoices) => invoices.vdsbs)
-    public invoices: Array<Invoices>;
+    @OneToMany(() => Invoice, (invoices) => invoices.vdsbs)
+    public invoices: Array<Invoice>;
 
-    @OneToMany(() => Payments, (payments) => payments.vdsbs)
-    public payments: Array<Payments>;
+    @OneToMany(() => Payment, (payment) => payment.vdsbs)
+    public payments: Array<Payment>;
 
     @OneToMany(() => PaymentMatches, (pm) => pm.vdsbs)
-    public payment_matches: Array<PaymentMatches>;
+    public paymentMatches: Array<PaymentMatches>;
 
     @OneToMany(() => Deposit, (deposit) => deposit.vdsbs)
     public deposits: Array<Deposit>;
@@ -57,7 +60,7 @@ export default class VendorToDealerSiteToBuyerSite extends SuperEntity {
         () => DealerRouteUser,
         (dealerUserRoute) => dealerUserRoute.vdsbs
     )
-    public dealer_route_users: Array<DealerRouteUser>;
+    public dealerRouteUsers: Array<DealerRouteUser>;
 
     @OneToMany(() => PaymentSchedule, (ps) => ps.vdsbs)
     public paymentSchedules: Array<PaymentSchedule>;

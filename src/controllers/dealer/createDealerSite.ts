@@ -2,29 +2,29 @@ import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { dealerSiteOperation } from "../../services";
 import dealerOperation from "../../services/dealerOperation";
-import { AttributeFields, OptionalDates } from "../../types/types";
+import { AttributeFields, OptionalDates } from "../../types";
 
 export interface IDealerSite extends AttributeFields, OptionalDates {
     name: string;
-    dealer_id: number;
+    dealerId: number;
 }
 
 export default async function dealerSite(
     req: Request<any, any, IDealerSite>,
     res: Response
 ) {
-    const { dealer_id, name, ...attributes } = req.body;
-    const user = req.user;
+    const { dealerId, name, ...attributes } = req.body;
+    const { user } = req;
 
     try {
         const dealer = await dealerOperation.repo.findOne({
-            where: { id: dealer_id },
+            where: { id: dealerId },
         });
 
         if (dealer) {
             await dealerSiteOperation.insertDealerSite({
                 name,
-                dealer_id,
+                dealerId,
                 ...attributes,
                 updated_by: user,
                 created_by: user,

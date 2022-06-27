@@ -24,10 +24,11 @@ export default async function resetPasswordController(
         const user = await userOperation.repo.findOne({
             where: { id: decoded.userId },
         });
-        if (!user)
+        if (!user) {
             return res.status(httpStatus.OK).json({
                 message: "true",
             });
+        }
 
         user.password = await genHash.gen(newPassword);
         await user.save();

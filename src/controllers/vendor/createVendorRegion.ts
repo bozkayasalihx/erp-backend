@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { vendorOperation } from "../../services";
-import { AttributeFields, OptionalDates } from "../../types/types";
+import { AttributeFields, OptionalDates } from "../../types";
 
 export interface IVendorRegion extends AttributeFields, OptionalDates {
     name: string;
-    vendor_id: number;
+    vendorId: number;
     attribute5?: string;
 }
 
@@ -13,16 +13,16 @@ export default async function createVendorRegion(
     req: Request<any, any, IVendorRegion>,
     res: Response
 ) {
-    const { name, vendor_id, ...attributes } = req.body;
+    const { name, vendorId, ...attributes } = req.body;
     const vendorRegion = vendorOperation.createVendorRegion({
         name,
         ...attributes,
     });
-    const user = req.user;
+    const { user } = req;
 
     try {
         const vendor = await vendorOperation.repo.findOne({
-            where: { id: vendor_id },
+            where: { id: vendorId },
         });
 
         if (!vendor) {

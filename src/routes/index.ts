@@ -6,7 +6,6 @@ export { default as DealerSiteRoute } from "./Dealer/dealerSiteRoute";
 export { default as depositRoute } from "./Deposit/depositRoute";
 export { default as PSIUploadProcess } from "./Generic/PSIUploadProcess";
 export { default as VIUploadProcess } from "./Generic/VIUploadProcess";
-export { default as invoiceRoute } from "./Invoice/invoiceRoute";
 export { default as meRoute } from "./Me/MeRoute";
 export { default as paymentRoute } from "./Payment/PaymentRoute";
 export { default as relationRoute } from "./Relations/relationRoute";

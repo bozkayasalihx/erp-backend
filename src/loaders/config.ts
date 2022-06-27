@@ -7,12 +7,12 @@ export default function config() {
         await appDataSource
             .getRepository(InvoiceInterface)
             .query(
-                `CREATE SEQUENCE IF NOT EXISTS invoice_file_process_id INCREMENT 1 START 1;`
+                "CREATE SEQUENCE IF NOT EXISTS invoice_file_process_id INCREMENT 1 START 1;"
             );
         await appDataSource
             .getRepository(PaymentScheduleInterface)
             .query(
-                `CREATE SEQUENCE IF NOT EXISTS ps_file_process_id INCREMENT 1 START 1;`
+                "CREATE SEQUENCE IF NOT EXISTS ps_file_process_id INCREMENT 1 START 1;"
             );
 
         /*
@@ -94,7 +94,7 @@ export default function config() {
            usr_rltns.start_date_uer, usr_rltns.end_date_uer,
            usr_rltns.user_id, usr_rltns.username, usr_rltns.user_type,
            usr_rltns.start_date_user, usr_rltns.end_date_user,
-           entity_rltns.vdsbs_id, entity_rltns.description_vdsbs, 
+           entity_rltns.vdsbs_id, entity_rltns.description_vdsbs,
            entity_rltns.start_date_vdsbs, entity_rltns.end_date_vdsbs,
            entity_rltns.vds_id, entity_rltns.start_date_vds, entity_rltns.end_date_vds,
            entity_rltns.vendor_id, entity_rltns.vendor_name,

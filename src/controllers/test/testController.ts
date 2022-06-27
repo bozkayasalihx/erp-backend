@@ -1,6 +1,4 @@
 import { Request, Response } from "express";
-import { appDataSource } from "../../loaders";
-import { BuyerSite, User, Vendor } from "../../models";
 
 export default async function testControler(req: Request, res: Response) {
     // const userRelation = new UserEntityRelation();
@@ -44,15 +42,15 @@ export default async function testControler(req: Request, res: Response) {
     // vendor.name = "tuborg";
     // vendor.tax_no = "maker";
 
-    const user = (await appDataSource.manager.findOne(User, {
-        where: { username: "james" },
-    })) as User;
-    const vendor = (await appDataSource.manager.findOne(Vendor, {
-        where: { name: "vendor" },
-    })) as Vendor;
-    const buyerSite = (await appDataSource.manager.findOne(BuyerSite, {
-        where: { name: "buyer site" },
-    })) as BuyerSite;
+    // const user = (await appDataSource.manager.findOne(User, {
+    //     where: { username: "james" },
+    // })) as User;
+    // const vendor = (await appDataSource.manager.findOne(Vendor, {
+    //     where: { name: "vendor" },
+    // })) as Vendor;
+    // const buyerSite = (await appDataSource.manager.findOne(BuyerSite, {
+    //     where: { name: "buyer site" },
+    // })) as BuyerSite;
 
     // const ue = new UserEntityRelation();
     // ue.created_by = user;
@@ -61,7 +59,7 @@ export default async function testControler(req: Request, res: Response) {
     // ue.description = "vendor";
     // ue.user = user;
 
-    const v = new Vendor();
+    // const v = new Vendor();
 
     // await ue.save();
     // const maker = await UserEntityRelation.findOne({

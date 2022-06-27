@@ -6,7 +6,7 @@ export default async function getVendor(
     req: Request<{ vendorId?: number }>,
     res: Response
 ) {
-    const vendorId = req.params.vendorId;
+    const { vendorId } = req.params;
 
     if (typeof vendorId === "number") {
         try {

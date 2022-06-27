@@ -4,28 +4,31 @@ import { Vendor } from "../../models";
 import { vendorOperation } from "../../services";
 import { IVendorRegion } from "./createVendorRegion";
 
+export type UpdateVendorRegion = Partial<IVendorRegion> & { id: number };
+
 export default async function updateVendorRegion(
-    req: Request<any, any, Partial<IVendorRegion> & { id: number }>,
+    req: Request<any, any, UpdateVendorRegion>,
     res: Response<{ message: string; data?: string }>
 ) {
-    const { id, name, vendor_id, ...attributes } = req.body;
-    const user = req.user;
+    const { id, name, vendorId, ...attributes } = req.body;
+    const { user } = req;
 
     try {
         const vendorRegion = await vendorOperation.vendorRegionRepo.findOne({
             where: { id },
         });
 
-        if (!vendorRegion)
+        if (!vendorRegion) {
             return res.status(httpStatus.NOT_FOUND).json({
                 message: "no such as vendor region",
             });
+        }
 
         let vendor: Vendor | null = null;
 
-        if (vendor_id) {
+        if (vendorId) {
             vendor = await vendorOperation.repo.findOne({
-                where: { id: vendor_id },
+                where: { id: vendorId },
             });
 
             if (!vendor) {

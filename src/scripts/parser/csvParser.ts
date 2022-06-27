@@ -1,11 +1,18 @@
 class CsvParser<T> {
     private data: string;
+
     private delimiter: string;
+
     private newLineOrTabRemoveRegex = /(\r\n|\n|\r|\\r|\s)/gim;
+
     private fullset: Set<T>;
+
     private RELATED_USER = "related_users";
+
     private CURRENCY = "currency";
+
     private has_ps = "has_ps";
+
     private newLine = "\n";
 
     constructor(delimiter = ",") {
@@ -15,9 +22,11 @@ class CsvParser<T> {
     public readData(data: string) {
         this.data = data;
     }
+
     private get getData() {
         return this.data;
     }
+
     public get parsedData() {
         return this.fullset;
     }
@@ -25,6 +34,7 @@ class CsvParser<T> {
     private get dataArray() {
         return this.getData.split("\n");
     }
+
     private senitizer(data: string) {
         return data.replace(this.newLineOrTabRemoveRegex, "");
     }
@@ -44,19 +54,20 @@ class CsvParser<T> {
     }
 
     private transformHeader() {
-        const delimiter = this.delimiter;
+        const { delimiter } = this;
         const headerItem = this.header.split(delimiter);
         let i = 0;
         while (i < headerItem.length) {
             headerItem[i] = this.senitizer(headerItem[i]);
             i++;
         }
+
         return headerItem;
     }
 
     public transformBody() {
-        const body = this.body;
-        const delimiter = this.delimiter;
+        const { body } = this;
+        const { delimiter } = this;
         const returnType: Record<number, Array<string>> = {};
         let i = 0;
         while (i < body.length) {
@@ -65,7 +76,7 @@ class CsvParser<T> {
             }
             const eachItem = body[i].trim().split(delimiter);
             for (let j = i; j < eachItem.length; j++) {
-                //@ts-ignore
+                // @ts-ignore
                 if (!eachItem[j]) eachItem[j] = null;
                 else {
                     eachItem[j] = this.senitizer(eachItem[j]);
@@ -86,8 +97,8 @@ class CsvParser<T> {
     public matcher(cb: (err: Error | null, data?: Set<T>) => void) {
         const body = this.transformBody();
         const header = this.transformHeader();
-        let headerCurrency: string;
-        let headerHasPs: string;
+        let headerCurrency: string | null = null;
+        let headerHasPs: string | null = null;
         const fullSet: Set<T> = new Set();
         for (let j = 0; j < Object.keys(body).length; j++) {
             const values = Object.values(body[j]);
@@ -102,11 +113,9 @@ class CsvParser<T> {
                 }
 
                 if (header[i] === this.CURRENCY) {
-                    //@ts-ignore
-                    if (!values[i]) values[i] = headerCurrency;
+                    if (!values[i]) values[i] = headerCurrency as string;
                 } else if (header[i] === this.has_ps) {
-                    //@ts-ignore
-                    if (!values[i]) values[i] = headerHasPs;
+                    if (!values[i]) values[i] = headerHasPs as string;
                 }
                 if (header[i] === this.RELATED_USER)
                     values[i] = JSON.parse(values[i]);
@@ -116,7 +125,7 @@ class CsvParser<T> {
             chunk = {} as T;
         }
         this.fullset = fullSet;
-        cb(null, fullSet);
+        return cb(null, fullSet);
     }
 }
 

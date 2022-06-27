@@ -14,6 +14,8 @@ COPY ./ ./
 
 RUN yarn build
 
+
+
 FROM node:16-alpine AS prodbase
 
 RUN npm i --location=global pm2

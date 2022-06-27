@@ -2,6 +2,5 @@ interface Iparams {
     token: string;
 }
 
-export const generateForgotPasswordHTML = ({ token }: Iparams) => {
-    return `<p>Click this link to reset password </br> ${process.env.ORIGIN}/reset-password/${token}`;
-};
+export const generateForgotPasswordHTML = ({ token }: Iparams) =>
+    `<p>Click this link to reset password </br> ${process.env.ORIGIN}/reset-password/${token}`;

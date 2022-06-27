@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany } from "typeorm";
-import { FileStatusType, LineStatusType } from "../types/types";
+import { Currency, FileStatusType, LineStatusType } from "../types";
 import PaymentSchedule from "./PaymentSchedule";
 import SuperEntity from "./SuperEntity";
 
@@ -12,7 +12,7 @@ export default class PaymentScheduleInteface extends SuperEntity {
     public file_name: string;
 
     @Column({ type: "enum", enum: FileStatusType, default: FileStatusType.NEW })
-    public file_status: FileStatusType;
+    public file_status?: FileStatusType;
 
     @Column({ type: "varchar", length: 30 })
     public invoice_no: string;
@@ -20,23 +20,33 @@ export default class PaymentScheduleInteface extends SuperEntity {
     @Column({ length: 10 })
     public vdsbs_id: string;
 
-    @Column({ name: "line_no", length: 3, type: "varchar", default: null })
-    public line_no: string;
+    @Column({
+        name: "line_no",
+        length: 3,
+        type: "varchar",
+        default: null,
+    })
+    public line_no?: string;
 
     @Column({ name: "due_date", type: "varchar", default: null })
-    public due_date: string;
+    public due_date?: string;
 
-    @Column({ name: "amount", type: "varchar", length: 20 })
-    public due_amount: string;
+    @Column({ name: "amount", type: "varchar", length: 20, default: null })
+    public due_amount?: string;
 
-    @Column({ name: "currency", length: 3, type: "varchar" })
-    public currency: string;
+    @Column({
+        name: "currency",
+        length: 3,
+        type: "varchar",
+        default: Currency.TRY,
+    })
+    public currency?: string;
 
     @Column({ type: "enum", enum: LineStatusType, default: LineStatusType.NEW })
-    public line_status: LineStatusType;
+    public line_status?: LineStatusType;
 
     @Column({ name: "error_desc", length: 500, default: null })
-    public error_desc: string;
+    public error_desc?: string;
 
     @OneToMany(() => PaymentSchedule, (ps) => ps.paymentScheduleInterface)
     public paymentSchedules: Array<PaymentSchedule>;

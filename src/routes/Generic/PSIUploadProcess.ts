@@ -1,7 +1,10 @@
+/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Router } from "express";
 import fileUpload, { UploadedFile } from "express-fileupload";
 import { createReadStream } from "fs";
 import httpStatus from "http-status";
+import { InsertResult } from "typeorm";
 import { checkFileType } from "../../middlewares";
 import { PaymentScheduleInterface } from "../../models";
 import { __prod__ } from "../../scripts/dev";
@@ -11,34 +14,28 @@ import DataVerifier from "../../scripts/parser/dataVerifier";
 import { GenerateCsv } from "../../scripts/parser/generateCsv";
 import { increment } from "../../scripts/utils/revokeRefreshToken";
 import { invoiceOperation, paymentOperation } from "../../services";
+import { TypedResponse } from "../../types";
 import { Routes } from "../../types/routePath";
-import { TypedResponse } from "../../types/types";
+import { OmmitedPaymentSchedule } from "./type";
 import { Args } from "./VIUploadProcess";
 
 const router = Router();
-const file = () => {
-    return fileUpload({
+const fileRoute = () =>
+    fileUpload({
         limits: {
-            fileSize: 10 * 1024 * 1024, // 10mb
+            fileSize: 10 * 1024 * 1024,
         },
         useTempFiles: true,
-        tempFileDir: "/temp/",
+        tempFileDir: "~/temp/",
         debug: !__prod__,
     });
-};
 
 const DELIMITER = ";";
-const LIMIT = 20;
 const HIGHWATERMARK = 150 * 1024;
-
-type OmmitedPaymentSchedule = Omit<
-    PaymentScheduleInterface,
-    "updated_at" | "created_at" | "updated_by" | "created_by"
->;
 
 router.post(
     Routes.PROCESS_PS_UPLOAD,
-    file(),
+    fileRoute(),
     checkFileType,
     async (req, res: TypedResponse) => {
         const file = req.files?.file as UploadedFile;
@@ -50,14 +47,14 @@ router.post(
         stream.on("data", (chunk) => {
             data += chunk;
         });
-        stream.on("error", (err) => {
-            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        stream.on("error", () =>
+            res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
                 message: "an error accured try again later",
-            });
-        });
+            })
+        );
 
         const fileName = file.name;
-        const user = req.user;
+        const { user } = req;
 
         const fileProcessid = await increment("ps_file_process_id");
 
@@ -65,21 +62,17 @@ router.post(
 
         parser.readData(data);
         parser.matcher(async (err, parsedData) => {
-            if (err || !parsedData)
+            if (err || !parsedData) {
                 return res.status(httpStatus.BAD_REQUEST).json({
                     message: "bad request",
                 });
+            }
 
             const insertedPSIResp: Array<Args<OmmitedPaymentSchedule>> = [];
+            const insertQueue: Array<Promise<PaymentScheduleInterface>> = [];
             for (const record of parsedData) {
-                try {
-                    const {
-                        created_by,
-                        updated_by,
-                        created_at,
-                        updated_at,
-                        ...args
-                    } = await paymentOperation.PSIRepo.save(
+                insertQueue.push(
+                    paymentOperation.PSIRepo.save(
                         {
                             ...record,
                             file_name: fileName,
@@ -88,14 +81,27 @@ router.post(
                             updated_by: user,
                         },
                         { chunk: 5 }
-                    );
+                    )
+                );
+            }
 
+            try {
+                const temp = await Promise.all(insertQueue);
+
+                for (let i = 0; i < temp.length; i++) {
+                    const {
+                        created_by,
+                        updated_by,
+                        created_at,
+                        updated_at,
+                        ...args
+                    } = temp[i];
                     insertedPSIResp.push(args);
-                } catch (err) {
-                    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-                        message: "an error accured try again later",
-                    });
                 }
+            } catch (err1) {
+                return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                    message: "an error accured try again later",
+                });
             }
 
             const psiDataVerifier = new DataVerifier("psi");
@@ -104,7 +110,7 @@ router.post(
             psiDataVerifier.validate();
 
             if (psiDataVerifier.errors.size) {
-                const generateCsv = new GenerateCsv(
+                const generateCsv = new GenerateCsv<PaymentScheduleInterface>(
                     psiDataVerifier.errors,
                     parsedData
                 );
@@ -118,52 +124,55 @@ router.post(
 
             const psi = psiDataVerifier.getPSIData[0];
 
-            const vdsbsId = parseInt(psi.vdsbs_id as string);
+            const vdsbsId = parseInt(psi.vdsbs_id as string, 10);
             const invoiceNo = psi.invoice_no as string;
 
             const invoice = await invoiceOperation.invoiceRepo.findOne({
-                where: { vdsbs_id: vdsbsId, invoice_no: invoiceNo },
+                where: { vdsbsId, invoiceNo },
             });
-            if (!invoice)
+            if (!invoice) {
                 return res.status(httpStatus.BAD_REQUEST).json({
                     message: "bad request",
                 });
-
-            for (let i = 0; i < psiDataVerifier.getPSIData.length; i++) {
-                const currentPSI = psiDataVerifier.getPSIData[i];
-                try {
-                    await paymentOperation.psRepo.insert({
-                        currency: currentPSI.currency,
-                        invoice: invoice,
-                        vdsbs_id: vdsbsId,
-                        due_date: currentPSI.due_date,
-                        due_amount: parseFloat(currentPSI.due_amount as string),
-                        line_no: parseInt(currentPSI.line_no as string),
-                        start_date: currentPSI.start_date,
-                        end_date: currentPSI.end_date,
-                        created_by: user,
-                        updated_by: user,
-                    });
-                } catch (err) {
-                    parseError.setError(err?.detail);
-                    const data = parseError.parser();
-                    if (!data)
-                        return res
-                            .status(httpStatus.INTERNAL_SERVER_ERROR)
-                            .json({
-                                message: "an error accured try again later",
-                            });
-
-                    return res.status(httpStatus.BAD_REQUEST).json({
-                        message: "some of yours inputs is invalid",
-                        data: { message: err?.detail },
-                    });
-                }
             }
 
-            return res.status(httpStatus.OK).json({
-                message: "operation succesful",
-            });
+            const queue: Array<Promise<InsertResult>> = [];
+            for (let i = 0; i < psiDataVerifier.getPSIData.length; i++) {
+                const currentPSI = psiDataVerifier.getPSIData[i];
+                queue.push(
+                    paymentOperation.psRepo.insert({
+                        currency: currentPSI.currency as string,
+                        invoice,
+                        vdsbsId,
+                        dueDate: new Date(currentPSI.due_date as string),
+                        dueAmount: parseFloat(currentPSI.due_amount as string),
+                        lineNo: parseInt(currentPSI.line_no as string, 10),
+                        created_by: user,
+                        updated_by: user,
+                    })
+                );
+            }
+
+            try {
+                await Promise.all(queue);
+
+                return res.status(httpStatus.OK).json({
+                    message: "operation succesful",
+                });
+            } catch (erro1) {
+                parseError.setError(erro1?.detail);
+                const d = parseError.parser();
+                if (!d) {
+                    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                        message: "an error accured try again later",
+                    });
+                }
+
+                return res.status(httpStatus.BAD_REQUEST).json({
+                    message: "some of yours inputs is invalid",
+                    data: { message: erro1?.detail },
+                });
+            }
         });
     }
 );

@@ -16,31 +16,21 @@ export default class UserEntityRelation extends SuperEntity {
     public description: string;
 
     @ManyToOne(() => User)
-    // @JoinColumn({ name: "user_id" })
     public user: User;
 
     @RelationId((UER: UserEntityRelation) => UER.user)
     @Column({ name: "user_id" })
-    public user_id: number;
+    public userId: number;
 
     @ManyToOne(() => Vendor)
     @JoinColumn({ name: "vendor_table_ref_id" })
-    public vendor_table_ref: Vendor;
+    public vendorTableRef: Vendor;
 
     @ManyToOne(() => BuyerSite)
     @JoinColumn({ name: "buyer_site_table_ref_id" })
-    public buyer_site_table_ref: BuyerSite;
+    public buyerSiteTableRef: BuyerSite;
 
     @ManyToOne(() => DealerSite)
     @JoinColumn({ name: "dealer_site_table_ref_id" })
-    public dealer_site_table_ref: DealerSite;
+    public dealerSiteTableRef: DealerSite;
 }
-
-// vendor => vendor.id
-// dealer_site => dealer_site.id
-// buyer_site => buyer_site.id
-
-// katmanli mimari olmasi lazjim
-// type = vendor => vendor.id
-//        dealer_site => dealer_site.id
-//        buyer_site  => buyer_site.id

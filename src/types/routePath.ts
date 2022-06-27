@@ -1,4 +1,4 @@
-import { UserTypes } from "./types";
+import { UserTypes } from ".";
 
 export enum Routes {
     REGISTER = "/register",

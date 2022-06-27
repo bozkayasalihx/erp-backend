@@ -1,5 +1,5 @@
 import VendorToDealerSiteToBuyerSite from "../models/VendorToDealerSiteToBuyerSite";
-import BaseService from "../services/BaseService";
+import BaseService from "./BaseService";
 
 class VendorTDealerSiteTBuyerSite extends BaseService {
     public async createVdsbs(params: Partial<VendorToDealerSiteToBuyerSite>) {

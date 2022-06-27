@@ -1,26 +1,41 @@
+/* eslint-disable import/no-cycle */
+/* eslint-disable no-underscore-dangle */
 import dayjs from "dayjs";
 import Joi from "joi";
-import { IInvoice } from "../../controllers/invoice/createInvoice";
 import { IPaymentSchedule } from "../../controllers/payment/createPayment";
 import { InvoiceInterface, PaymentScheduleInterface } from "../../models";
-import { Currency, InvoiceStatusType } from "../../types/types";
+import { OmittedInvoice } from "../../routes/Generic/type";
+import { Args } from "../../routes/Generic/VIUploadProcess";
+import { Currency, InvoiceStatusType } from "../../types";
 
 type Tabletype = "psi" | "vi";
+type PickedPSI = Pick<
+    PaymentScheduleInterface,
+    | "invoice_no"
+    | "vdsbs_id"
+    | "line_no"
+    | "due_date"
+    | "due_amount"
+    | "currency"
+>;
 
-type PSIDataType = Partial<PaymentScheduleInterface>;
-type VIDataType = Partial<InvoiceInterface>;
-
-enum ErrorSecondName {
-    PAYMENT = "payment_schedule_interface",
-    INVOICE = "invoice_interface",
-}
+type PSIVerifierType = Array<Args<PickedPSI>>;
+type InvoiceVerifierType = Array<Args<OmittedInvoice>>;
 class DataVerifier {
     private type: Tabletype;
-    private data: { psi: Array<PSIDataType>; vi: Array<VIDataType> };
+
+    private data: {
+        psi: PSIVerifierType;
+        vi: InvoiceVerifierType;
+    };
+
     private errorObj: Map<string, any> = new Map();
+
     // private dateFormater = dayjs;
     private dateFormat = "DD/MM/YYYY";
+
     private H = "H";
+
     private L = "L";
 
     constructor(type: Tabletype, private dateFormater = dayjs) {
@@ -35,10 +50,11 @@ class DataVerifier {
         return this.errorObj;
     }
 
-    public setPSIData(data: Array<PSIDataType>) {
+    public setPSIData(data: PSIVerifierType) {
         this.data.psi = data;
     }
-    public setVIData(data: Array<VIDataType>) {
+
+    public setVIData(data: InvoiceVerifierType) {
         this.data.vi = data;
     }
 
@@ -61,11 +77,11 @@ class DataVerifier {
     }
 
     private strToInt(str: string) {
-        return parseInt(str);
+        return parseInt(str, 10);
     }
 
     private invoiceIntefaceValidationSchema() {
-        return Joi.object<IInvoice>({
+        return Joi.object<InvoiceInterface>({
             currency: Joi.object({
                 currency: Joi.valid(...Object.values(Currency)).required(),
             }),
@@ -75,15 +91,7 @@ class DataVerifier {
             invoice_date: Joi.object({
                 invoice_date: Joi.date().required(),
             }),
-            amount: Joi.object({ amount: Joi.number().required() }),
-            status: Joi.object({
-                status: Joi.valid(
-                    ...Object.values(InvoiceStatusType)
-                ).required(),
-            }),
-            ref_file_id: Joi.object({
-                ref_file_id: Joi.number().required(),
-            }),
+            due_amount: Joi.object({ due_amount: Joi.number().required() }),
             due_date: Joi.object({ due_date: Joi.date().required() }),
             vdsbs_id: Joi.object({
                 vdsbs_id: Joi.number().required(),
@@ -94,8 +102,8 @@ class DataVerifier {
     private PSIValidatonSchema() {
         return Joi.object<
             IPaymentSchedule & {
-                line_no: number;
-                due_date: Date;
+                lineNo: number;
+                dueDate: Date;
                 amount: number;
             }
         >({
@@ -103,19 +111,19 @@ class DataVerifier {
                 currency: Joi.valid(...Object.values(Currency)).required(),
             }),
 
-            vdsbs_id: Joi.object({
-                vdsbs_id: Joi.number().required(),
+            vdsbsId: Joi.object({
+                vdsbsId: Joi.number().required(),
             }),
-            line_no: Joi.object({
-                line_no: Joi.number().required(),
+            lineNo: Joi.object({
+                lineNo: Joi.number().required(),
             }),
-            invoiced_status: Joi.object({
-                invoiced_status: Joi.valid(
+            invoicedStatus: Joi.object({
+                invoicedStatus: Joi.valid(
                     ...Object.values(InvoiceStatusType)
                 ).required(),
             }),
-            due_date: Joi.object({
-                due_date: Joi.date().required(),
+            dueDate: Joi.object({
+                dueDate: Joi.date().required(),
             }),
             amount: Joi.object({
                 amount: Joi.number().required(),
@@ -123,29 +131,28 @@ class DataVerifier {
         });
     }
 
-    private viTransformer(data: VIDataType) {
-        //@ts-ignore
-        data.amount = this.strToFloat(data.amount);
+    private viTransformer(data: Args<OmittedInvoice>) {
+        // @ts-ignore
+        data.due_amount = this.strToFloat(data.due_amount as string);
         data.due_date = this.dateFormater(data.due_date).format(
             this.dateFormat
         );
         data.invoice_date = this.dateFormater(data.invoice_date).format(
             this.dateFormat
         );
-        //@ts-ignore
+        // @ts-ignore
         data.vdsbs_id = this.strToInt(data.vdsbs_id);
-
         return data;
     }
 
     private transform() {
-        const newData: { psi: Array<PSIDataType>; vi: Array<VIDataType> } = {
+        const newData: { psi: PSIVerifierType; vi: InvoiceVerifierType } = {
             psi: [],
             vi: [],
         };
 
         if (this.type === "vi") {
-            const cur = this.data.vi[0] as VIDataType;
+            const cur = this.data.vi[0] as Args<OmittedInvoice>;
             try {
                 const newCur = this.viTransformer(cur);
                 newData.vi.push(newCur as InvoiceInterface);
@@ -165,22 +172,21 @@ class DataVerifier {
         } else if (this.type === "psi") {
             for (let i = 0; i < this.data.psi.length; i++) {
                 try {
-                    //@ts-ignore
-                    this.data.psi[i].amount = this.strToFloat(
+                    // @ts-ignore
+                    this.data.psi[i].due_amount = this.strToFloat(
                         this.data.psi[i].due_amount as string
                     );
 
-                    //@ts-ignore
                     this.data.psi[i].due_date = this.dateFormater(
                         this.data.psi[i].due_date
                     ).format(this.dateFormat);
 
-                    //@ts-ignore
+                    // @ts-ignore
                     this.data.psi[i].vdsbs_id = this.strToInt(
                         this.data.psi[i].vdsbs_id as string
                     );
 
-                    //@ts-ignore
+                    // @ts-ignore
                     this.data.psi[i].line_no = this.strToInt(
                         this.data.psi[i].line_no as string
                     );
@@ -201,13 +207,14 @@ class DataVerifier {
         const list: Array<Partial<InvoiceInterface>> = [];
         for (let i = 0; i < data.length; i++) {
             const cur = data[i];
-            if (cur.record_type == this.H) list.push(cur);
+            if (cur.record_type === this.H) list.push(cur);
         }
         return list;
     }
 
     public validate() {
         this.transform();
+        // @ts-ignore
         this.data.vi = this.recordFilter(this.data.vi);
         for (let i = 0; i < this.data[this.type].length; i++) {
             const keys = Object.keys(this.data[this.type][i]);
@@ -223,7 +230,7 @@ class DataVerifier {
                         .validate({
                             [keys[j]]: this.data[this.type][i][keys[j]],
                         });
-                    error &&
+                    if (error) {
                         this.errorObj.set(
                             `${i}__${keys[j]}`,
                             error.message.replace(
@@ -231,6 +238,7 @@ class DataVerifier {
                                 Object.keys(error._original)[0]
                             )
                         );
+                    }
                 } catch (err) {
                     continue;
                 }

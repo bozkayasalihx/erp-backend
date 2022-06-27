@@ -6,11 +6,11 @@ import {
     userOperation,
     vendorToDealerSiteToBuyerSiteOperation,
 } from "../../services";
-import { SqlConditions } from "../../types/types";
+import { SqlConditions } from "../../types";
 
 export interface IDealerRouteUser {
-    vdsbs_id: number;
-    user_id: number;
+    vdsbsId: number;
+    userId: number;
     description?: string;
 }
 
@@ -18,12 +18,12 @@ export default async function dealerRouteUser(
     req: Request<any, any, IDealerRouteUser>,
     res: Response
 ) {
-    const user = req.user;
-    const { user_id, vdsbs_id, description } = req.body;
+    const { user } = req;
+    const { userId, vdsbsId, description } = req.body;
 
     try {
         const findedUser = await userOperation.repo.findOne({
-            where: { id: user_id },
+            where: { id: userId },
         });
 
         if (!findedUser) {
@@ -34,17 +34,18 @@ export default async function dealerRouteUser(
 
         const vdsbs = await vendorToDealerSiteToBuyerSiteOperation.repo.findOne(
             {
-                where: { id: vdsbs_id },
+                where: { id: vdsbsId },
                 relations: {
-                    dealer_route_users: true,
+                    dealerRouteUsers: true,
                 },
             }
         );
 
-        if (!vdsbs)
+        if (!vdsbs) {
             return res.status(httpStatus.NOT_FOUND).json({
                 message: "vdsbs not found",
             });
+        }
 
         // getAll<typeof vdsbs.dealer_route_users[0]>(
         //     vdsbs.dealer_route_users,
@@ -55,10 +56,10 @@ export default async function dealerRouteUser(
         //     }
         // );
 
-        //const vConditions:SqlConditions = {};
+        // const vConditions:SqlConditions = {};
         // date fields should be string type if passed in vConditions
         const vConditions: SqlConditions = {
-            user_id: user_id,
+            userId,
         };
         const vdsbsIds = await execUserEntityAccess(vConditions, false);
 
@@ -66,20 +67,19 @@ export default async function dealerRouteUser(
             return res.status(httpStatus.NOT_FOUND).json({
                 message: "user_id data has no relation",
             });
-        } else {
-            // check whether user_id-vdsbs_id relation exists on system
-            let relationFound = false;
-            for (let i = 0; i < vdsbsIds.length; i++) {
-                if (vdsbsIds[i].vdsbs_id === vdsbs_id) {
-                    relationFound = true;
-                    break;
-                }
+        }
+        // check whether user_id-vdsbs_id relation exists on system
+        let relationFound = false;
+        for (let i = 0; i < vdsbsIds.length; i++) {
+            if (vdsbsIds[i].vdsbs_id === vdsbsId) {
+                relationFound = true;
+                break;
             }
-            if (!relationFound) {
-                return res.status(httpStatus.NOT_FOUND).json({
-                    message: "user_id data entity relation must setup first",
-                });
-            }
+        }
+        if (!relationFound) {
+            return res.status(httpStatus.NOT_FOUND).json({
+                message: "user_id data entity relation must setup first",
+            });
         }
 
         await dealerRouteUserOperation.insertUE({

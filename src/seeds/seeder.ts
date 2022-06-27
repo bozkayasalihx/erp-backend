@@ -17,16 +17,22 @@ const config: PoolConfig = {
 
 class Inserter extends Pool {
     private readStream: ReadStream;
+
     private writerStream: WriteStream;
+
     private errorCounter: number;
+
     private successCounter: number;
+
     private path = path;
+
     private USER_ENTITY = "user_entity_relations";
+
     public head: string;
 
     constructor(private table: string) {
         super(config);
-        const csvPath = this.path.resolve("./csv", table) + ".csv";
+        const csvPath = `${this.path.resolve("./csv", table)}.csv`;
         this.readStream = createReadStream(this.curDir(csvPath), {
             highWaterMark: 8192,
         });
@@ -39,8 +45,8 @@ class Inserter extends Pool {
         this.successCounter = 0;
     }
 
-    private curDir(...path: Array<string>) {
-        return this.path.resolve(__dirname, ...path);
+    private curDir(...curPath: Array<string>) {
+        return this.path.resolve(__dirname, ...curPath);
     }
 
     public get countError() {
@@ -52,7 +58,9 @@ class Inserter extends Pool {
     }
 
     private sleep(ms: number) {
-        return new Promise((res) => setTimeout(res, ms));
+        return new Promise((res) => {
+            setTimeout(res, ms);
+        });
     }
 
     private strigifier(dataSet: string) {
@@ -60,15 +68,15 @@ class Inserter extends Pool {
         const passIndex = this.handleIndex(this.head);
         let str = "";
         for (let i = 0; i < columValues.length; i++) {
-            if (i == passIndex) columValues[i] = hashSync(columValues[i], 10);
-            if (i == columValues.length - 1) str += `'${columValues[i]}'`;
+            if (i === passIndex) columValues[i] = hashSync(columValues[i], 10);
+            if (i === columValues.length - 1) str += `'${columValues[i]}'`;
             else str += `'${columValues[i]}',`;
         }
         return str;
     }
 
     private headerWrapper(header: string) {
-        return "(" + header + ")";
+        return `(${header})`;
     }
 
     private header(data: string) {
@@ -91,6 +99,7 @@ class Inserter extends Pool {
 
         return cols[Math.floor(Math.random() * cols.length)];
     }
+
     public streamData() {
         let unProcessed = "";
         this.readStream.on("data", (chunk: string) => {
@@ -98,12 +107,12 @@ class Inserter extends Pool {
             unProcessed = "";
             let startIndex = 0;
             for (let ch = startIndex; ch < chunkString.length; ch++) {
-                if (chunkString[ch] == "\n") {
+                if (chunkString[ch] === "\n") {
                     this.counter++;
                     const line = chunkString.slice(startIndex, ch);
-                    if (this.counter == 1) {
+                    if (this.counter === 1) {
                         this.header(line);
-                        if (this.table == this.USER_ENTITY) {
+                        if (this.table === this.USER_ENTITY) {
                             const header = this.head;
                             const willRemovedColumns = header
                                 .split(",")
@@ -119,7 +128,7 @@ class Inserter extends Pool {
                         continue;
                     }
 
-                    if (this.table == this.USER_ENTITY) {
+                    if (this.table === this.USER_ENTITY) {
                         const header = this.head;
                         const willRemovedColumns = header
                             .split(",")
@@ -170,9 +179,9 @@ class Inserter extends Pool {
 
         this.connect((err, client, done) => {
             if (err) throw new Error(err.message);
-            client.query(sql, (err, data) => {
+            client.query(sql, (err1) => {
                 done();
-                if (err) {
+                if (err1) {
                     this.errorCounter += 1;
                     this.writerStream.write(sql);
                 } else {
@@ -183,6 +192,7 @@ class Inserter extends Pool {
     }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const main = async () => {
     const arrDir: Set<string> = new Set([
         "users",
@@ -197,20 +207,18 @@ const main = async () => {
         "user_entity_relations",
         "dealer_route_users",
     ]);
-    const counter = 0;
     for (const item of arrDir) {
         const insert = new Inserter(item);
         try {
             insert.streamData();
-            insert.on("connect", (client) => {
+            insert.on("connect", () => {
                 // eslint-disable-next-line no-console
                 console.log("client connected");
             });
         } catch (err) {
             // eslint-disable-next-line no-console
             console.log("err", err);
-        } finally {
-            await insert.end();
+            continue;
         }
     }
 };

@@ -17,7 +17,6 @@ import {
     dealerRoute,
     DealerSiteRoute,
     depositRoute,
-    invoiceRoute,
     meRoute,
     paymentRoute,
     PSIUploadProcess,
@@ -50,7 +49,7 @@ export const main = async () => {
     app.use("/static", express.static(path.join(__dirname, "../src/public")));
 
     app.use("/api", userRoute);
-    //after this middeleware all route protected;
+    // after this middeleware all route protected;
     app.use(authenticate);
     app.use(permission);
     /** routes */
@@ -68,16 +67,15 @@ export const main = async () => {
     app.use("/api/relations", relationRoute);
     app.use("/api/deposit", depositRoute);
     app.use("/api/advance", advanceRoute);
-    app.use("/api/invoice", invoiceRoute);
     app.use("/api/payment", paymentRoute);
     // not found route;
-    app.use("*", (_, res) => {
-        return res.status(httpStatus.FORBIDDEN).send("<h1>NOT FOUND</h1>");
-    });
+    app.use("*", (_, res) =>
+        res.status(httpStatus.FORBIDDEN).send("<h1>NOT FOUND</h1>")
+    );
 
     app.listen(process.env.SERVER_PORT, () => {
         // eslint-disable-next-line no-console
-        console.log("server started at port: " + process.env.SERVER_PORT);
+        console.log(`server started at port: ${process.env.SERVER_PORT}`);
     });
 };
 process.on("unhandledRejection", (reason, promise) => {

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUserEntityAccessController } from "../../controllers/";
+import { getUserEntityAccessController } from "../../controllers";
 import { Routes } from "../../types/routePath";
 
 const router = Router();

@@ -1,30 +1,30 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { buyerOperation } from "../../services";
-import { AttributeFields, OptionalDates } from "../../types/types";
+import { AttributeFields, OptionalDates } from "../../types";
 
-export interface IBuyerParams extends AttributeFields, OptionalDates {
+export interface IBuyer extends AttributeFields, OptionalDates {
     name: string;
-    tax_no: number;
+    taxNo: number;
 }
 
 export default async function buyer(
-    req: Request<any, any, IBuyerParams>,
+    req: Request<any, any, IBuyer>,
     res: Response
 ) {
-    const { name, tax_no, ...attributes } = req.body;
-    const user = req.user;
+    const { name, taxNo, ...attributes } = req.body;
+    const { user } = req;
 
     try {
-        const buyer = await buyerOperation.repo.findOne({
-            where: [{ name }, { tax_no: String(tax_no) }],
+        const buyerUser = await buyerOperation.repo.findOne({
+            where: [{ name }, { taxNo: String(taxNo) }],
         });
 
-        if (!buyer) {
+        if (!buyerUser) {
             // create buyer;
-            const buyer = await buyerOperation.insertBuyer({
+            const insertedBuyer = await buyerOperation.insertBuyer({
                 name,
-                tax_no: String(tax_no),
+                taxNo: String(taxNo),
                 ...attributes,
                 updated_by: user,
                 created_by: user,
@@ -32,7 +32,7 @@ export default async function buyer(
 
             return res.status(httpStatus.OK).json({
                 message: "successfully created",
-                data: buyer,
+                data: insertedBuyer,
             });
         }
 

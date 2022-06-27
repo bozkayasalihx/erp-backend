@@ -9,6 +9,7 @@ export class ObjectUtils {
     static assign<T, U>(target: T, source: U): void;
 
     static assign<T, U, V>(target: T, source1: U, source2: V): void;
+
     static assign<T, U, V, W>(
         target: T,
         source1: U,
@@ -29,8 +30,7 @@ export class ObjectUtils {
             return Object.keys(list).map(
                 (key) => (list as { [key: string]: T })[key]
             );
-        } else {
-            return list;
         }
+        return list;
     }
 }

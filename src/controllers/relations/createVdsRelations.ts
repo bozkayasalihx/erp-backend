@@ -5,11 +5,11 @@ import {
     vendorOperation,
     vendorToDealerSiteOperation,
 } from "../../services";
-import { OptionalDates } from "../../types/types";
+import { OptionalDates } from "../../types";
 
 export interface IVdsRelations extends OptionalDates {
-    vendor_id: number;
-    dealer_site_id: number;
+    vendorId: number;
+    dealerSiteId: number;
     description?: string;
 }
 
@@ -17,11 +17,12 @@ export default async function vdsRelations(
     req: Request<any, any, IVdsRelations>,
     res: Response
 ) {
-    const { dealer_site_id, vendor_id, description, ...dates } = req.body;
+    const { dealerSiteId, vendorId, description, ...dates } = req.body;
+    const { user } = req;
 
     try {
         const dealerSite = await dealerSiteOperation.repo.findOne({
-            where: { id: dealer_site_id },
+            where: { id: dealerSiteId },
         });
         if (!dealerSite) {
             return res.status(httpStatus.BAD_REQUEST).json({
@@ -30,7 +31,7 @@ export default async function vdsRelations(
         }
 
         const vendor = await vendorOperation.repo.findOne({
-            where: { id: vendor_id },
+            where: { id: vendorId },
         });
 
         if (!vendor) {
@@ -44,8 +45,8 @@ export default async function vdsRelations(
             dealerSite,
             description,
             ...dates,
-            updated_by: req.user,
-            created_by: req.user,
+            updated_by: user,
+            created_by: user,
         });
 
         return res.status(httpStatus.OK).json({

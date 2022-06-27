@@ -8,7 +8,7 @@ function isHasShebang(str: string) {
     const [path, argument] = match[0].replace(/#! ?/, "").split(" ");
     const binary = path.split("/").pop();
 
-    if (binary == "env") return argument;
+    if (binary === "env") return argument;
     return argument ? `${binary} ${argument}` : binary;
 }
 

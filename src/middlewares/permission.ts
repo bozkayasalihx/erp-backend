@@ -1,23 +1,24 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
+import { UserTypes } from "../types";
 import { accesableRoute } from "../types/routePath";
-import { UserTypes } from "../types/types";
 
 export default function permission(
     req: Request,
     res: Response,
     next: NextFunction
 ) {
-    const fullUrl = `${req.protocol}://${req.headers.host}${req.url}`;
-    const userType = req.user.user_type;
-    const url = req.url;
+    // const fullUrl = `${req.protocol}://${req.headers.host}${req.url}`;
+    const { userType } = req.user;
+    const { url } = req;
     const routeType = url.split("/").filter(Boolean)[1];
     const valid = Object.values(UserTypes).indexOf(userType) !== -1;
 
-    if (!valid)
+    if (!valid) {
         return res.status(httpStatus.UNAUTHORIZED).json({
             message: "not autorizated",
         });
+    }
 
     switch (userType) {
         case UserTypes.BUYER_ADMIN: {

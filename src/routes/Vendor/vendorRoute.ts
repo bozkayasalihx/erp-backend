@@ -17,7 +17,7 @@ router.post(
     createVendorController
 );
 
-router.get(`/:vendorId?`, getVendorController);
+router.get("/:vendorId?", getVendorController);
 
 router.patch(
     Routes.CREATE_VENDOR,

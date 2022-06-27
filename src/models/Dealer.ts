@@ -1,15 +1,20 @@
 import { Column, Entity, OneToMany } from "typeorm";
-import DealerSite from "./DealerSite";
+import { DealerSite } from "./index";
 import SuperEntity from "./SuperEntity";
 
 @Entity("dealers")
 export default class Dealer extends SuperEntity {
-    /** Properites*/
+    /** Properites */
     @Column({ name: "name", unique: true })
     public name: string;
 
-    @Column({ type: "varchar", length: 20, name: "tax_no", unique: true })
-    public tax_no: string;
+    @Column({
+        type: "varchar",
+        length: 20,
+        name: "tax_no",
+        unique: true,
+    })
+    public taxNo: string;
 
     @Column({ default: null, name: "attribute1" })
     public attribute1: string;
@@ -28,5 +33,5 @@ export default class Dealer extends SuperEntity {
 
     /** Releations */
     @OneToMany(() => DealerSite, (dealerSite) => dealerSite.dealer)
-    public dealer_sites: Array<DealerSite>;
+    public dealerSites: Array<DealerSite>;
 }

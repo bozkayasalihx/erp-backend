@@ -3,22 +3,22 @@ import httpStatus from "http-status";
 import { vendorToDealerSiteToBuyerSiteOperation } from "../../services";
 
 interface IParams {
-    vdsbs_id: string;
+    vdsbsId: string;
 }
 
 export default async function getVdsbsRelations(
     req: Request<IParams>,
     res: Response
 ) {
-    const vdsbs_id = req.params.vdsbs_id
-        ? parseInt(req.params.vdsbs_id)
+    const vdsbsId = req.params.vdsbsId
+        ? parseInt(req.params.vdsbsId, 10)
         : undefined;
 
     try {
-        if (typeof vdsbs_id === "number") {
+        if (typeof vdsbsId === "number") {
             const vdsbs =
                 await vendorToDealerSiteToBuyerSiteOperation.repo.findOne({
-                    where: { id: vdsbs_id },
+                    where: { id: vdsbsId },
                     relations: {
                         vToDS: true,
                         buyerSite: {

@@ -4,8 +4,6 @@ export { default as buyerSiteController } from "./buyer/createBuyerSite";
 export { default as dealerController } from "./dealer/createDealer";
 export { default as dealerSiteController } from "./dealer/createDealerSite";
 export { default as createDeposit } from "./deposit/createDeposit";
-export { default as createInvoiceController } from "./invoice/createInvoice";
-export { default as createInvoceLineController } from "./invoice/createInvoiceLine";
 export { default as createPaymentController } from "./payment/createPayment";
 export { default as createDealerRouteUser } from "./relations/createDealerRouteUser";
 export { default as createUserEntityRelationController } from "./relations/createUserEntityRelation";
@@ -14,7 +12,6 @@ export { default as vdsRelationController } from "./relations/createVdsRelations
 export { default as getVdsbsRelationsController } from "./relations/getVdsbsRelations";
 export { default as getVdsRelationsController } from "./relations/getVdsRelations";
 export { default as testControler } from "./test/testController";
-export { default as fileUploadController } from "./upload/fileUploadController";
 export { default as forgotPasswordController } from "./user/forgotPaswordController";
 export { default as loginController } from "./user/LoginController";
 export { default as logoutController } from "./user/logoutController";

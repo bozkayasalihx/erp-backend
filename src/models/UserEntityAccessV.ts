@@ -1,5 +1,5 @@
-import { ViewColumn, ViewEntity } from "typeorm";
-import { UserEntityRelationsV, VendorDealerBuyerRltnsV } from "./";
+import { ViewColumn } from "typeorm";
+// import { UserEntityRelationsV, VendorDealerBuyerRltnsV } from ".";
 
 // @ViewEntity("user_entity_access_v", {
 //     expression: `
@@ -7,7 +7,7 @@ import { UserEntityRelationsV, VendorDealerBuyerRltnsV } from "./";
 //                 usr_rltns.start_date_uer, usr_rltns.end_date_uer,
 //                 usr_rltns.user_id, usr_rltns.username, usr_rltns.user_type,
 //                 usr_rltns.start_date_user, usr_rltns.end_date_user,
-//                 entity_rltns.vdsbs_id, entity_rltns.description_vdsbs, 
+//                 entity_rltns.vdsbs_id, entity_rltns.description_vdsbs,
 //                 entity_rltns.start_date_vdsbs, entity_rltns.end_date_vdsbs,
 //                 entity_rltns.vds_id, entity_rltns.start_date_vds, entity_rltns.end_date_vds,
 //                 entity_rltns.vendor_id, entity_rltns.vendor_name,
@@ -37,7 +37,7 @@ import { UserEntityRelationsV, VendorDealerBuyerRltnsV } from "./";
 //                 null as start_date_uer, null as end_date_uer,
 //                 u.id as user_id, u.username, u.user_type,
 //                 u.start_date as start_date_user, u.end_date as end_date_user,
-//                 entity_rltns.vdsbs_id, entity_rltns.description_vdsbs, 
+//                 entity_rltns.vdsbs_id, entity_rltns.description_vdsbs,
 //                 entity_rltns.start_date_vdsbs, entity_rltns.end_date_vdsbs,
 //                 entity_rltns.vds_id, entity_rltns.start_date_vds, entity_rltns.end_date_vds,
 //                 entity_rltns.vendor_id, entity_rltns.vendor_name,

@@ -2,50 +2,51 @@ import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { paymentOperation } from "../../services";
 import VendorTDealerSiteTBuyerSiteOperation from "../../services/VendorTDealerSiteTBuyerSiteOperation";
-import { Currency, InvoiceStatusType, PaymentType } from "../../types/types";
+import { Currency, InvoiceStatusType, PaymentType } from "../../types";
 
 export interface IPaymentSchedule {
-    payment_type?: PaymentType;
-    reference_id: number;
-    vdsbs_id: number;
-    original_amount: number;
-    remained_amount: number;
+    paymentType?: PaymentType;
+    referenceId: number;
+    vdsbsId: number;
+    originalAmount: number;
+    remainedAmount: number;
     currency?: Currency;
-    effective_date: Date;
-    invoiced_status?: InvoiceStatusType;
+    effectiveDate: Date;
+    invoicedStatus?: InvoiceStatusType;
 }
 
 type TypedRequest = Request<any, any, IPaymentSchedule>;
 export default async function createPayment(req: TypedRequest, res: Response) {
-    const user = req.user;
+    const { user } = req;
     const {
         currency,
-        effective_date,
-        invoiced_status,
-        original_amount,
-        payment_type,
-        reference_id,
-        remained_amount,
-        vdsbs_id,
+        effectiveDate,
+        invoicedStatus,
+        originalAmount,
+        paymentType,
+        referenceId,
+        remainedAmount,
+        vdsbsId,
     } = req.body;
 
     try {
         const vdsbs = await VendorTDealerSiteTBuyerSiteOperation.repo.findOne({
-            where: { id: vdsbs_id },
+            where: { id: vdsbsId },
         });
-        if (!vdsbs)
+        if (!vdsbs) {
             return res.status(httpStatus.NOT_FOUND).json({
                 message: "not found",
             });
+        }
 
         await paymentOperation.createPayment({
             currency,
-            effective_date,
-            invoiced_status,
-            original_amount,
-            payment_type,
-            reference_id,
-            remained_amount,
+            effectiveDate,
+            invoicedStatus,
+            originalAmount,
+            paymentType,
+            referenceId,
+            remainedAmount,
             created_by: user,
             updated_by: user,
         });

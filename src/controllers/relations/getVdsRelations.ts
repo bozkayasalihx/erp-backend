@@ -3,13 +3,13 @@ import httpStatus from "http-status";
 import { vendorToDealerSiteOperation } from "../../services";
 
 interface Iparams {
-    vds_id?: string;
+    vdsId?: string;
 }
 export default async function getVdsRelations(
     req: Request<Iparams>,
     res: Response
 ) {
-    const vdsId = req.params.vds_id ? parseInt(req.params.vds_id) : undefined;
+    const vdsId = req.params.vdsId ? parseInt(req.params.vdsId, 10) : undefined;
 
     try {
         if (typeof vdsId === "number") {
@@ -21,10 +21,11 @@ export default async function getVdsRelations(
                 },
             });
 
-            if (!vds)
+            if (!vds) {
                 return res.status(httpStatus.BAD_REQUEST).json({
                     message: "invalid request",
                 });
+            }
 
             return res.status(httpStatus.OK).json({
                 message: "operation successful",

@@ -6,7 +6,7 @@ import revokeRefreshToken from "../../scripts/utils/revokeRefreshToken";
 import { userOperation } from "../../services";
 
 async function refreshController(req: Request, res: Response) {
-    const refreshToken = req.refreshToken;
+    const { refreshToken } = req;
     res.clearCookie("jwt", { httpOnly: true, sameSite: "lax", secure: true });
 
     const decoded = jwt.decode(refreshToken) as jwt.JwtPayload;
@@ -15,10 +15,11 @@ async function refreshController(req: Request, res: Response) {
         where: { id: decoded.userId },
     });
 
-    if (!user)
+    if (!user) {
         return res.status(httpStatus.UNAUTHORIZED).json({
             message: "unauthorized request",
         });
+    }
 
     if (user.tokenVersion !== decoded.tokenVersion) {
         return res.status(httpStatus.BAD_REQUEST).json({

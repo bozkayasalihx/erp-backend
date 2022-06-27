@@ -1,7 +1,11 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable camelcase */
+/* eslint-disable import/no-cycle */
 import { Router } from "express";
 import fileUpload, { UploadedFile } from "express-fileupload";
 import { createReadStream } from "fs";
 import httpStatus from "http-status";
+import { InsertResult } from "typeorm";
 import { checkFileType } from "../../middlewares";
 import { Invoice, InvoiceInterface } from "../../models";
 import { __prod__ } from "../../scripts/dev";
@@ -9,28 +13,24 @@ import CsvParser from "../../scripts/parser/csvParser";
 import DataVerifier from "../../scripts/parser/dataVerifier";
 import { GenerateCsv } from "../../scripts/parser/generateCsv";
 import { increment } from "../../scripts/utils/revokeRefreshToken";
-import {
-    invoiceOperation,
-    paymentOperation,
-    vendorToDealerSiteToBuyerSiteOperation,
-} from "../../services";
+import { invoiceOperation, paymentOperation } from "../../services";
+import { TypedRequest, TypedResponse } from "../../types";
 import { Routes } from "../../types/routePath";
-import { TypedRequest, TypedResponse } from "../../types/types";
+import validateIds from "./checkIds";
+import { OmittedInvoice } from "./type";
 
 const router = Router();
-const file = () => {
-    return fileUpload({
+const fileRoute = () =>
+    fileUpload({
         limits: {
-            fileSize: 10 * 1024 * 1024, // 10mb
+            fileSize: 10 * 1024 * 1024,
         },
         useTempFiles: true,
-        tempFileDir: "/temp/",
+        tempFileDir: "~/temp/",
         debug: !__prod__,
     });
-};
 
 const DELIMITER = ";";
-const LIMIT = 20;
 const HIGHWATERMARK = 150 * 1024;
 const LINE = "L";
 const HEAD = "H";
@@ -39,14 +39,9 @@ export type Args<T> = {
     // eslint-disable-next-line @typescript-eslint/ban-types
     [P in keyof T as T[P] extends Function ? never : P]: T[P];
 };
-type OmittedInvoice = Omit<
-    InvoiceInterface,
-    "updated_at" | "created_at" | "updated_by" | "created_by"
->;
-
 router.post(
     Routes.PROCESS_INVOICE_UPLOAD,
-    file(),
+    fileRoute(),
     checkFileType,
     async (
         req: TypedRequest<any, { hasInstallment: string }>,
@@ -63,14 +58,14 @@ router.post(
         stream.on("data", (chunk) => {
             data += chunk;
         });
-        stream.on("error", (err) => {
-            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        stream.on("error", (err) =>
+            res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
                 message: err.message,
-            });
-        });
+            })
+        );
 
         const fileName = file.name;
-        const user = req.user;
+        const { user } = req;
 
         const fileProcessid = await increment("invoice_file_process_id");
 
@@ -78,28 +73,27 @@ router.post(
 
         parser.readData(data);
         parser.matcher(async (err, parsedData) => {
-            if (err || !parsedData)
+            if (err || !parsedData) {
                 return res.status(httpStatus.BAD_REQUEST).json({
                     message: "bad request",
                 });
+            }
 
             const invoiceInsertResp: {
                 header: [
                     {
-                        [P in keyof Args<OmittedInvoice>]?: Args<OmittedInvoice>[P];
+                        [P in keyof Args<OmittedInvoice>]: Args<OmittedInvoice>[P];
                     }
                 ];
                 line: Array<Args<OmittedInvoice>>;
+                // @ts-ignore
             } = { header: [{}], line: [] };
+
+            const insertQueue: Array<Promise<InvoiceInterface>> = [];
+
             for (const record of parsedData) {
-                try {
-                    const {
-                        created_by,
-                        updated_by,
-                        created_at,
-                        updated_at,
-                        ...args
-                    } = await invoiceOperation.invoiceInterfaceRepo.save(
+                insertQueue.push(
+                    invoiceOperation.invoiceInterfaceRepo.save(
                         {
                             ...record,
                             file_name: fileName,
@@ -108,17 +102,29 @@ router.post(
                             updated_by: user,
                         },
                         { chunk: 5 }
-                    );
+                    )
+                );
+            }
 
-                    if (record["record_type"] == HEAD)
+            try {
+                const resp = await Promise.all(insertQueue);
+                for (let i = 0; i < resp.length; i++) {
+                    const {
+                        created_at,
+                        created_by,
+                        updated_at,
+                        updated_by,
+                        ...args
+                    } = resp[i];
+                    if (resp[i].record_type === HEAD)
                         invoiceInsertResp.header[0] = args;
-                    else if (record["record_type"] == LINE)
+                    else if (resp[i].record_type === LINE)
                         invoiceInsertResp.line.push(args);
-                } catch (err) {
-                    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-                        message: "an error accured try again later",
-                    });
                 }
+            } catch (err1) {
+                return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                    message: "an error accured try again later",
+                });
             }
             const viDataVerifier = new DataVerifier("vi");
             viDataVerifier.setVIData([
@@ -140,96 +146,176 @@ router.post(
                 });
             }
 
-            for (let i = 0; i < viDataVerifier.getVIData.length; i++) {
-                const currentVI = viDataVerifier.getVIData[i];
-                const currentVdsbsId = parseInt(currentVI.vdsbs_id as string);
+            // all done here;
 
-                const currentVdsbs =
-                    await vendorToDealerSiteToBuyerSiteOperation.repo.findOne({
-                        where: { id: currentVdsbsId },
-                    });
+            const csvHeader = viDataVerifier.getVIData[0];
+            const valid = await validateIds([parseInt(csvHeader.vdsbs_id, 10)]);
+            if (!valid)
+                return res.status(httpStatus.BAD_REQUEST).json({
+                    message: "bad request",
+                });
 
-                if (!currentVdsbs)
-                    return res.status(httpStatus.BAD_REQUEST).json({
-                        message: "bad request",
-                    });
+            try {
+                const resp = await invoiceOperation.invoiceRepo.insert({
+                    amount: parseFloat(csvHeader.due_amount as string),
+                    vdsbsId: +csvHeader.vdsbs_id,
+                    currency: csvHeader.currency,
+                    dueDate: csvHeader.due_date,
+                    end_date: csvHeader.end_date,
+                    start_date: csvHeader.start_date,
+                    invoiceNo: csvHeader.invoice_no,
+                    invoiceDate: csvHeader.invoice_date,
+                    refUserList: csvHeader.related_users,
+                    created_by: user,
+                    updated_by: user,
+                });
 
-                try {
-                    const resp = await invoiceOperation.invoiceRepo.insert({
-                        amount: parseFloat(currentVI.amount as string),
-                        vdsbs: currentVdsbs,
-                        currency: currentVI.currency,
-                        due_date: currentVI.due_date,
-                        end_date: currentVI.end_date,
-                        start_date: currentVI.start_date,
-                        invoice_no: currentVI.invoice_no,
-                        invoice_date: currentVI.invoice_date,
-                        ref_user_list: currentVI.related_users,
-                        created_by: user,
-                        updated_by: user,
-                    });
-
-                    const invoice = resp.raw[0] as Invoice;
-
-                    for (let j = 0; j < invoiceInsertResp.line.length; j++) {
-                        try {
-                            await invoiceOperation.createInvoiceLine({
-                                ...invoiceInsertResp.line[j],
-                                created_by: user,
-                                updated_by: user,
-                                line_no: +invoiceInsertResp.line[j].line_no,
-                                amount: parseFloat(
-                                    invoiceInsertResp.line[j].amount as string
-                                ),
-                                item_quantity: parseInt(
-                                    invoiceInsertResp.line[j].item_quantity
-                                ),
-                            });
-                        } catch (err) {
-                            return res
-                                .status(httpStatus.INTERNAL_SERVER_ERROR)
-                                .json({
-                                    message: "an error accured try again later",
-                                });
-                        }
-                    }
-
-                    const lineNo = invoiceInsertResp.header[0].line_no;
-                    const dueDate = invoiceInsertResp.header[0].due_date;
-
-                    if (!hasInstallment)
-                        return await paymentOperation.createPS({
-                            ...invoiceInsertResp.header[0],
-                            line_no: lineNo ? +lineNo : undefined,
-                            due_date: dueDate ? new Date(dueDate) : undefined,
-                            invoice,
-                            updated_by: user,
+                const invoice = resp.raw[0] as Invoice;
+                const queue: Array<Promise<InsertResult>> = [];
+                for (let j = 0; j < invoiceInsertResp.line.length; j++) {
+                    queue.push(
+                        invoiceOperation.createInvoiceLine({
+                            ...invoiceInsertResp.line[j],
                             created_by: user,
-                            vdsbs: currentVdsbs,
-                            vdsbs_id: currentVdsbs.id,
-                        });
+                            updated_by: user,
+                            lineNo: parseInt(
+                                invoiceInsertResp.line[j].line_no as string,
+                                10
+                            ),
+                            amount: parseFloat(
+                                invoiceInsertResp.line[j].due_amount as string
+                            ),
+                            itemQuantity: parseInt(
+                                invoiceInsertResp.line[j]
+                                    .item_quantity as string,
+                                10
+                            ),
+                        })
+                    );
+                }
 
-                    return res.status(httpStatus.CREATED).json({
-                        message: "operation succesfull",
-                    });
-                } catch (err) {
-                    if (err?.detail?.includes("already exists")) {
-                        // already exits error;
-                        return res.status(httpStatus.BAD_REQUEST).json({
-                            message: "this record already exists",
-                        });
-                    }
-                    return res.status(httpStatus.BAD_REQUEST).json({
-                        message:
-                            "some of your inputs are invalid, you may want to check over",
-                        data: { message: err?.detail },
+                await Promise.all(queue);
+
+                const { due_date, line_no } = invoiceInsertResp.header[0];
+                if (!hasInstallment) {
+                    await paymentOperation.createPS({
+                        ...invoiceInsertResp.header[0],
+                        lineNo: parseInt(line_no as string, 10),
+                        dueDate: due_date ? new Date(due_date) : undefined,
+                        invoice,
+                        updated_by: user,
+                        created_by: user,
+                        vdsbsId: +csvHeader.vdsbs_id,
                     });
                 }
+
+                return res.status(httpStatus.CREATED).json({
+                    message: "operation succesfull",
+                });
+            } catch (err1) {
+                if (err1?.detail?.includes("already exists")) {
+                    // already exits error;
+                    return res.status(httpStatus.BAD_REQUEST).json({
+                        message: "this record already exists",
+                    });
+                }
+                return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                    message: "an error accured try again later",
+                });
             }
 
-            return res.status(httpStatus.CREATED).json({
-                message: "operation successful",
-            });
+            // for (let i = 0; i < viDataVerifier.getVIData.length; i++) {
+            //     const currentVI = viDataVerifier.getVIData[i];
+            //     console.log("current vi", viDataVerifier.getVIData);
+            //     const currentVdsbsId = parseInt(
+            //         currentVI.vdsbsIdas string,
+            //         10
+            //     );
+
+            //     const currentVdsbs =
+            //         await vendorToDealerSiteToBuyerSiteOperation.repo.findOne({
+            //             where: { id: currentVdsbsId },
+            //         });
+
+            //     if (!currentVdsbs) {
+            //         return res.status(httpStatus.BAD_REQUEST).json({
+            //             message: "bad request",
+            //         });
+            //     }
+
+            //     try {
+            //         const resp = await invoiceOperation.invoiceRepo.insert({
+            //             amount: parseFloat(currentVI.amount as string),
+            //             vdsbs: currentVdsbs,
+            //             currency: currentVI.currency,
+            //             due_date: currentVI.dueDate,
+            //             end_date: currentVI.endDate,
+            //             start_date: currentVI.startDate,
+            //             invoice_no: currentVI.invoiceNo,
+            //             invoice_date: currentVI.invoiceDate,
+            //             ref_user_list: currentVI.relatedUsers,
+            //             created_by: user,
+            //             updated_by: user,
+            //         });
+
+            //         const invoice = resp.raw[0] as Invoice;
+
+            //         for (let j = 0; j < invoiceInsertResp.line.length; j++) {
+            //             try {
+            //                 await invoiceOperation.createInvoiceLine({
+            //                     ...invoiceInsertResp.line[j],
+            //                     created_by: user,
+            //                     updated_by: user,
+            //                     line_no: +invoiceInsertResp.line[j].lineNo,
+            //                     amount: parseFloat(
+            //                         invoiceInsertResp.line[j].amount as string
+            //                     ),
+            //                     item_quantity: parseInt(
+            //                         invoiceInsertResp.line[j].itemQuantity
+            //                     ),
+            //                 });
+            //             } catch (err) {
+            //                 return res
+            //                     .status(httpStatus.INTERNAL_SERVER_ERROR)
+            //                     .json({
+            //                         message: "an error accured try again later",
+            //                     });
+            //             }
+            //         }
+
+            //         const lineNo = invoiceInsertResp.header[0].lineNo;
+            //         const { dueDate } = invoiceInsertResp.header[0];
+
+            //         if (!hasInstallment) {
+            //             return await paymentOperation.createPS({
+            //                 ...invoiceInsertResp.header[0],
+            //                 line_no: lineNo ? +lineNo : undefined,
+            //                 due_date: dueDate ? new Date(dueDate) : undefined,
+            //                 invoice,
+            //                 updated_by: user,
+            //                 created_by: user,
+            //                 vdsbs: currentVdsbs,
+            //                 vdsbs_id: currentVdsbs.id,
+            //             });
+            //         }
+
+            //         return res.status(httpStatus.CREATED).json({
+            //             message: "operation succesfull",
+            //         });
+            //     } catch (err) {
+            //         if (err?.detail?.includes("already exists")) {
+            //             // already exits error;
+            //             return res.status(httpStatus.BAD_REQUEST).json({
+            //                 message: "this record already exists",
+            //             });
+            //         }
+            //         return res.status(httpStatus.BAD_REQUEST).json({
+            //             message:
+            //                 "some of your inputs are invalid, you may want to check over",
+            //             data: { message: err?.detail },
+            //         });
+            //     }
+            // }
         });
     }
 );

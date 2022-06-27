@@ -1,5 +1,4 @@
-import { ViewColumn, ViewEntity } from "typeorm";
-import { UserEntityRelationsV, VendorToDealerSiteToBuyerSite } from "./";
+import { ViewColumn } from "typeorm";
 
 // @ViewEntity("vendor_dealer_buyer_rltns_v", {
 //     expression: `

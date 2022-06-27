@@ -27,15 +27,15 @@ async function loginController(req: Request<any, any, IBody>, res: Response) {
             });
         }
 
-        const access_token = generateAccessToken(
+        const accessToken = generateAccessToken(
             { userId: user.id, tokenVersion: user.tokenVersion },
             process.env.ACCESS_TOKEN_SECRET_KEY as string
         );
-        const refresh_token = generateRefreshToken(
+        const refreshToken = generateRefreshToken(
             { userId: user.id, tokenVersion: user.tokenVersion },
             process.env.REFRESH_TOKEN_SECRET_KEY as string
         );
-        res.cookie("qid", refresh_token, {
+        res.cookie("qid", refreshToken, {
             httpOnly: true,
             sameSite: "lax",
             secure: __prod__,
@@ -45,8 +45,8 @@ async function loginController(req: Request<any, any, IBody>, res: Response) {
             message: "operation succesful",
             data: {
                 username: user.username,
-                user_type: user.user_type,
-                access_token,
+                user_type: user.userType,
+                accessToken,
             },
         });
     } catch (err) {

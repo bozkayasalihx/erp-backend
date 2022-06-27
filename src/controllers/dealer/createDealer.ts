@@ -1,23 +1,23 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import dealerOperation from "../../services/dealerOperation";
-import { AttributeFields, OptionalDates } from "../../types/types";
+import { AttributeFields, OptionalDates } from "../../types";
 
 export interface IDealer extends AttributeFields, OptionalDates {
     name: string;
-    tax_no: number;
+    taxNo: number;
 }
 
 export default async function dealer(
     req: Request<any, any, IDealer>,
     res: Response
 ) {
-    const { name, tax_no, ...attributes } = req.body;
-    const user = req.user;
+    const { name, taxNo, ...attributes } = req.body;
+    const { user } = req;
     try {
         await dealerOperation.insertDealer({
             name,
-            tax_no: String(tax_no),
+            taxNo: String(taxNo),
             ...attributes,
             updated_by: user,
             created_by: user,

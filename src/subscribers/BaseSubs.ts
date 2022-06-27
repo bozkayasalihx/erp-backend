@@ -8,14 +8,16 @@ import {
 } from "typeorm";
 import { appDataSource } from "../loaders";
 import UserEntityRelation from "../models/UserEntityRelation";
-import { UserTypes } from "../types/types";
+import { UserTypes } from "../types";
 
 @EventSubscriber()
 export class UserEntityRelationSubscriber
     implements EntitySubscriberInterface<UserEntityRelation>
 {
     private subsribers = appDataSource.subscribers;
+
     private entity: UserEntityRelation;
+
     private manager = appDataSource.manager;
 
     constructor() {
@@ -46,11 +48,11 @@ export class UserEntityRelationSubscriber
 
     private async dropRelation(queryRunner: QueryRunner) {
         const table = await this.getTable(queryRunner);
-        const ref_table_foreignkey = table.foreignKeys.filter(
+        const refTableForeignKey = table.foreignKeys.filter(
             (key) => key.columnNames[0] === "ref_table_id"
         )[0];
 
-        return await queryRunner.dropForeignKey(table, ref_table_foreignkey);
+        return queryRunner.dropForeignKey(table, refTableForeignKey);
     }
 
     private async getTable(queryRunner: QueryRunner) {
@@ -73,7 +75,7 @@ export class UserEntityRelationSubscriber
         });
         const table = await this.getTable(queryRunner);
 
-        return await queryRunner.createForeignKey(table, foreignKey);
+        return queryRunner.createForeignKey(table, foreignKey);
     }
 
     async beforeInsert(event: InsertEvent<UserEntityRelation>) {
@@ -82,7 +84,7 @@ export class UserEntityRelationSubscriber
         this.entity = entity;
 
         metadata.relations.filter((relation) => {
-            relation.isManyToOne || relation.isOneToMany;
+            return relation.isManyToOne || relation.isOneToMany;
         });
 
         const childtype = await this.getChildType();
