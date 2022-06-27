@@ -22,7 +22,6 @@ export default class Deposit extends SuperEntity {
     public approvalDate: Date;
 
     /** relations */
-
     @ManyToOne(() => VendorToDealerSiteToBuyerSite, (vdsbs) => vdsbs.deposits)
     @JoinColumn({ name: "vdsbs_id" })
     public vdsbs: VendorToDealerSiteToBuyerSite;

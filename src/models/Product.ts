@@ -1,8 +1,9 @@
-import { Column, JoinColumn, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { Currency } from "../types";
 import { Vendor } from "./index";
 import SuperEntity from "./SuperEntity";
 
+@Entity("products")
 export default class Product extends SuperEntity {
     @Column({ length: 30 })
     public productCode: string;
