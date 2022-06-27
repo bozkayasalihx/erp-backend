@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany } from "typeorm";
-import { VendorRegion, VendorToDealerSite } from "./index";
+import { Product, VendorRegion, VendorToDealerSite } from "./index";
 import SuperEntity from "./SuperEntity";
 
 @Entity("vendors")
@@ -45,4 +45,7 @@ export default class Vendor extends SuperEntity {
 
     @OneToMany(() => VendorRegion, (vendorRegion) => vendorRegion.vendor)
     public vendorRegions: Array<VendorRegion>;
+
+    @OneToMany(() => Product, (product) => product.vendor)
+    public products: Array<Product>;
 }
