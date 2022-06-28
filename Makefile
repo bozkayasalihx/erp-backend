@@ -21,3 +21,6 @@ down:
 
 logs:
 	docker compose --env-file ./.env logs -f
+
+dev-close: 
+	docker compose -f docker-compose.dev.yml --env-file ./.env.test down

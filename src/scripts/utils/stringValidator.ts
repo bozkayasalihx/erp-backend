@@ -28,7 +28,6 @@ export class StringValidator {
 
         if (!__prod__) ALLOWEDTYPES.push("Digest");
 
-        if (header in ALLOWEDTYPES) return true;
-        return false;
+        return ALLOWEDTYPES.indexOf(header) !== -1 ? true : false;
     }
 }
