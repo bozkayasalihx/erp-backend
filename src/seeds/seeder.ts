@@ -166,8 +166,8 @@ class Inserter extends Pool {
         });
 
         this.readStream.on("end", () => {
-            // console.log("done...");
-            // this.writerStream.end();
+            // eslint-disable-next-line no-warning-comments
+            // TODO: clean up process when streams end;
         });
     }
 
@@ -212,12 +212,10 @@ const main = async () => {
         try {
             insert.streamData();
             insert.on("connect", () => {
-                // eslint-disable-next-line no-console
-                console.log("client connected");
+                // eslint-disable-next-line no-warning-comments
+                // TODO: notify user for connection established
             });
         } catch (err) {
-            // eslint-disable-next-line no-console
-            console.log("err", err);
             continue;
         }
     }

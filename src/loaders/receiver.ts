@@ -29,9 +29,6 @@ export class Main {
         const subs = this.worker;
         for await (const [msg] of subs) {
             if (!msg.length) subs.close();
-            else {
-                // console.log("received", msg);
-            }
         }
     }
 

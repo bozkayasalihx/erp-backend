@@ -118,8 +118,12 @@ router.post(
                 await DatabaseTransaction.transection(
                     async (error, queryRunner) => {
                         if (error) {
-                            // eslint-disable-next-line no-console
-                            console.log("err", error);
+                            if (error?.detail?.includes("already exists")) {
+                                // already exits error;
+                                return res.status(httpStatus.BAD_REQUEST).json({
+                                    message: "this record already exists",
+                                });
+                            }
                             return res
                                 .status(httpStatus.INTERNAL_SERVER_ERROR)
                                 .json({
@@ -255,8 +259,6 @@ router.post(
                 //     message: "operation succesfull",
                 // });
             } catch (err1) {
-                // eslint-disable-next-line no-console
-                console.log("error", err1);
                 if (err1?.detail?.includes("already exists")) {
                     // already exits error;
                     return res.status(httpStatus.BAD_REQUEST).json({

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable import/no-named-as-default */
-import { DataSource, QueryRunner } from "typeorm";
+import { DataSource, QueryFailedError, QueryRunner } from "typeorm";
 import appDataSource, { dataSourceOptions } from "../../loaders/database";
 
 export default class DatabaseTransaction {
@@ -18,7 +18,7 @@ export default class DatabaseTransaction {
 
     public static async transection<T>(
         callback: (
-            error: Error | null,
+            error: (QueryFailedError & { detail: string }) | null,
             queryRunner: QueryRunner | null
         ) => Promise<T>,
         handler?: (valid: boolean) => void
@@ -26,6 +26,7 @@ export default class DatabaseTransaction {
         const dataSource = DatabaseTransaction.connect();
         const queryRunner = dataSource.createQueryRunner();
         await queryRunner.startTransaction();
+
         try {
             await callback(null, queryRunner);
             handler && handler(true);
