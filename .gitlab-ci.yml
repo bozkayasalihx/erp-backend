@@ -22,7 +22,7 @@ run_build:
     image: docker:20.10.17
     variables:
         DOCKER_TLS_CERTDIR: "/certs"
-        SHA: $(git rev-parse HEAD)
+        SHA: ${git rev-parse HEAD}
     services:
         - docker:20.10.17-dind
     before_script:
@@ -30,4 +30,3 @@ run_build:
         - chmod 700 ./containers/deploy.sh
     script:
         - sh ./containers/deploy.sh
-    
