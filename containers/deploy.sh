@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 
 SHA=$(git rev-parse HEAD)
 

@@ -28,6 +28,6 @@ run_build:
         - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
         - chmod 700 ./containers/deploy.sh
     script:
-        - bash ./containers/deploy.sh
+        - sh ./containers/deploy.sh
     # only:
     #     - master
