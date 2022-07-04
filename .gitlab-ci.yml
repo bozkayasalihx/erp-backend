@@ -1,5 +1,5 @@
 variables:
-    DOCKER_HUB_USER: naticadevelopment
+    DOCKER_USERNAME: naticadevelopment
     DOCKER_TAG: latest
 
 stages:
@@ -27,4 +27,4 @@ run_build:
     script:
         - docker compose build
     only:
-        - main
+        - master
