@@ -12,6 +12,7 @@ run_test:
     image: node:16-alpine
     before_script:
         - apk upgrade && apk add yarn
+        - yarn install
     script:
         - yarn test --ci
 
