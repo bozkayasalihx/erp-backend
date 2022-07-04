@@ -25,7 +25,7 @@ run_build:
     services:
         - docker:20.10.17-dind
     before_script:
-        - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+        - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
         - chmod 700 ./containers/deploy.sh
     script:
         - bash ./containers/deploy.sh
