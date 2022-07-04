@@ -6,6 +6,7 @@ stages:
     - test
     - build
     - deploy
+    - google
 
 run_test:
     stage: test
