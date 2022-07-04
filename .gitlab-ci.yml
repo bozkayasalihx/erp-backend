@@ -30,5 +30,4 @@ run_build:
         - chmod 700 ./containers/deploy.sh
     script:
         - sh ./containers/deploy.sh
-    # only:
-    #     - master
+    
