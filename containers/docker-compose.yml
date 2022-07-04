@@ -1,16 +1,17 @@
-version: "3.8"
+version: "3.9"
 name: naticadevelopment
 
 services:
   db_prod:
     build:
-      context: .
-      dockerfile: Dockerfile.prod.postgres
+      context: ${PWD}
+      dockerfile: ${PWD}/Dockerfile.prod.postgres
+    container_name: postgres_prod_db
+    image: ${DOCKER_USERNAME}/postgres_prod_db
 
-    container_name: prod_db
     restart: always
     env_file:
-      - ./.env
+      - ${PWD}/.env
     ports:
       - "${PG_PORT}:5432"
     volumes:
@@ -20,7 +21,7 @@ services:
     image: redis:6.2.6-alpine
     container_name: prod_redis
     env_file:
-      - ./.env
+      - ${PWD}/.env
 
     restart: always
     ports:
@@ -30,12 +31,14 @@ services:
 
   prod_server:
     build:
-      context: .
+      context: ${PWD}
       target: prodbase
+      dockerfile: ${PWD}/containers/Dockerfile
     container_name: prod_server
+    image: ${DOCKER_USERNAME}/prod_server
 
     env_file:
-      - ./.env
+      - ${PWD}/.env
 
     expose:
       - "${SERVER_PORT}"

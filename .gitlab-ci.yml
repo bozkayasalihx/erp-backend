@@ -21,11 +21,13 @@ run_build:
     image: docker:20.10.17
     variables:
         DOCKER_TLS_CERTDIR: "/certs"
+        SHA: $(git rev-parse HEAD)
     services:
         - docker:20.10.17-dind
     before_script:
         - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+        - chmod 700 ./containers/deploy.sh
     script:
-        - docker compose build
-    only:
-        - master
+        - bash ./containers/deploy.sh
+    # only:
+    #     - master

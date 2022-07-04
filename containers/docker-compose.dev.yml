@@ -2,8 +2,8 @@ version: "3.8"
 services:
   db_dev:
     build:
-      context: .
-      dockerfile: Dockerfile.dev.postgres
+      context: ${PWD}
+      dockerfile: ${PWD}/containers/Dockerfile.dev.postgres
 
     container_name: postgres_dev
     command:
@@ -17,7 +17,7 @@ services:
 
     restart: always
     env_file:
-      - ./.env.test
+      - ${PWD}/.env.test
     ports:
       - "${PG_PORT}:5432"
     volumes:
@@ -28,7 +28,7 @@ services:
     container_name: redis_dev
     restart: always
     env_file:
-      - ./.env.test
+      - ${PWD}/.env.test
     ports:
       - "${REDIS_PORT}:6379"
     volumes:
@@ -36,16 +36,19 @@ services:
 
   dev_server:
     build:
-      context: .
+      context: ${PWD}
+      dockerfile: ${PWD}/containers/Dockerfile
       target: devbase
 
     container_name: dev_server
+    depends_on:
+      - db_dev
 
     env_file:
-      - ./.env.test
+      - ${PWD}/.env.test
     volumes:
       - /usr/api/node_modules
-      - ./:/usr/api
+      - ${PWD}:/usr/api
 
     expose:
       - "${SERVER_PORT}"

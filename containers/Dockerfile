@@ -26,9 +26,9 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/api
 
-COPY package.json ./
+COPY ./package.json ./
 
-COPY yarn.lock ./
+COPY ./yarn.lock ./
 
 RUN yarn install --production --frozen-lockfile
 
