@@ -27,4 +27,4 @@ run_build:
     script:
         - docker compose build
     only:
-        - main
+        - master
