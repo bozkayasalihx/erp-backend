@@ -6,3 +6,6 @@ ormconfig.js
 src/results.csv
 .env.test
 ~/
+src/results2.csv
+src/seeds/csv/buyers.csv
+src/seeds/csv/buyers.csv

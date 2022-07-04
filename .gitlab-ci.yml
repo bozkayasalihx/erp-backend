@@ -1,0 +1,30 @@
+variables:
+    DOCKER_HUB_USER: naticadevelopment
+    DOCKER_TAG: latest
+
+stages:
+    - test
+    - build
+    - deploy
+
+run_test:
+    stage: test
+    image: node:16-alpine
+    before_script:
+        - apk upgrade && apk add yarn
+    script:
+        - yarn test --ci
+
+run_build:
+    stage: build
+    image: docker:20.10.17
+    variables:
+        DOCKER_TLS_CERTDIR: "/certs"
+    services:
+        - docker:20.10.17-dind
+    before_script:
+        - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    script:
+        - docker compose build
+    only:
+        - main
