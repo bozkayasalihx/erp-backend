@@ -1,6 +1,7 @@
 variables:
     DOCKER_USERNAME: naticadevelopment
     DOCKER_LATEST_TAG: latest
+    CONTAINER_DIR: ./containers/Dockerfile
 
 stages:
     - test
@@ -28,5 +29,5 @@ run_build:
         - apk add git
         - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     script:
-        - docker buildx build . --platform=linux/amd64 -t $DOCKER_USERNAME/prod_server:$DOCKER_LATEST_TAG -t $DOCKER_USERNAME/prod_server:$(git rev-parse HEAD) --push
-        - docker buildx build . --platform=linux/amd64 -t $DOCKER_USERNAME/prod_db:$DOCKER_LATEST_TAG -t $DOCKER_USERNAME/prod_db:$(git rev-parse HEAD) --push
+        - docker buildx build -f $CONTAINER_DIR . --platform=linux/amd64 -t $DOCKER_USERNAME/prod_server:$DOCKER_LATEST_TAG -t $DOCKER_USERNAME/prod_server:$(git rev-parse HEAD) --push
+        - docker buildx build -f $CONTAINER_DIR . --platform=linux/amd64 -t $DOCKER_USERNAME/prod_db:$DOCKER_LATEST_TAG -t $DOCKER_USERNAME/prod_db:$(git rev-parse HEAD) --push
