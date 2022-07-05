@@ -1,12 +1,11 @@
 variables:
     DOCKER_USERNAME: naticadevelopment
-    DOCKER_TAG: latest
+    DOCKER_LATEST_TAG: latest
 
 stages:
     - test
     - build
     - deploy
-    - google
 
 run_test:
     stage: test
@@ -22,11 +21,16 @@ run_build:
     image: docker:20.10.17
     variables:
         DOCKER_TLS_CERTDIR: "/certs"
-        SHA: ${git rev-parse HEAD}
     services:
         - docker:20.10.17-dind
     before_script:
         - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-        - chmod 700 ./containers/deploy.sh
     script:
-        - sh ./containers/deploy.sh
+        - docker buildx build . --platfrom=linux/amd64 -t $DOCKER_USERNAME/prod_server:$DOCKER_LATEST_TAG -t $DOCKER_USERNAME/prod_server:$(git rev-parse HEAD) .
+        - docker buildx build . --platform=linux/amd64 -t $DOCKER_USERNAME/prod_db:$DOCKER_LATEST_TAG -t $DOCKER_USERNAME/prod_db:$(git rev-parse HEAD) .
+
+        - docker push $DOCKER_USERNAME/prod_server:$DOCKER_LATEST_TAG
+        - docker push $DOCKER_USERNAME/prod_server:$(git rev-parse HEAD)
+
+        - docker push $DOCKER_USERNAME/prod_db:$DOCKER_LATEST_TAG
+        - docker push $DOCKER_USERNAME/prod_db:$(git rev-parse HEAD)

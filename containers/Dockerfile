@@ -16,22 +16,22 @@ RUN yarn build
 
 
 
-FROM node:16-alpine AS prodbase
+# FROM node:16-alpine AS prodbase
 
-RUN npm i --location=global pm2
+# RUN npm i --location=global pm2
 
-ARG NODE_ENV=production
+# ARG NODE_ENV=production
 
-ENV NODE_ENV=${NODE_ENV}
+# ENV NODE_ENV=${NODE_ENV}
 
-WORKDIR /usr/api
+# WORKDIR /usr/api
 
-COPY ./package.json ./
+# COPY ./package.json ./
 
-COPY ./yarn.lock ./
+# COPY ./yarn.lock ./
 
-RUN yarn install --production --frozen-lockfile
+# RUN yarn install --production --frozen-lockfile
 
-COPY --from=devbase /usr/api/dist ./dist
+# COPY --from=devbase /usr/api/dist ./dist
 
-CMD ["pm2-runtime", "dist/app.js"]
+# CMD ["pm2-runtime", "dist/app.js"]
