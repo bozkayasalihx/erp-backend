@@ -28,7 +28,6 @@ WORKDIR /usr/api
 
 COPY ./package.json ./
 COPY ./yarn.lock ./
-COPY ./.env ./
 COPY ./wait-for.sh ./
 COPY ./start.sh ./
 
