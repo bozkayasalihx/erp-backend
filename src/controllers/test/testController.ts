@@ -1,7 +1,4 @@
 import { Request, Response } from "express";
-import { appDataSource } from "../../loaders";
-import { User, Vendor } from "../../models";
-import UserEntityRelation from "../../models/UserEntityRelation";
 
 export default async function testControler(req: Request, res: Response) {
     // const userRelation = new UserEntityRelation();
@@ -14,7 +11,6 @@ export default async function testControler(req: Request, res: Response) {
     // userRelation.updated_by = user.id;
 
     // const maker = await appDataSource.manager.save(userRelation);
-    // console.log("maker", maker);
 
     // const user = new User();
     // user.username = "salih";
@@ -41,36 +37,41 @@ export default async function testControler(req: Request, res: Response) {
     // usrRelation.user_id = user.id;
 
     // const maker = await appDataSource.manager.save(usrRelation);
-    // console.log("maker", maker);
 
     // const vendor = new Vendor()
     // vendor.name = "tuborg";
     // vendor.tax_no = "maker";
-    // vendor.
 
-    const user = (await appDataSource.manager.findOne(User, {
-        where: { username: "salih" },
-    })) as User;
+    // const user = (await appDataSource.manager.findOne(User, {
+    //     where: { username: "james" },
+    // })) as User;
+    // const vendor = (await appDataSource.manager.findOne(Vendor, {
+    //     where: { name: "vendor" },
+    // })) as Vendor;
+    // const buyerSite = (await appDataSource.manager.findOne(BuyerSite, {
+    //     where: { name: "buyer site" },
+    // })) as BuyerSite;
 
-    const vendor = (await appDataSource.manager.findOne(Vendor, {
-        where: { name: "coca cola" },
-    })) as Vendor;
+    // const ue = new UserEntityRelation();
+    // ue.created_by = user;
+    // ue.updated_by = user;
+    // ue.buyer_site_ref_table = buyerSite;
+    // ue.description = "vendor";
+    // ue.user = user;
 
-    // const userEntityRelation = new UserEntityRelation();
-    // userEntityRelation.description = "make me alive";
-    // userEntityRelation.user_id = user.id;
-    // userEntityRelation.ref_entity_id = vendor.id;
+    // const v = new Vendor();
 
-    // const maker = await appDataSource.manager.save(userEntityRelation);
-    // console.log("maker", maker);
+    // await ue.save();
+    // const maker = await UserEntityRelation.findOne({
+    //     where: { user: { id: user.id } },
+    //     relations: {
+    //         dealer_site_ref_table: true,
+    //         vendor_ref_table: true,
+    //         buyer_site_ref_table: true,
+    //     },
+    // });
 
-    const maker = await appDataSource.manager
-        .createQueryBuilder(UserEntityRelation, "eu")
-        .where("eu.user_id = :userid", { userid: user.id })
-        .getMany();
-
-    
-    console.log("user entity relations", maker);
-
-    return res.send("not found");
+    return res.send({
+        message: "done with that",
+    });
 }

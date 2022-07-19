@@ -2,52 +2,47 @@ import {
     Column,
     Entity,
     Index,
-    JoinColumn,
-    ManyToMany,
     ManyToOne,
     OneToMany,
     RelationId,
 } from "typeorm";
-import BaseEntity from "./BaseEntity";
-import Dealer from "./Dealer";
-import Vendor from "./Vendor";
-import VendorToDealerSite from "./VendorToDealerSite";
+import { Dealer, VendorToDealerSite } from "./index";
+import SuperEntity from "./SuperEntity";
 
-@Entity("dealer_site")
-@Index(["dealer_id"], { unique: true })
-export default class DealerSite extends BaseEntity {
-    /** Properites*/
+@Entity("dealer_sites")
+@Index(["dealerId"])
+export default class DealerSite extends SuperEntity {
+    /** Properites */
     @Column({ name: "name" })
-    name: string;
+    public name: string;
 
-    @Column({ default: null, name: "attribute" })
-    attribute: string;
+    @Column({ default: null, name: "attribute1" })
+    public attribute1: string;
 
     @Column({ default: null, name: "attribute2" })
-    attribute2: string;
+    public attribute2: string;
 
     @Column({ default: null, name: "attribute3" })
-    attribute3: string;
+    public attribute3: string;
 
     @Column({ default: null, name: "attribute4" })
-    attribute4: string;
+    public attribute4: string;
 
     @Column({ default: null, name: "attribute5" })
-    attribute5: string;
+    public attribute5: string;
 
     /** Releations */
-    @ManyToOne(() => Dealer, dealer => dealer.dealer_sites)
-    dealer: Dealer;
+    @ManyToOne(() => Dealer, (dealer) => dealer.dealerSites)
+    public dealer: Dealer;
 
     @RelationId((dealerSite: DealerSite) => dealerSite.dealer)
     @Column({ name: "dealer_id" })
-    dealer_id: number;
+    public dealerId: number;
 
     /** Referantions */
-
     @OneToMany(
         () => VendorToDealerSite,
-        vendorToDealerSite => vendorToDealerSite.dealerSite
+        (vendorToDealerSite) => vendorToDealerSite.dealerSite
     )
-    vendorToDealerSites: Array<VendorToDealerSite>;
+    public vendorToDealerSites: Array<VendorToDealerSite>;
 }

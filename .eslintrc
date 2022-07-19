@@ -5,10 +5,32 @@
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "airbnb-base",
+        "airbnb-typescript/base",
+        "airbnb-typescript-prettier"
     ],
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
     "rules": {
         "no-unused-labels": 1,
-        "@typescript-eslint/ban-ts-comment": 1
+        "@typescript-eslint/ban-ts-comment": 1,
+        "no-console": 2,
+        "no-warning-comments": 2,
+        "no-inline-comments": 2,
+        "no-multiple-empty-lines":2,
+        "no-invalid-regexp": 1,
+        "import/prefer-default-export": 0,
+        "class-methods-use-this": 0,
+        "no-plusplus": 0,
+        "no-restricted-syntax": 0,
+        "no-continue": 0,
+        "no-param-reassign": 0,
+        "no-nested-ternary": 0,
+        "no-unneeded-ternary": 0,
+        "@typescript-eslint/no-unused-expressions": 0,
+        "no-unused-expressions": 0
     }
 }
+

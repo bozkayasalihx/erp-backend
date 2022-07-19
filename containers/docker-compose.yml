@@ -1,0 +1,52 @@
+version: "3.9"
+name: naticadevelopment
+
+services:
+  db_prod:
+    build:
+      context: ${PWD}
+      dockerfile: ${PWD}/containers/Dockerfile.prod.postgres
+    container_name: postgres_prod_db
+
+    restart: always
+    env_file:
+      - ${PWD}/.env
+    environment:
+      PG_PORT: ${PG_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA\: ${PGDATA}
+
+    ports:
+      - "${PG_PORT}:5432"
+    volumes:
+      - pgdata:${PGDATA}
+
+  prod_server:
+    build:
+      context: ${PWD}
+      target: prodbase
+      dockerfile: ${PWD}/containers/Dockerfile
+    container_name: prod_server
+
+    env_file:
+      - ${PWD}/.env
+
+    expose:
+      - "${SERVER_PORT}"
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    depends_on:
+      - db_prod
+
+    entrypoint:
+      [
+        '/usr/api/wait-for.sh',
+        "db_prod:5432",
+        "--",
+        "pm2-runtime",
+        "dist/app.js"
+      ]
+volumes:
+  pgdata:

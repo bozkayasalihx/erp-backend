@@ -1,29 +1,42 @@
 import { Column, Entity, OneToMany } from "typeorm";
-import BaseEntity from "./BaseEntity";
-import BuyerSite from "./BuyerSite";
+import { BuyerSite } from "./index";
+import SuperEntity from "./SuperEntity";
 
-@Entity("buyer")
-export default class Buyer extends BaseEntity {
-  /** Properties */
-  @Column({ type: "varchar", length: 240, name: "name" })
-  name: string;
+@Entity("buyers")
+export default class Buyer extends SuperEntity {
+    /** Properties */
+    @Column({
+        type: "varchar",
+        length: 240,
+        name: "name",
+        unique: true,
+    })
+    public name: string;
 
-  @Column({ type: "varchar", length: 20, name: "tax_no" })
-  tax_no: string;
+    @Column({
+        type: "varchar",
+        length: 20,
+        name: "tax_no",
+        unique: true,
+    })
+    public taxNo: string;
 
-  @Column({ default: null, name: "attribute" })
-  attribute: string;
+    @Column({ default: null, name: "attribute1" })
+    public attribute1: string;
 
-  @Column({ default: null, name: "attribute2" })
-  attribute2: string;
+    @Column({ default: null, name: "attribute2" })
+    public attribute2: string;
 
-  @Column({ default: null, name: "attribute3" })
-  attribute3: string;
+    @Column({ default: null, name: "attribute3" })
+    public attribute3: string;
 
-  @Column({ default: null, name: "attribute4" })
-  attribute4: string;
+    @Column({ default: null, name: "attribute4" })
+    public attribute4: string;
 
-  /** Relations */
-  @OneToMany(() => BuyerSite, (buyerSite) => buyerSite.buyer)
-  buyer_sites: Array<BuyerSite>;
+    @Column({ default: null, name: "attribute5" })
+    public attribute5: string;
+
+    /** Relations */
+    @OneToMany(() => BuyerSite, (buyerSite) => buyerSite.buyer)
+    public buyerSites: Array<BuyerSite>;
 }

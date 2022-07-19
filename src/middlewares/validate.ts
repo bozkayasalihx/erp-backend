@@ -1,12 +1,12 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction } from "express";
 import httpStatus from "http-status";
 import { ObjectSchema } from "joi";
 import { errorSlugify } from "../scripts/textSlugify";
+import { TypedRequest, TypedResponse } from "../types";
 
 export default class Validate<T> {
-    // constructor(private params: T) {}
     public validate(schema: ObjectSchema<T>) {
-        return (req: Request, res: Response, next: NextFunction) => {
+        return (req: TypedRequest, res: TypedResponse, next: NextFunction) => {
             const { error, value } = schema.validate(req.body);
 
             if (error) {

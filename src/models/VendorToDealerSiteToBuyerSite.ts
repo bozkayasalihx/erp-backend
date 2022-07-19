@@ -1,32 +1,67 @@
-import { Column, Entity, Index, ManyToOne, RelationId } from "typeorm";
-import BaseEntity from "./BaseEntity";
-import BuyerSite from "./BuyerSite";
-import VendorToDealerSite from "./VendorToDealerSite";
+import {
+    Column,
+    Entity,
+    Index,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+} from "typeorm";
+import {
+    Advance,
+    BuyerSite,
+    DealerRouteUser,
+    Deposit,
+    Invoice,
+    Payment,
+    PaymentMatches,
+    PaymentSchedule,
+    VendorToDealerSite,
+} from "./index";
+import SuperEntity from "./SuperEntity";
 
 @Entity("vdsbs_relations")
-@Index(["vds_rltn_id", "buyer_site_id"], { unique: true })
-export default class VendorToDealerSiteToBuyerSite extends BaseEntity {
-    /**Properties */
+@Index(["buyerSite.id", "vToDS.id"], { unique: true })
+export default class VendorToDealerSiteToBuyerSite extends SuperEntity {
+    /** Properties */
     @Column({
         type: "varchar",
         length: 240,
         default: null,
         name: "description",
+        nullable: true,
     })
-    description: string;
+    public description: string;
 
-    @ManyToOne(() => BuyerSite, buyerSite => buyerSite.vToDS)
-    buyerSites: Array<BuyerSite>;
+    /** relations */
+    @ManyToOne(() => BuyerSite, (buyerSite) => buyerSite.vToDSBS)
+    @JoinColumn({ name: "buyer_site_id" })
+    public buyerSite: BuyerSite;
 
-    @ManyToOne(() => VendorToDealerSite, vToDS => vToDS.vToDsBs)
-    vToDS: Array<VendorToDealerSite>;
+    @ManyToOne(() => VendorToDealerSite, (vToDS) => vToDS.vToDsBs)
+    @JoinColumn({ name: "vds_rltn_id" })
+    public vToDS: VendorToDealerSite;
 
-    /** referanss */
-    @RelationId((vToDsBs: VendorToDealerSiteToBuyerSite) => vToDsBs.buyerSites)
-    @Column({ name: "buyer_site_id" })
-    buyer_site_id: number;
+    @OneToMany(() => Invoice, (invoices) => invoices.vdsbs)
+    public invoices: Array<Invoice>;
 
-    @RelationId((vToDsBs: VendorToDealerSiteToBuyerSite) => vToDsBs.vToDS)
-    @Column({ name: "vds_rltn_id" })
-    vds_rltn_id: number;
+    @OneToMany(() => Payment, (payment) => payment.vdsbs)
+    public payments: Array<Payment>;
+
+    @OneToMany(() => PaymentMatches, (pm) => pm.vdsbs)
+    public paymentMatches: Array<PaymentMatches>;
+
+    @OneToMany(() => Deposit, (deposit) => deposit.vdsbs)
+    public deposits: Array<Deposit>;
+
+    @OneToMany(() => Advance, (advance) => advance.vdsbs)
+    public advances: Array<Advance>;
+
+    @OneToMany(
+        () => DealerRouteUser,
+        (dealerUserRoute) => dealerUserRoute.vdsbs
+    )
+    public dealerRouteUsers: Array<DealerRouteUser>;
+
+    @OneToMany(() => PaymentSchedule, (ps) => ps.vdsbs)
+    public paymentSchedules: Array<PaymentSchedule>;
 }

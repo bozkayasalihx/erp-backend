@@ -1,35 +1,51 @@
-import { Column, Entity, OneToMany, RelationId } from "typeorm";
-import BaseEntity from "./BaseEntity";
-import VendorToDealerSite from "./VendorToDealerSite";
+import { Column, Entity, OneToMany } from "typeorm";
+import { Product, VendorRegion, VendorToDealerSite } from "./index";
+import SuperEntity from "./SuperEntity";
 
-@Entity("vendor")
-export default class Vendor extends BaseEntity {
-    //** Properties */
-    @Column({ type: "varchar", length: 240, name: "name" })
-    name: string;
+@Entity("vendors")
+export default class Vendor extends SuperEntity {
+    //* * Properties */
+    @Column({
+        type: "varchar",
+        length: 240,
+        name: "name",
+        unique: true,
+    })
+    public name: string;
 
-    @Column({ type: "varchar", length: 20, name: "tax_no" })
-    tax_no: string;
+    @Column({
+        type: "varchar",
+        length: 20,
+        name: "tax_no",
+        unique: true,
+    })
+    public taxNo: string;
 
-    @Column({ nullable: true, name: "attribute" })
-    attribute: string;
+    @Column({ nullable: true, name: "attribute1" })
+    public attribute1: string;
 
     @Column({ nullable: true, name: "attribute2" })
-    attribute2: string;
+    public attribute2: string;
 
     @Column({ nullable: true, name: "attribute3" })
-    attribute3: string;
+    public attribute3: string;
 
     @Column({ nullable: true, name: "attribute4" })
-    attribute4: string;
+    public attribute4: string;
 
     @Column({ nullable: true, name: "attribute5" })
-    attribute5: string;
+    public attribute5: string;
 
     /* Releations */
     @OneToMany(
         () => VendorToDealerSite,
-        vendorToDealerSite => vendorToDealerSite.vendor
+        (vendorToDealerSite) => vendorToDealerSite.vendor
     )
-    vendorToDealerSite: Array<VendorToDealerSite>;
+    public vendorToDealerSite: Array<VendorToDealerSite>;
+
+    @OneToMany(() => VendorRegion, (vendorRegion) => vendorRegion.vendor)
+    public vendorRegions: Array<VendorRegion>;
+
+    @OneToMany(() => Product, (product) => product.vendor)
+    public products: Array<Product>;
 }
