@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  namespace: api
+
+spec:
+  selector:
+    matchLabels:
+      component: api
+  template:
+    metadata:
+      name: api-deployment
+      namespace: api
+    spec:
+      containers:
+        - name: 
+    
