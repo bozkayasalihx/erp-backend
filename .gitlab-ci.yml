@@ -15,43 +15,45 @@ stages:
     - build
     - deploy
 
-sast:
-    stage: test
+# sast:
+#     stage: test
 
-run_test:
-    stage: test
-    image: node:16-alpine
-    before_script:
-        - apk update && apk add yarn
-        - yarn install
-    script:
-        - yarn test --ci
+# run_test:
+#     stage: test
+#     image: node:16-alpine
+#     before_script:
+#         - apk update && apk add yarn
+#         - yarn install
+#     script:
+#         - yarn test --ci
 
-    except:
-        - main
+#     except:
+#         - main
 
-run_build:
-    stage: build
-    image: docker:20.10.17-alpine3.16
-    variables:
-        DOCKER_TLS_CERTDIR: "/certs"
-    services:
-        - docker:20.10.17-dind-alpine3.16
-    before_script:
-        - apk update
-        - apk add git
-        - export HEAD=$(git rev-parse HEAD)
-        - echo $DOCKER_USER
-        - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-    script:
-        - docker buildx build -f $CONTAINER_DIR . --platform=linux/amd64 -t $DOCKER_USERNAME/prod_server:$DOCKER_LATEST_TAG -t $DOCKER_USERNAME/prod_server:$HEAD --push
-        - docker buildx build -f $CONTAINER_DIR . --platform=linux/amd64 -t $DOCKER_USERNAME/prod_db:$DOCKER_LATEST_TAG -t $DOCKER_USERNAME/prod_db:$HEAD --push
-    only:
-        - main
+# run_build:
+#     stage: build
+#     image: docker:20.10.17-alpine3.16
+#     variables:
+#         DOCKER_TLS_CERTDIR: "/certs"
+#     services:
+#         - docker:20.10.17-dind-alpine3.16
+#     before_script:
+#         - apk update
+#         - apk add git
+#         - export HEAD=$(git rev-parse HEAD)
+#         - echo $DOCKER_USER
+#         - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+#     script:
+#         - docker buildx build -f $CONTAINER_DIR . --platform=linux/amd64 -t $DOCKER_USERNAME/prod_server:$DOCKER_LATEST_TAG -t $DOCKER_USERNAME/prod_server:$HEAD --push
+#         - docker buildx build -f $CONTAINER_DIR . --platform=linux/amd64 -t $DOCKER_USERNAME/prod_db:$DOCKER_LATEST_TAG -t $DOCKER_USERNAME/prod_db:$HEAD --push
+#     only:
+#         - main
 
 run_aws_login:
     stage: deploy
-    image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+    image: alpine:latest
+    services:
+        - registry.gitlab.com/gitlab-org/cloud-deploy/aws-base
     before_script:
         - apk update
         - apk add jq
@@ -64,5 +66,5 @@ run_aws_login:
     only:
         - main
 
-include:
-    - template: Jobs/SAST.latest.gitlab-ci.yml
+# include:
+#     - template: Jobs/SAST.latest.gitlab-ci.yml
