@@ -65,3 +65,4 @@ run_aws_login:
 
 include:
     - template: Jobs/SAST.latest.gitlab-ci.yml
+
