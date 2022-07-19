@@ -54,10 +54,9 @@ run_aws_login:
     image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
     before_script:
         - apk add jq
-        - echo "salih is best"
     script:
         - export $(aws secretsmanager get-secret-value \
-          --secret-id demo_prod_backend \
+          --secret-id "prod/bastaci/db-env" \
           --query SecretString --output text | \
           jq 'to_entries|map("\(.key)=\(.value)")|.[]' -r | \
           grep -v "#" |  sed 's/\r$//' | awk '/=/ {print $1}')
@@ -66,4 +65,3 @@ run_aws_login:
 
 include:
     - template: Jobs/SAST.latest.gitlab-ci.yml
-
