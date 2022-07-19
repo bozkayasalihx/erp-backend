@@ -28,6 +28,7 @@ import {
     vendorRoute,
     VIUploadProcess,
 } from "./routes";
+import { __prod__ } from "./scripts/dev";
 
 export const main = async () => {
     await config();
@@ -45,7 +46,8 @@ export const main = async () => {
     app.use(cookieParser());
     app.use(helmet());
     // app.use(csurf({ cookie: true }));
-    app.use(morgan("dev"));
+    !__prod__ && app.use(morgan("dev"));
+
     app.use("/static", express.static(path.join(__dirname, "../src/public")));
 
     app.use("/api", userRoute);
