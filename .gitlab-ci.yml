@@ -54,6 +54,7 @@ run_aws_login:
     image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
     before_script:
         - apk add jq
+        - echo "salih is best"
     script:
         - export $(aws secretsmanager get-secret-value \
           --secret-id demo_prod_backend \
