@@ -53,11 +53,7 @@ run_aws_login:
     stage: deploy
     image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base
     script:
-        - export $(aws secretsmanager get-secret-value \
-          --secret-id "prod/bastaci/db-env" \
-          --query SecretString --output text | \
-          jq 'to_entries|map("\(.key)=\(.value)")|.[]' -r | \
-          grep -v "#" |  sed 's/\r$//' | awk '/=/ {print $1}')
+        - export $(aws secretsmanager get-secret-value --secret-id "prod/bastaci/db-env" --query SecretString --output text | jq 'to_entries|map("\(.key)=\(.value)")|.[]' -r | grep -v "#" |  sed 's/\r$//' | awk '/=/ {print $1}')
     only:
         - main
 include:
