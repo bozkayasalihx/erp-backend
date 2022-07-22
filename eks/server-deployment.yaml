@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: server-deployment
+    namespace: server
+    labels:
+        component: server
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            component: server
+    template:
+        metadata:
+            labels:
+                component: server
+        spec:
+            containers:
+                - name: api-server
+                  image: naticadevelopment/prod_server
+                  ports:
+                      - containerPort: 9000
+            imagePullSecrets:
+                - name: regcred
