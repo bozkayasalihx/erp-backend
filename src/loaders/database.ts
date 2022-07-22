@@ -10,9 +10,6 @@ const entityTsDir = path.join(__dirname, "../models/*.ts");
 // const subsDir = path.join(__dirname, "../../dist/subscribers/*.js");
 const migrationDir = path.join(__dirname, "../../dist/migrations/*.js");
 
-// eslint-disable-next-line no-console
-console.log("env loader env", process.env.POSTGRES_DB);
-
 export const dataSourceOptions: DataSourceOptions = {
     type: "postgres",
     database: process.env.POSTGRES_DB,
