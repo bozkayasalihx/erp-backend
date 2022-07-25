@@ -58,9 +58,7 @@ deploy_to_eks:
         - docker:20.10.17-dind-alpine3.16
     script:
         - env
-    needs:
-        - .run_aws_login
-    dependencies:
+    extends:
         - .run_aws_login
 
 .run_aws_login:
