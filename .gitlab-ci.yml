@@ -49,12 +49,29 @@ run_build:
     only:
         - main
 
-run_aws_login:
+deploy_to_eks:
+    stage: deploy
+    image: docker:20.10.17-alpine3.16
+    variables:
+        DOCKER_TLS_CERTDIR: "/certs"
+    services:
+        - docker:20.10.17-dind-alpine3.16
+    script:
+        - env
+    needs:
+        - .run_aws_login
+    dependencies:
+        - .run_aws_login
+
+.run_aws_login:
     stage: deploy
     image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base
     script:
-        - export $(aws secretsmanager get-secret-value --secret-id "prod/bastaci/db-env" --query SecretString --output text | jq 'to_entries|map("\(.key)=\(.value)")|.[]' -r | grep -v "#" |  sed 's/\r$//' | awk '/=/ {print $1}')
-    only:
-        - main
+        - echo $(aws secretsmanager get-secret-value --secret-id "prod/bastaci/db-env" --query SecretString --output text | jq 'to_entries|map("\(.key)=\(.value)")|.[]' -r | grep -v "#" |  sed 's/\r$//' | awk '/=/ {print $1}') > build.env
+
+    artifacts:
+        reports:
+            dotenv: build.env
+
 include:
     - template: Jobs/SAST.latest.gitlab-ci.yml
