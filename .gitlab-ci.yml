@@ -60,6 +60,8 @@ deploy_to_eks:
         - env
     extends:
         - .run_aws_login
+    only:
+        - main
 
 .run_aws_login:
     stage: deploy
