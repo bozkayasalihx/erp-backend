@@ -75,6 +75,8 @@ run_aws_login:
     artifacts:
         reports:
             dotenv: build.env
+    only:
+        - main
 
 include:
     - template: Jobs/SAST.latest.gitlab-ci.yml
