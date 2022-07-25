@@ -51,13 +51,11 @@ run_build:
 
 deploy_to_eks:
     stage: deploy
-    image: docker:20.10.17-alpine3.16
-    variables:
-        DOCKER_TLS_CERTDIR: "/certs"
-    services:
-        - docker:20.10.17-dind-alpine3.16
+    image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base
+    before_script:
+      - aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $CLUSTER_NAME
     script:
-        - env
+      - kubectl version
 
     needs:
         - run_aws_login
