@@ -18,6 +18,7 @@ spec:
             containers:
                 - name: api-server
                   image: naticadevelopment/prod_server
+                  imagePullPolicy: Always
                   ports:
                       - containerPort: 9000
             imagePullSecrets:
