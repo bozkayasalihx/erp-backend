@@ -11,6 +11,5 @@ export { default as paymentRoute } from "./Payment/PaymentRoute";
 export { default as relationRoute } from "./Relations/relationRoute";
 export { default as testRoute } from "./test/Test";
 export { default as userRoute } from "./User/Users";
-export { default as UserAccessRoute } from "./UserAccess/UserAccessRoute";
 export { default as VendorRegionRoute } from "./Vendor/VendorRegionRoute";
 export { default as vendorRoute } from "./Vendor/vendorRoute";

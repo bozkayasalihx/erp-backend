@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
     createDealerRouteUser,
     createUserEntityRelationController,
+    getHasVdsbsAccess,
     getVdsbsRelationsController,
     getVdsRelationsController,
     vdsbsRelationController,
@@ -48,6 +49,14 @@ router.get(`${Routes.CREATE_VDS_RELATION}/:vds_id?`, getVdsRelationsController);
 router.get(
     `${Routes.CREATE_VDSBS_RELATION}/:vdsbs_id?`,
     getVdsbsRelationsController
+);
+
+router.post(
+    Routes.GET_USER_ACCESS,
+    new Validate<{ userId: number }>().validate(
+        validationSchema.getUserAccess()
+    ),
+    getHasVdsbsAccess
 );
 
 export default router;

@@ -49,30 +49,35 @@ run_build:
     only:
         - main
 
-deploy_to_eks:
-    stage: deploy
-    image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base
-    before_script:
-      - aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $CLUSTER_NAME
-    script:
-      - kubectl version
-
-    needs:
-        - run_aws_login
-    dependencies:
-        - run_aws_login
-    only:
-        - main
-
 run_aws_login:
     stage: deploy
     image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base
     script:
         - echo $(aws secretsmanager get-secret-value --secret-id "prod/bastaci/db-env" --query SecretString --output text | jq 'to_entries|map("\(.key)=\(.value)")|.[]' -r | grep -v "#" |  sed 's/\r$//' | awk '/=/ {print $1}') > build.env
-
     artifacts:
         reports:
             dotenv: build.env
+        paths:
+            - ""
+    only:
+        - main
+
+run_eks_deploy:
+    stage: deploy
+    image: lwolf/helm-kubectl-docker:v152_213
+    before_script:
+        - mkdir -p /etc/deploy
+        - echo ${kube_config} | base64 -d > ${KUBECONFIG}
+    script:
+        - cd deploy/libr-files
+        - helm dep build
+        - export API_VERSION="$(grep "appVersion" Chart.yaml | cut -d" " -f2)"
+        - export RELEASE_NAME="libr-files-v${API_VERSION/./-}"
+        - export DEPLOYS=$(helm ls | grep $RELEASE_NAME | wc -l)
+        - if [ ${DEPLOYS}  -eq 0 ]; then helm install --name=${RELEASE_NAME} . --namespace=${STAGING_NAMESPACE}; else helm upgrade ${RELEASE_NAME} . --namespace=${STAGING_NAMESPACE}; fi
+    environment:
+        name: production
+        url: https://natica-handshake.com
     only:
         - main
 

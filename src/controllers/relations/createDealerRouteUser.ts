@@ -1,11 +1,10 @@
 import httpStatus from "http-status";
-import { execUserEntityAccess } from "../../scripts/utils/viewFunctions";
 import {
     dealerRouteUserOperation,
     userOperation,
     vendorToDealerSiteToBuyerSiteOperation,
 } from "../../services";
-import { SqlConditions, TypedRequest, TypedResponse } from "../../types";
+import { TypedRequest, TypedResponse } from "../../types";
 
 export interface IDealerRouteUser {
     vdsbsId: number;
@@ -46,28 +45,14 @@ export default async function dealerRouteUser(
             });
         }
 
-        // getAll<typeof vdsbs.dealer_route_users[0]>(
-        //     vdsbs.dealer_route_users,
-        //     (routeUser) => {
-        //         // router users ile tum router userlarina erisebilirsin;
-        //         // buradan gerlikli validasyonlari yaparsin sen artik;
-        //         // routeUser.
-        //     }
-        // );
-
-        // const vConditions:SqlConditions = {};
-        // date fields should be string type if passed in vConditions
-        const vConditions: SqlConditions = {
-            userId,
-        };
-        const vdsbsIds = await execUserEntityAccess(vConditions, false);
+        const vdsbsIds = [{ vdsbs_id: 1 }];
 
         if (!vdsbsIds) {
             return res.status(httpStatus.NOT_FOUND).json({
                 message: "user_id data has no relation",
             });
         }
-        // check whether user_id-vdsbs_id relation exists on system
+
         let relationFound = false;
         for (let i = 0; i < vdsbsIds.length; i++) {
             if (vdsbsIds[i].vdsbs_id === vdsbsId) {

@@ -289,6 +289,12 @@ class ValidationSchema {
             ...dateOptions,
         });
     }
+
+    public getUserAccess() {
+        return Joi.object<{ userId: number }>({
+            userId: Joi.number().required(),
+        });
+    }
 }
 
 export default new ValidationSchema();

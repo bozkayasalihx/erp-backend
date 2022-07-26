@@ -1,6 +1,10 @@
 /* eslint-disable camelcase */
 import httpStatus from "http-status";
-import { hasAccess, isContain, makeSure } from "../../scripts/utils/isContains";
+import {
+    beSure,
+    convertToSnakeCase,
+    isContain,
+} from "../../scripts/utils/isContains";
 import userEntityRelationOperation from "../../services/userEntityRelationOperation";
 import userOperation from "../../services/userOperation";
 import { OptionalDates, TypedRequest, TypedResponse } from "../../types";
@@ -35,13 +39,14 @@ export default async function createUserEntityRelation(
             });
         }
         const { error, hashMap, validOne } = isContain(ids);
+
         if (!error.valid) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "more than one or zero nonnullable field not allowed",
             });
         }
 
-        const valid = await makeSure(validOne);
+        const valid = await beSure(validOne);
 
         if (!valid) {
             return res.status(httpStatus.NOT_FOUND).json({
@@ -49,19 +54,19 @@ export default async function createUserEntityRelation(
             });
         }
 
-        const accessRight = hasAccess(validOne, user.userType);
+        // const accessRight = hasAccess(validOne, user.userType);
 
-        if (!accessRight) {
-            return res.status(httpStatus.FORBIDDEN).json({
-                message: "user_type has no access to create data",
-            });
-        }
-
+        // if (!accessRight) {
+        //     return res.status(httpStatus.FORBIDDEN).json({
+        //         message: "user_type has no access to create data",
+        //     });
+        // }
+        const snakeCaseValidOne = convertToSnakeCase(validOne);
         const data = await userEntityRelationOperation.repo
             .createQueryBuilder("uer")
             .where(
-                `${Object.keys(validOne)[0]}_id = ${
-                    Object.values(validOne)[0]
+                `${Object.keys(snakeCaseValidOne)[0]}_id = ${
+                    Object.values(snakeCaseValidOne)[0]
                 } AND user_id = ${userId}`
             )
             .select("1")

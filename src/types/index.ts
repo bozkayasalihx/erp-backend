@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import * as models from "../models";
 
-type Interval = undefined | string | string[] | qs.ParsedQs | qs.ParsedQs[];
+type Interval = string | string[] | qs.ParsedQs | qs.ParsedQs[] | undefined;
 
 type NewQS<Q> = qs.ParsedQs & Record<keyof Q, Interval>;
 
@@ -124,5 +124,3 @@ export enum HasPs {
     YES = "Y",
     NO = "N",
 }
-
-export type SqlConditions = Record<string, string | number>;
