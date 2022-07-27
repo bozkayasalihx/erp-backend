@@ -13,44 +13,7 @@ provider "aws" {
 }
 
 
-variable "vpc_cidr_block" {
-  description = "vpc cidr ip block"
-  type        = string
-}
 
-
-variable "server_port" {
-  description = "port that run port on"
-  type        = number
-}
-
-variable "public_ssh_file_location" {
-  description = "ssh file location"
-}
-
-variable "instance_type" {
-  description = "ec2 instance type"
-  type        = string
-}
-
-variable "my_ip" {
-  description = "my default ip"
-  type        = string
-}
-
-variable "subnet_cidr_block" {
-  description = "subnet cidr ip block"
-  type        = string
-}
-
-variable "avail_zone" {
-  description = "availability zone of app"
-  type        = string
-}
-
-variable "env_prefix" {
-  type = string
-}
 
 resource "aws_vpc" "demo-server-vpc" {
   cidr_block = var.vpc_cidr_block
@@ -159,23 +122,6 @@ output "aws-ami_id" {
 resource "aws_key_pair" "deployer" {
   key_name   = "deployer-key"
   public_key = file(var.public_ssh_file_location)
-}
-
-resource "aws_instance" "demo-server" {
-  ami           = data.aws_ami.demo-server-ami.id
-  instance_type = var.instance_type
-
-  availability_zone = var.avail_zone
-
-  vpc_security_group_ids = [aws_security_group.demo-server-sg.id]
-  subnet_id              = aws_subnet.demo-server-subnet-1.id
-
-  associate_public_ip_address = true
-  key_name                    = aws_key_pair.deployer.key_name
-
-  tags = {
-    Name = "demo-server"
-  }
 }
 
 
