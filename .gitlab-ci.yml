@@ -57,29 +57,21 @@ run_aws_login:
     artifacts:
         reports:
             dotenv: build.env
-        paths:
-            - ""
     only:
         - main
 
-run_eks_deploy:
-    stage: deploy
-    image: lwolf/helm-kubectl-docker:v152_213
-    before_script:
-        - mkdir -p /etc/deploy
-        - echo ${kube_config} | base64 -d > ${KUBECONFIG}
+check_binary:
+    stage: environment-setup
     script:
-        - cd deploy/libr-files
-        - helm dep build
-        - export API_VERSION="$(grep "appVersion" Chart.yaml | cut -d" " -f2)"
-        - export RELEASE_NAME="libr-files-v${API_VERSION/./-}"
-        - export DEPLOYS=$(helm ls | grep $RELEASE_NAME | wc -l)
-        - if [ ${DEPLOYS}  -eq 0 ]; then helm install --name=${RELEASE_NAME} . --namespace=${STAGING_NAMESPACE}; else helm upgrade ${RELEASE_NAME} . --namespace=${STAGING_NAMESPACE}; fi
-    environment:
-        name: production
-        url: https://natica-handshake.com
-    only:
-        - main
+        - aws --version
+        - eksctl version
+        - python3 --version
+        - pip3 list
+        - kubectl version --client
+        - helm version
 
-include:
-    - template: Jobs/SAST.latest.gitlab-ci.yml
+setup_credentials:
+    stage: environment-setup
+    script:
+        - aws sts get-caller-indentify
+
