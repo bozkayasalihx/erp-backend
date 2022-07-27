@@ -1,15 +1,4 @@
 /* eslint-disable no-else-return */
-// import wrapper from "../scripts/wrapper";
-// import { vendorToDealerSiteToBuyerSiteOperation } from ".";
-// import {
-//     BuyerSite,
-//     User,
-//     UserEntityRelation,
-//     Vendor,
-//     VendorToDealerSite,
-// } from "../models";
-// import BaseService from "./BaseService";
-
 import { vendorToDealerSiteToBuyerSiteOperation } from ".";
 import { VendorToDealerSite, VendorToDealerSiteToBuyerSite } from "../models";
 import BaseService from "./BaseService";
@@ -40,16 +29,20 @@ class UserToVdsbs extends BaseService {
         };
     }
 
-    public async tableRouter() {
+    public async tableRouter(getAll = false, active = false) {
         const res = await this.findUserEntity();
         if (!res) return false;
 
         if (res.relatedBuyerSiteId) {
             return this.ifItsBuyerSite(res.relatedBuyerSiteId);
         } else if (res.relatedDealerSiteId) {
-            return this.ifItsDealerSite(res.relatedDealerSiteId);
+            return this.ifItsDealerSite(
+                res.relatedDealerSiteId,
+                getAll,
+                active
+            );
         } else if (res.relatedVendorId) {
-            return this.ifItsVendor(res.relatedVendorId);
+            return this.ifItsVendor(res.relatedVendorId, getAll, active);
         }
         return false;
     }
@@ -57,8 +50,8 @@ class UserToVdsbs extends BaseService {
     private async sequence(
         id: number,
         specificIdName: string,
-        getAll = false,
-        active = false
+        getAll: boolean,
+        active: boolean
     ) {
         const vdsQb = this.source
             .getRepository(VendorToDealerSite)
@@ -88,39 +81,72 @@ class UserToVdsbs extends BaseService {
                         "vendor",
                         "dealer_site",
                     ]);
+
+                if (active) {
+                    const actives = await this.activeRecords();
+                    allVdsbs.andWhere(actives);
+                }
+
+                return allVdsbs.execute();
             } else {
                 allVdsbs.select("id");
             }
 
-            if (active) {
-                const currentDate = new Date(Date.now());
-                allVdsbs.andWhere("vdsbs.start_date > :start_date", {
-                    start_date: currentDate,
-                });
-                allVdsbs.andWhere("vdsbs.end_date < :end_date", {
-                    end_date: currentDate,
-                });
-            }
             return allVdsbs.execute();
         }
 
         return false;
     }
 
-    private ifItsDealerSite(id: number) {
-        const specificIdName = "dealer_site_id";
-        return this.sequence(id, specificIdName, true);
+    private async activeRecords() {
+        const tables = ["vds", "buyer_site", "vendor", "dealer_site"];
+        let condition = "";
+        let i = 0;
+        while (i < tables.length) {
+            if (i === tables.length - 1)
+                condition += `${tables[i]}.start_date < NOW() AND ${tables[i]}.end_date > NOW()`;
+            else
+                condition += `${tables[i]}.start_date < NOW() AND ${tables[i]}.end_date > NOW() AND `;
+            i++;
+        }
+        return condition;
     }
 
-    private ifItsVendor(id: number) {
+    private tsDateToPostgres(date: Date) {
+        function zeroPad(d: number) {
+            // eslint-disable-next-line prefer-template
+            return ("0" + d).slice(-2);
+        }
+
+        const parsed = new Date(date);
+        return [
+            parsed.getUTCFullYear(),
+            zeroPad(parsed.getMonth() + 1),
+            zeroPad(parsed.getDate()),
+            zeroPad(parsed.getHours()),
+            zeroPad(parsed.getMinutes()),
+            zeroPad(parsed.getSeconds()),
+        ].join(" ");
+    }
+
+    private ifItsDealerSite(id: number, getAll: boolean, active: boolean) {
+        const specificIdName = "dealer_site_id";
+        return this.sequence(id, specificIdName, getAll, active);
+    }
+
+    private ifItsVendor(id: number, getAll: boolean, active: boolean) {
         const specificIdName = "vendor_id";
-        return this.sequence(id, specificIdName, true);
+        return this.sequence(id, specificIdName, getAll, active);
     }
 
     private ifItsBuyerSite(id: number) {
         vendorToDealerSiteToBuyerSiteOperation.repo.findOne({
             where: { buyerSite: { id } },
-            relations: { buyerSite: true, id: true },
+            relations: {
+                buyerSite: true,
+                id: true,
+                vToDS: { dealerSite: true, vendor: true },
+            },
         });
     }
 }

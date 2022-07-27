@@ -12,12 +12,16 @@ export default async function getHasVdsbsAccess(
 ) {
     const { userId } = req.body;
     userVdsbsAccess.setUserId = userId;
-    const results = await userVdsbsAccess.tableRouter();
+    try {
+        const results = await userVdsbsAccess.tableRouter();
 
-    // eslint-disable-next-line no-console
-    console.log("results", results);
-
-    return res.status(httpStatus.OK).json({
-        message: "everythings is okay",
-    });
+        return res.status(httpStatus.OK).json({
+            message: "everythings is okay",
+            data: results,
+        });
+    } catch (err) {
+        return res.status(httpStatus.BAD_REQUEST).json({
+            message: "bad request",
+        });
+    }
 }

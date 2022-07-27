@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+// eslint-disable-next-line import/no-cycle
+import { dateOptions } from "../validations/validationSchema";
 import * as models from "../models";
 
 type Interval = string | string[] | qs.ParsedQs | qs.ParsedQs[] | undefined;
@@ -30,10 +32,9 @@ export interface AttributeFields {
     attribute4?: string;
 }
 
-export interface OptionalDates {
-    startDate?: Date;
-    endDate?: Date;
-}
+export type OptionalDates = {
+    [K in keyof typeof dateOptions]: Date | undefined;
+};
 
 export interface GenericError {
     field: string;

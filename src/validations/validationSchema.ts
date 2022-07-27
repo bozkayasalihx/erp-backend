@@ -48,9 +48,9 @@ export interface Options {
     attribute5: string;
 }
 
-const dateOptions = {
-    startDate: Joi.date().optional(),
-    endDate: Joi.date().optional(),
+export const dateOptions = {
+    start_date: Joi.date().optional(),
+    end_date: Joi.date().optional(),
 };
 
 const options = {

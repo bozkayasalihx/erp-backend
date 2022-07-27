@@ -1,3 +1,5 @@
+/* eslint-disable import/no-cycle */
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable camelcase */
 import httpStatus from "http-status";
 import {
@@ -7,6 +9,7 @@ import {
 } from "../../scripts/utils/isContains";
 import userEntityRelationOperation from "../../services/userEntityRelationOperation";
 import userOperation from "../../services/userOperation";
+
 import { OptionalDates, TypedRequest, TypedResponse } from "../../types";
 
 export interface IUserEntityRelation extends OptionalDates {
@@ -22,7 +25,7 @@ export default async function createUserEntityRelation(
     res: TypedResponse
 ) {
     try {
-        const { description, userId, endDate, startDate, ...ids } = req.body;
+        const { description, userId, end_date, start_date, ...ids } = req.body;
 
         const user = await userOperation.repo.findOne({
             where: { id: userId },
@@ -83,8 +86,8 @@ export default async function createUserEntityRelation(
             user,
             updated_by: req.user,
             created_by: req.user,
-            start_date: startDate,
-            end_date: endDate,
+            start_date,
+            end_date,
             ...hashMap,
         });
 
