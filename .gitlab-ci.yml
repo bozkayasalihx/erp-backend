@@ -87,6 +87,9 @@ run_eks_build:
         - terraform validate
         - terraform plan
 
+    only:
+        - main
+
 run_eks_deploy:
     extends: .image
     when: manual
@@ -117,3 +120,6 @@ run_eks_deploy:
         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "kubectl apply -f ~/eks/aws-auth.yaml"
         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "kubectl apply -f ~/eks/container-secret.yaml"
         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "kubectl apply -f ~/eks "
+
+    only:
+        - main
