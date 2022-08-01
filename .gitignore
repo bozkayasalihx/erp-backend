@@ -11,3 +11,5 @@ src/seeds/csv/buyers.csv
 src/seeds/csv/buyers.csv
 terraform/.terraform/*
 *.tfvars
+*.tfstate.backup
+*.tfstate
