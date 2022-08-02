@@ -65,7 +65,7 @@ run_aws_login:
     only:
         - main
 
-.image:
+image:
     name: hashicorp/terraform:light
     entrypoint:
         - "/usr/bin/env"
@@ -75,7 +75,6 @@ run_aws_login:
         - "AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}"
 
 run_eks_build:
-    extends: .image
     stage: eks_build
     before_script:
         - cd ./terraform
@@ -91,7 +90,6 @@ run_eks_build:
         - main
 
 run_eks_deploy:
-    extends: .image
     when: manual
     script:
         - terraform apply -auto-approve=true
@@ -125,7 +123,6 @@ run_eks_deploy:
         - main
 
 run_eks_destroy:
-    extends: .image
     when: manual
     script:
         - terraform destroy -auto-approve
