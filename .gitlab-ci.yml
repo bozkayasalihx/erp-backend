@@ -9,7 +9,7 @@ variables:
     DOCKER_LATEST_TAG: latest
     CURRENT_TAG: $CI_PIPELINE_IID
     CONTAINER_DIR: ./containers/Dockerfile
-    ROOT_USER: "ubuntu"
+    ROOT_USER: ubuntu
 
 stages:
     - test
@@ -123,3 +123,9 @@ run_eks_deploy:
 
     only:
         - main
+
+run_eks_destroy:
+    extends: .image
+    when: manual
+    script:
+        - terraform destroy -auto-approve
