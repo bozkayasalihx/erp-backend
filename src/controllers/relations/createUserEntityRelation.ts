@@ -1,8 +1,15 @@
+/* eslint-disable import/no-cycle */
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable camelcase */
 import httpStatus from "http-status";
-import { hasAccess, isContain, makeSure } from "../../scripts/utils/isContains";
+import {
+    beSure,
+    convertToSnakeCase,
+    isContain,
+} from "../../scripts/utils/isContains";
 import userEntityRelationOperation from "../../services/userEntityRelationOperation";
 import userOperation from "../../services/userOperation";
+
 import { OptionalDates, TypedRequest, TypedResponse } from "../../types";
 
 export interface IUserEntityRelation extends OptionalDates {
@@ -18,7 +25,7 @@ export default async function createUserEntityRelation(
     res: TypedResponse
 ) {
     try {
-        const { description, userId, endDate, startDate, ...ids } = req.body;
+        const { description, userId, end_date, start_date, ...ids } = req.body;
 
         const user = await userOperation.repo.findOne({
             where: { id: userId },
@@ -35,13 +42,14 @@ export default async function createUserEntityRelation(
             });
         }
         const { error, hashMap, validOne } = isContain(ids);
+
         if (!error.valid) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 message: "more than one or zero nonnullable field not allowed",
             });
         }
 
-        const valid = await makeSure(validOne);
+        const valid = await beSure(validOne);
 
         if (!valid) {
             return res.status(httpStatus.NOT_FOUND).json({
@@ -49,19 +57,19 @@ export default async function createUserEntityRelation(
             });
         }
 
-        const accessRight = hasAccess(validOne, user.userType);
+        // const accessRight = hasAccess(validOne, user.userType);
 
-        if (!accessRight) {
-            return res.status(httpStatus.FORBIDDEN).json({
-                message: "user_type has no access to create data",
-            });
-        }
-
+        // if (!accessRight) {
+        //     return res.status(httpStatus.FORBIDDEN).json({
+        //         message: "user_type has no access to create data",
+        //     });
+        // }
+        const snakeCaseValidOne = convertToSnakeCase(validOne);
         const data = await userEntityRelationOperation.repo
             .createQueryBuilder("uer")
             .where(
-                `${Object.keys(validOne)[0]}_id = ${
-                    Object.values(validOne)[0]
+                `${Object.keys(snakeCaseValidOne)[0]}_id = ${
+                    Object.values(snakeCaseValidOne)[0]
                 } AND user_id = ${userId}`
             )
             .select("1")
@@ -78,8 +86,8 @@ export default async function createUserEntityRelation(
             user,
             updated_by: req.user,
             created_by: req.user,
-            start_date: startDate,
-            end_date: endDate,
+            start_date,
+            end_date,
             ...hashMap,
         });
 

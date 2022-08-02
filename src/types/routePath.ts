@@ -26,7 +26,7 @@ export enum Routes {
     CREATE_INVOICE_LINE = "/create-invoice_line",
     CREATE_PAYMENT_SCHEDULE = "/create-payment-schedule",
     CREATE_PAYMENT = "/create-payment",
-    GET_USER_ACCESS = "/get-user-access",
+    GET_USER_ACCESS = "/has-user-access",
 }
 
 export const accesableRoute = new Map<string, Array<string>>();

@@ -27,3 +27,6 @@ dev-close:
 
 deploy-containers: 
 	docker compose build && docker compose push
+
+v-down:
+	docker volume rm $(docker volume ls -q)

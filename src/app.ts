@@ -22,7 +22,6 @@ import {
     PSIUploadProcess,
     relationRoute,
     testRoute,
-    UserAccessRoute,
     userRoute,
     VendorRegionRoute,
     vendorRoute,
@@ -55,7 +54,6 @@ export const main = async () => {
     app.use(authenticate);
     app.use(permission);
     /** routes */
-    app.use("/api/access-control", UserAccessRoute);
     app.use("/api", meRoute);
     app.use("/api", testRoute);
     app.use("/api", PSIUploadProcess);

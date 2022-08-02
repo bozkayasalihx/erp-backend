@@ -9,5 +9,7 @@ src/results.csv
 src/results2.csv
 src/seeds/csv/buyers.csv
 src/seeds/csv/buyers.csv
-terraform/.terraform/*
-*.tfvars
+*.terraform
+*.tfstate
+*.tfstate.backup
+*.DS_Store
