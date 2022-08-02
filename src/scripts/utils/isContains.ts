@@ -5,8 +5,21 @@ import {
 } from "../../services";
 import { UserTypes } from "../../types";
 
+export function convertToSnakeCase(obj: Record<string, any>) {
+    const keys = Object.keys(obj);
+    const newObj: Record<string, any> = {};
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+
+        newObj[key.replace(/[A-Z]/g, (finded) => `_${finded.toLowerCase()}`)] =
+            obj[key];
+    }
+
+    return newObj;
+}
+
 export function isContain(params: Record<string, any>) {
-    const hashMap = {};
+    const hashMap: Record<string, any> = {};
     const error: { valid: boolean } = { valid: true };
     const validOne: { [x: string]: number } = {};
     let i = 0;
@@ -20,6 +33,7 @@ export function isContain(params: Record<string, any>) {
     }
     if (i > 1 || i === 0) error.valid = false;
     i = 0;
+
     return {
         hashMap,
         error,
@@ -29,13 +43,13 @@ export function isContain(params: Record<string, any>) {
 
 enum Types {
     VENDOR = "vendor",
-    BUYER_SITE = "buyer_site",
-    DEALER_SITE = "dealer_site",
+    BUYER_SITE = "buyerSite",
+    DEALER_SITE = "dealerSite",
 }
-export async function makeSure(obj: { [x: string]: number }) {
+export async function beSure(obj: { [x: string]: number }) {
     const key = Object.keys(obj)[0];
-    if (!key.includes("table")) return false;
-    const type = key.split("_table")[0];
+    if (!key.includes("Table")) return false;
+    const type = key.split("Table")[0];
     switch (type) {
         case Types.VENDOR: {
             const data = await vendorOperation.repo.findOne({
@@ -70,8 +84,8 @@ export async function makeSure(obj: { [x: string]: number }) {
 }
 
 export function hasAccess(obj: { [x: string]: number }, userType: string) {
-    if (!Object.keys(obj)[0].includes("table")) return false;
-    const entityType = Object.keys(obj)[0].split("_table")[0];
+    if (!Object.keys(obj)[0].includes("Table")) return false;
+    const entityType = Object.keys(obj)[0].split("Table")[0];
 
     switch (entityType) {
         case Types.VENDOR: {

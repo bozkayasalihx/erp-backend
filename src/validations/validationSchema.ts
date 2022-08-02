@@ -48,9 +48,9 @@ export interface Options {
     attribute5: string;
 }
 
-const dateOptions = {
-    startDate: Joi.date().optional(),
-    endDate: Joi.date().optional(),
+export const dateOptions = {
+    start_date: Joi.date().optional(),
+    end_date: Joi.date().optional(),
 };
 
 const options = {
@@ -287,6 +287,12 @@ class ValidationSchema {
             referenceId: Joi.number().required(),
             vdsbsId: Joi.number().required(),
             ...dateOptions,
+        });
+    }
+
+    public getUserAccess() {
+        return Joi.object<{ userId: number }>({
+            userId: Joi.number().required(),
         });
     }
 }
