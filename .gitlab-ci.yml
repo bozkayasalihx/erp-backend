@@ -106,35 +106,71 @@ run_eks_infrastructure_provision:
     only:
         - main
 
+# run_eks_deploy:
+#     stage: eks_deploy
+#     when: manual
+#     extends: run_eks_infrastructure_provision
+#     script:
+#         - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+#         - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+#         - chmod 600 ~/.ssh/id_rsa
+#         - eval $(ssh-agent -s)
+#         - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+#         # waiting for completing to install shh
+#         - sleep 200
+#         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "sudo DEBIAN_FRONTEND=noninteractive apt -y update"
+#         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "sudo DEBIAN_FRONTEND=noninteractive apt -y install unzip"
+#         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "curl 'https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip' -o awscliv2.zip && unzip awscliv2.zip"
+#         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "sudo ./aws/install"
+
+#         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}"
+#         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}"
+#         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "aws configure set default.region $AWS_DEFAULT_REGION"
+#         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "aws --version"
+
+#         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.2/bin/linux/amd64/kubectl"
+#         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "chmod +x ./kubectl && sudo mv ./kubectl /usr/local/bin/kubectl"
+#         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $(terraform output -json cluster_name | awk -F'[(")]' '{print $2}')"
+#         - scp -r ./eks $ROOT_USER@$EC2_BASTION_IP:~/
+#         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "kubectl apply -f ~/eks/aws-auth.yaml"
+#         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "kubectl apply -f ~/eks/container-secret.yaml"
+#         - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "kubectl apply -f ~/eks "
+
+#     only:
+#         - main
+
+run_eks_deploy_prepare:
+    stage: eks_deploy
+    image: matshareyourscript/aws-helm-kubectl
+    before_script:
+        - export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+        - export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+        - export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+    script:
+        - cd ./eks
+        - kubectl --kubeconfig ${KUBECONFIG} apply -f server-namespaces.yaml
+        - kubectl --kubeconfig ${KUBECONFIG} apply -f aws-auth.yaml
+        - kubectl --kubeconfig ${KUBECONFIG} apply -f container-secret.yaml
+
+    rules:
+        - changes:
+              - ./eks/aws-auth.yaml
+              - ./eks/container-secret.yaml
+              - ./eks/server-namespaces.yaml
+    only:
+        - main
+
 run_eks_deploy:
     stage: eks_deploy
-    when: manual
-    extends: run_eks_infrastructure_provision
+    image: matshareyourscript/aws-helm-kubectl
+    before_script:
+        - export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+        - export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+        - export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
     script:
-        - mkdir -p ~/.ssh && chmod 700 ~/.ssh
-        - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-        - chmod 600 ~/.ssh/id_rsa
-        - eval $(ssh-agent -s)
-        - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
-        # waiting for completing to install shh
-        - sleep 200
-        - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "sudo DEBIAN_FRONTEND=noninteractive apt -y update"
-        - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "sudo DEBIAN_FRONTEND=noninteractive apt -y install unzip"
-        - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "curl 'https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip' -o awscliv2.zip && unzip awscliv2.zip"
-        - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "sudo ./aws/install"
-
-        - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}"
-        - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}"
-        - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "aws configure set default.region $AWS_DEFAULT_REGION"
-        - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "aws --version"
-
-        - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.2/bin/linux/amd64/kubectl"
-        - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "chmod +x ./kubectl && sudo mv ./kubectl /usr/local/bin/kubectl"
-        - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $(terraform output -json cluster_name | awk -F'[(")]' '{print $2}')"
-        - scp -r ./eks $ROOT_USER@$EC2_BASTION_IP:~/
-        - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "kubectl apply -f ~/eks/aws-auth.yaml"
-        - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "kubectl apply -f ~/eks/container-secret.yaml"
-        - ssh -T -o "StrictHostKeyChecking no" -l $ROOT_USER $EC2_BASTION_IP "kubectl apply -f ~/eks "
+        - kubectl --kubeconfig ${KUBECONFIG} apply -f ./eks
+    needs:
+        - run_eks_deploy_prepare
 
     only:
         - main
