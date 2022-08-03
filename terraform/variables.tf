@@ -115,8 +115,8 @@ variable "node_groups" {
   }))
   default = [
     {
-      name           = "t2-micro-standard"
-      instance_types = ["t2.micro"]
+      name           = "m1-small-standard"
+      instance_types = ["m1.small"]
       ami_type       = "AL2_x86_64"
       capacity_type  = "ON_DEMAND"
       disk_size      = 20
