@@ -175,6 +175,7 @@ run_eks_destroy:
     when: manual
     stage: destroy
     script:
+        - cd ./terraform
         - terraform destroy -auto-approve
     only:
         - main
