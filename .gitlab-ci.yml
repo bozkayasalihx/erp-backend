@@ -13,15 +13,19 @@ variables:
 
 stages:
     - test
-    - image_build
+    - aws_secret_set
     - image_deploy
-    - eks_build
+    - validate_eks_infrastructure
+    - eks_infrastructure_provision
     - eks_deploy
     - basttion_prep
     - destroy
 
 sast:
     stage: test
+    only:
+        refs:
+          - develop
 
 run_test:
     stage: test
@@ -54,8 +58,8 @@ run_build:
     only:
         - main
 
-run_aws_login:
-    stage: image_build
+run_secret_envs:
+    stage: aws_secret_set
     image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base
     script:
         - echo $(aws secretsmanager get-secret-value --secret-id "prod/bastaci/db-env" --query SecretString --output text | jq 'to_entries|map("\(.key)=\(.value)")|.[]' -r | grep -v "#" |  sed 's/\r$//' | awk '/=/ {print $1}') > build.env
@@ -74,26 +78,41 @@ image:
         - "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
         - "AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}"
 
-run_eks_build:
-    stage: eks_build
+run_provision_valid:
+    stage: validate_eks_infrastructure
     before_script:
         - cd ./terraform
         - rm -rf .terraform
         - terraform --version
         - terraform init
-
-    script:
         - terraform validate
         - terraform plan
+    only:
+        - main
+
+run_eks_infrastructure_provision:
+    stage: eks_infrastructure_provision
+    before_script:
+        - cd .terraform
+        - rm -rf .terraform
+        - terraform --version
+        - terraform init
+        - terraform validate
+        - terraform plan
+        - terraform apply -auto-approve=true
+        - EC2_BASTION_IP=$(terraform output -json bastion_eip | awk -F'[(")]' '{print $2}') >> deploy.env
+    artifacts:
+        reports:
+            dotenv: deploy.env
 
     only:
         - main
 
 run_eks_deploy:
+    stage: eks_deploy
     when: manual
+    extends: run_eks_infrastructure_provision
     script:
-        - terraform apply -auto-approve=true
-        - EC2_BASTION_IP=$(terraform output -json bastion_eip | awk -F'[(")]' '{print $2}') >> deploy.env
         - mkdir -p ~/.ssh && chmod 700 ~/.ssh
         - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
         - chmod 600 ~/.ssh/id_rsa
@@ -124,8 +143,11 @@ run_eks_deploy:
 
 run_eks_destroy:
     when: manual
+    stage: destroy
     script:
         - terraform destroy -auto-approve
+    only:
+        - main
 
 include:
     - template: Jobs/SAST.latest.gitlab-ci.yml
