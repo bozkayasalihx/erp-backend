@@ -148,9 +148,9 @@ run_eks_deploy_prepare:
         - export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
     script:
         - cd ./eks
-        - kubectl --kubeconfig ${KUBECONFIG} apply -f server-namespaces.yaml
-        - kubectl --kubeconfig ${KUBECONFIG} apply -f aws-auth.yaml
-        - kubectl --kubeconfig ${KUBECONFIG} apply -f container-secret.yaml
+        - kubectl --kubeconfig=$KUBECONFIG apply -f server-namespaces.yaml
+        - kubectl --kubeconfig=$KUBECONFIG apply -f aws-auth.yaml
+        - kubectl --kubeconfig=$KUBECONFIG apply -f container-secret.yaml
 
     only:
         - main
@@ -164,7 +164,7 @@ run_eks_deploy:
         - export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
         - export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
     script:
-        - kubectl --kubeconfig ${KUBECONFIG} apply -f ./eks
+        - kubectl --kubeconfig=$KUBECONFIG apply -f ./eks
     needs:
         - run_eks_deploy_prepare
 
