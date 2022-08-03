@@ -13,8 +13,8 @@ variables:
 
 stages:
     - test
+    - image_build_and_deploy
     - aws_secret_set
-    - image_deploy
     - validate_eks_infrastructure
     - eks_infrastructure_provision
     - eks_deploy
@@ -23,9 +23,6 @@ stages:
 
 sast:
     stage: test
-    only:
-        refs:
-          - develop
 
 run_test:
     stage: test
@@ -40,7 +37,7 @@ run_test:
         - main
 
 run_build:
-    stage: image_build
+    stage: image_build_and_deploy
     image: docker:20.10.17-alpine3.16
     variables:
         DOCKER_TLS_CERTDIR: "/certs"
@@ -80,7 +77,7 @@ image:
 
 run_provision_valid:
     stage: validate_eks_infrastructure
-    before_script:
+    script:
         - cd ./terraform
         - rm -rf .terraform
         - terraform --version
@@ -92,7 +89,7 @@ run_provision_valid:
 
 run_eks_infrastructure_provision:
     stage: eks_infrastructure_provision
-    before_script:
+    script:
         - cd .terraform
         - rm -rf .terraform
         - terraform --version
