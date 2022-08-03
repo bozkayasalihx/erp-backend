@@ -98,8 +98,7 @@ run_eks_infrastructure_provision:
         - terraform validate
         - terraform plan
         - terraform apply -auto-approve=true
-        - cd ../
-        - EC2_BASTION_IP=$(terraform output -json ec2_elastic_ip | awk -F'[(")]' '{print $2}') >> deploy.env
+        - EC2_BASTION_IP=$(terraform output -json ec2_elastic_ip | awk -F'[(")]' '{print $2}') >> ../deploy.env
     artifacts:
         reports:
             dotenv: deploy.env
