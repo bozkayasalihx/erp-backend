@@ -9,7 +9,7 @@ variables:
     DOCKER_LATEST_TAG: latest
     CURRENT_TAG: $CI_PIPELINE_IID
     CONTAINER_DIR: ./containers/Dockerfile
-    ROOT_USER: ubuntu
+    ROOT_USER: ec2-user
 
 stages:
     - test
@@ -36,7 +36,7 @@ run_test:
     except:
         - main
 
-run_build:
+run_build_and_deploy:
     stage: image_build_and_deploy
     image: docker:20.10.17-alpine3.16
     variables:
@@ -90,13 +90,14 @@ run_provision_valid:
 run_eks_infrastructure_provision:
     stage: eks_infrastructure_provision
     script:
-        - cd .terraform
+        - cd ./terraform
         - rm -rf .terraform
         - terraform --version
         - terraform init
         - terraform validate
         - terraform plan
         - terraform apply -auto-approve=true
+        - cd ../
         - EC2_BASTION_IP=$(terraform output -json bastion_eip | awk -F'[(")]' '{print $2}') >> deploy.env
     artifacts:
         reports:
