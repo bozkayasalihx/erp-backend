@@ -146,5 +146,10 @@ run_eks_destroy:
     only:
         - main
 
+run_eks_destroy:
+    when: manual
+    script:
+        - terraform destroy -auto-approve
+
 include:
     - template: Jobs/SAST.latest.gitlab-ci.yml
