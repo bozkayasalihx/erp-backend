@@ -115,15 +115,15 @@ variable "node_groups" {
   }))
   default = [
     {
-      name           = "t3-micro-standard"
-      instance_types = ["t3.micro"]
+      name           = "t2-micro-standard"
+      instance_types = ["t2.micro"]
       ami_type       = "AL2_x86_64"
       capacity_type  = "ON_DEMAND"
       disk_size      = 20
       scaling_config = {
-        desired_size = 2
-        max_size     = 3
-        min_size     = 1
+        desired_size = 1
+        max_size     = 2
+        min_size     = 0
       }
       update_config = {
         max_unavailable = 1
