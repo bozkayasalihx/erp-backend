@@ -152,17 +152,13 @@ run_eks_deploy_prepare:
         - kubectl --kubeconfig ${KUBECONFIG} apply -f aws-auth.yaml
         - kubectl --kubeconfig ${KUBECONFIG} apply -f container-secret.yaml
 
-    rules:
-        - changes:
-              - ./eks/aws-auth.yaml
-              - ./eks/container-secret.yaml
-              - ./eks/server-namespaces.yaml
     only:
         - main
 
 run_eks_deploy:
     stage: eks_deploy
     image: matshareyourscript/aws-helm-kubectl
+    when: manual
     before_script:
         - export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
         - export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
